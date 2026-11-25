@@ -6,10 +6,16 @@ COPIA E INCLUDI
 2. Nelle tue pagine HTML:
 
        <link rel="stylesheet" href="/dpi/dpi.css">
+       <link rel="stylesheet" href="/dpi/css/reset.css">
        <script src="/dpi/dpi.js" defer></script>
 
    (adatta il percorso a dove hai messo la cartella: ogni riferimento interno al pacchetto è relativo, non c'è nessun percorso fisso)
-3. Scrivi HTML con le classi dpi-* documentate:
+3. Metti la classe dpi-root sul contenitore che deve usare la tipografia DPI (di solito il body): senza, il testo resta con il font predefinito
+   del browser. reset.css agisce SOLO dentro .dpi-root, non sul resto della pagina:
+
+       <body class="dpi-root">
+
+4. Scrivi HTML con le classi dpi-* documentate:
 
        <button class="dpi-btn dpi-btn--primary">Continua</button>
        <button class="dpi-btn" data-dpi-dialog-open="info">Apri il dialog</button>

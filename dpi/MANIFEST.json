@@ -1,6 +1,6 @@
 {
   "name": "dpi",
-  "built_utc": "2026-11-24T15:44:18.773Z",
+  "built_utc": "2026-11-25T08:42:31.025Z",
   "entry": {
     "css": "dpi.css",
     "js": "dpi.js"
@@ -8,8 +8,8 @@
   "requires": "server HTTP qualsiasi; nessun runtime",
   "files": {
     "LEGGIMI.txt": {
-      "bytes": 3069,
-      "sha256": "46b0475fc2ab7b07f98009dae3f60fb47977b0e7ae4b84ffbe17d05143053af4"
+      "bytes": 3387,
+      "sha256": "56598ef6909d51c0138df5b3f4af0f576314ff71a57709a3f6eca7030dd2f84d"
     },
     "THIRD-PARTY-LICENSES.txt": {
       "bytes": 10480,
@@ -148,8 +148,8 @@
       "sha256": "24ad76f0fb86e68997b5fb218312910a5dc5396c94e8de8831d7606531032fd1"
     },
     "dpi.js": {
-      "bytes": 474066,
-      "sha256": "ab271f5ae8b91f2db841e0ac636853f75f215f040a50fc908cb061a7c680d689"
+      "bytes": 474944,
+      "sha256": "ace2ba876ef3d199fc5cf76d8c82ff368a7c2c46ef0301c11db506e8e1aa6bf5"
     },
     "fonts/OFL.txt": {
       "bytes": 4384,

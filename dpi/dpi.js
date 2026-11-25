@@ -2709,6 +2709,7 @@
     st.ac.abort();
     st.mo.disconnect();
     st.ro.disconnect();
+    st.posRo?.disconnect();
     st.bar.removeAttribute("data-dpi-bbn");
     st.m.layer.remove();
     const list = listOf(st.bar);
@@ -2793,6 +2794,12 @@
       st.wrap.style.top = `${br.top + st.box.y}px`;
     };
     addEventListener("scroll", sync8, { passive: true, signal, capture: true });
+    if (bar2.parentElement) {
+      st.posRo = new ResizeObserver(() => {
+        if (S === st) sync8();
+      });
+      for (const n of [bar2.parentElement, ...bar2.parentElement.children]) if (n !== bar2) st.posRo.observe(n);
+    }
     addEventListener("resize", redo, { signal });
     globalThis.visualViewport?.addEventListener("resize", redo, { signal });
     document.addEventListener("dpi:chatbot-open", () => {
@@ -9776,10 +9783,10 @@ ${inner}
       }
       return external && trigger2.isConnected ? trigger2 : null;
     };
-    function placeSide() {
+    function placeSide(keep = false) {
       if (!external || !trigger2.isConnected) return false;
       const t = trigger2.getBoundingClientRect(), W = document.documentElement.clientWidth;
-      const start3 = W >= 576 && t.width > 0 && t.left + t.width / 2 < W / 2;
+      const start3 = W >= 576 && t.width > 0 && (keep ? root4.hasAttribute("data-dpi-side-start") : t.left + t.width / 2 < W / 2);
       const x = start3 ? `${Math.round(t.left)}px` : "";
       const had = root4.hasAttribute("data-dpi-side-start"), prev = root4.style.getPropertyValue("--dpi-chatbot-x");
       if (start3 === had && x === prev) return false;
@@ -9789,7 +9796,8 @@ ${inner}
       return true;
     }
     function measureTop() {
-      const moved = placeSide();
+      const moved = placeSide(!!st.sideDecided);
+      st.sideDecided = true;
       const ref = topRef();
       let v = "";
       if (ref) {
@@ -9805,9 +9813,22 @@ ${inner}
     }
     const onTopMove = (e) => {
       if (e && e.target instanceof Node && root4.contains(e.target)) return;
+      if (e?.type === "resize") st.sideDecided = false;
       cancelAnimationFrame(st.topRaf);
       st.topRaf = requestAnimationFrame(measureTop);
     };
+    function followTrigger(on) {
+      st.sideRo?.disconnect();
+      st.sideRo = null;
+      if (!on || !external || typeof ResizeObserver !== "function") return;
+      st.sideRo = new ResizeObserver(() => {
+        if (stateOf4() !== "closed" && placeSide(true)) {
+          st.geo = null;
+          paintMorph();
+        }
+      });
+      for (const n of [trigger2, trigger2.parentElement, trigger2.previousElementSibling]) if (n) st.sideRo.observe(n);
+    }
     function bindTop(on) {
       if (!o.topFrom && !external) return;
       const f3 = on ? "addEventListener" : "removeEventListener";
@@ -9818,10 +9839,12 @@ ${inner}
         if (ref && typeof ResizeObserver === "function") {
           st.topRo = new ResizeObserver(onTopMove);
           st.topRo.observe(ref);
-          for (const n of [ref.parentElement, ref.previousElementSibling]) if (n) st.topRo.observe(n);
         }
+        followTrigger(true);
         measureTop();
       } else {
+        followTrigger(false);
+        st.sideDecided = false;
         st.topRo?.disconnect();
         st.topRo = null;
         cancelAnimationFrame(st.topRaf);
