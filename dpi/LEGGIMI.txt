@@ -1,4 +1,4 @@
-DPI — framework frontend Liquid Glass
+DPI — Design Platform Interface
 =====================================
 
 COPIA E INCLUDI

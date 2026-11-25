@@ -49,7 +49,7 @@ Se usi una Content Security Policy: gli script e gli stili sono file esterni e n
 | Eventi | `dpi:*` | `dpi:open`, `dpi:action` |
 | JavaScript | `window.DPI` | `DPI.init(elemento)` |
 
-Non si usano gestori in linea (`onclick`): il framework ascolta eventi delegati. Pulsanti (`dpi-btn`) e schede (`dpi-card`) ricevono da soli il materiale; per gli altri componenti va copiato il markup completo mostrato nelle pagine.
+Non si usano gestori in linea (`onclick`): DPI ascolta eventi delegati. Pulsanti (`dpi-btn`) e schede (`dpi-card`) ricevono da soli il materiale; per gli altri componenti va copiato il markup completo mostrato nelle pagine.
 
 Senza JavaScript restano utilizzabili link, form, `details/summary` e controlli nativi. Le sovrapposizioni (per esempio il dialog) richiedono JavaScript.
 
@@ -180,7 +180,7 @@ document.addEventListener('dpi:loading-collect', (e) => e.detail.wait(fetch('/ap
 
 ## Accessibilità
 
-Cosa fa il framework:
+Cosa fa DPI:
 
 - usa elementi nativi dove esistono (`button`, `a`, `input`, `select`, `details`, `dialog`, `progress`, `fieldset`);
 - mostra un focus visibile uniforme per la tastiera;

@@ -30,7 +30,7 @@ Il markup va in una pagina che include gli asset DPI (vedi [Installazione](../gu
     </summary>
     <div class="dpi-accordion__body">
       <p class="dpi-text">
-        Un framework frontend in HTML, CSS e JavaScript.
+        Componenti pronti in HTML, CSS e JavaScript.
       </p>
     </div>
   </details>

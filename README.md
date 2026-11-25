@@ -1,6 +1,6 @@
-# DPI — framework frontend «Liquid Glass»
+# DPI — Design Platform Interface
 
-DPI è un framework di interfaccia in **HTML, CSS e JavaScript**. Si scrive markup normale con classi `dpi-*` e attributi `data-dpi-*`: il materiale a vetro, le animazioni, le sovrapposizioni e i comportamenti da tastiera li fornisce il pacchetto. Non c'è build, non ci sono dipendenze da installare e funziona con qualunque backend, o senza.
+**Componenti moderni già pronti per le interfacce delle tue applicazioni.** Pulsanti, moduli, tabelle, navigazione, finestre, notifiche, calendario e molto altro: si scrive HTML normale con classi `dpi-*` e attributi `data-dpi-*`, e aspetto, animazioni e comportamenti da tastiera arrivano già fatti. Basta un foglio di stile e uno script: nessuna build, nessuna dipendenza da installare, con qualunque backend o senza.
 
 **[Documentazione interattiva](https://davideprioreschi.github.io/dpi-framework/site/index.html)** ·
 **[Componenti](docs/README.md)** ·
@@ -15,7 +15,7 @@ Le immagini sono catturate in Chromium dalla pagina [`docs/esempi/pagina-complet
 
 ## A cosa serve
 
-È pensato per chi realizza siti, pannelli di amministrazione, strumenti interni e web app e vuole un'interfaccia coerente senza introdurre una toolchain JavaScript.
+A costruire l'interfaccia di un'applicazione senza ridisegnare ogni volta gli stessi pezzi: gestionali, pannelli di amministrazione, aree riservate, strumenti interni, siti e web app. Si parte da componenti coerenti tra loro, già responsivi e con tema chiaro e scuro, e si personalizzano con le variabili CSS.
 
 | Esigenza | Cosa fa DPI |
 | --- | --- |
@@ -25,7 +25,7 @@ Le immagini sono catturate in Chromium dalla pagina [`docs/esempi/pagina-complet
 | Un'interfaccia utilizzabile su telefono | Bottom bar, sheet, tabelle che diventano schede, pannelli a tutta larghezza. |
 | Nessuna richiesta a terze parti | Font, icone e motore ottico sono nel pacchetto. Le risorse esterne sono solo quelle che aggiungi tu (per esempio le tessere di una mappa). |
 
-DPI **non** è un framework applicativo: non ha router, gestione dello stato, accesso ai dati o autenticazione.
+DPI si occupa dell'interfaccia: non ha router, gestione dello stato, accesso ai dati o autenticazione, che restano nella tua applicazione.
 
 ## Caratteristiche principali
 
@@ -324,7 +324,7 @@ Non sono stati fatti test con screen reader o su dispositivi touch reali. La ver
 ## Struttura del repository
 
 ```
-dpi/              il framework da distribuire
+dpi/              la libreria da distribuire
   dpi.css         punto d'ingresso CSS (importa i fogli in css/)
   css/reset.css   base tipografica facoltativa (.dpi-root)
   dpi.js          bundle JavaScript classico

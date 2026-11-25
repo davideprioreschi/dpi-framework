@@ -66,7 +66,7 @@ Il markup va in una pagina che include gli asset DPI (vedi [Installazione](../gu
 
 - `dpi-card`, `dpi-card__header`, `dpi-card__body`, `dpi-card__title`, `dpi-card__footer`.
 - `dpi-card--line`: bordo pieno al posto del tratteggio (`--dpi-dash-color` ne cambia il colore).
-- Le `dpi-card` ricevono materiale e animazioni dal framework: non si scrivono strati ottici.
+- Le `dpi-card` ricevono materiale e animazioni da DPI: non si scrivono strati ottici.
 
 <details>
 <summary>Tutte le classi e gli attributi usati negli esempi del sito</summary>

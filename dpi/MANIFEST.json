@@ -1,6 +1,6 @@
 {
   "name": "dpi",
-  "built_utc": "2026-11-25T09:19:16.537Z",
+  "built_utc": "2026-11-25T09:26:31.537Z",
   "entry": {
     "css": "dpi.css",
     "js": "dpi.js"
@@ -8,8 +8,8 @@
   "requires": "server HTTP qualsiasi; nessun runtime",
   "files": {
     "LEGGIMI.txt": {
-      "bytes": 3387,
-      "sha256": "56598ef6909d51c0138df5b3f4af0f576314ff71a57709a3f6eca7030dd2f84d"
+      "bytes": 3381,
+      "sha256": "581c52625d21120ed1971b2698233128b4cf7a7745d78f8e43ece625256690e0"
     },
     "THIRD-PARTY-LICENSES.txt": {
       "bytes": 10480,
