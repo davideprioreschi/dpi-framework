@@ -1,6 +1,6 @@
 {
   "name": "dpi",
-  "built_utc": "2026-11-25T08:42:31.025Z",
+  "built_utc": "2026-11-25T09:19:16.537Z",
   "entry": {
     "css": "dpi.css",
     "js": "dpi.js"
@@ -196,8 +196,8 @@
       "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
     },
     "icons/lucide/PROVENANCE.json": {
-      "bytes": 20711,
-      "sha256": "153b3467279bbc5f5c121e8d44d8366934f775655cb394f14f525d1b5f3a23e9"
+      "bytes": 20680,
+      "sha256": "b9c721de9e4cfa67d5586e1c6ef2120b30ac84aa10eead35fbf5224ef7f0c9a7"
     },
     "img/grid.svg": {
       "bytes": 1353,

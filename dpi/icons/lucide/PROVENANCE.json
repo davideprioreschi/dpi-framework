@@ -66,7 +66,7 @@
         "x": "4a9cdab38fbb96162e7dace28e33f4ca0e49d8963a6162abc3d4691b7d675117"
     },
     "added_2026_11_19": {
-        "note": "Icone Lucide (stessa famiglia, ISC) estratte dal bundle lucide-react del gestionale MVC per coprire l'interfaccia ricostruita; elementi e attributi limitati alla stessa lista bianca. Hash = sha256 di JSON.stringify(icona) in lucide.json.",
+        "note": "Icone Lucide (stessa famiglia, ISC) estratte dal bundle lucide-react per coprire l'interfaccia; elementi e attributi limitati alla stessa lista bianca. Hash = sha256 di JSON.stringify(icona) in lucide.json.",
         "icons": {
             "activity": "515d34b71336b67c1d2d40b2b17bb5176d7d612ffe8b139fe9e7cbb4fec80268",
             "alarm-clock": "b167deab1885e9e80c8b377e6d222d1bfb4593be1e5eab141998276060d97f14",

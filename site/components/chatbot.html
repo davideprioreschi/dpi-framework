@@ -68,7 +68,7 @@ bot.open();  bot.close();  bot.toggle();  bot.isOpen();  bot.destroy();</code></
 <h2 class="dpi-heading dpi-heading--2" id="limiti" tabindex="-1">Limiti</h2>
 <ul><li><p class="dpi-text">Un solo pannello per pagina è l’uso previsto. Il pulsante può essere interno (in basso a destra) oppure esterno (<code>data-dpi-chatbot-trigger-for</code>, es. nella barra superiore): in entrambi i casi non viene clonato né nascosto e il collo parte dal suo bordo.</p></li><li><p class="dpi-text">Nessun rendering Markdown, nessuno streaming dedicato (si aggiorna il messaggio con updateMessage), nessuna persistenza: sono compiti dell’app.</p></li><li><p class="dpi-text">Il componente non è stato provato in un browser: morph (collo, separazione, ricongiungimento), materiale, tastiera virtuale e sovrapposizioni con la bottom bar vanno verificati a mano.</p></li></ul>
 <script>
-(() => {
+document.addEventListener('DOMContentLoaded', () => {
   const bot = DPI.chatbot.get(document.getElementById('demo-chat'));
   if (!bot) return;
   bot.setSuggestions(['Dimmi qualcosa', 'Mostra una fonte']);
@@ -79,5 +79,5 @@ bot.open();  bot.close();  bot.toggle();  bot.isOpen();  bot.destroy();</code></
       bot.addMessage({ role: 'assistant', text: 'Risposta simulata a «' + e.detail.text + '».', sources: [{ title: 'Documentazione DPI', href: '../index.html' }], feedback: true });
     }, 700);
   });
-})();
+});
 </script><dialog class="dpi-dialog dpi-glass dpi-glass--strong" id="cerca" aria-labelledby="cerca-title" data-dpi-dismissible><form class="dpi-dialog__form" method="dialog"><div class="dpi-dialog__header"><h2 class="dpi-dialog__title" id="cerca-title">Cerca nella documentazione</h2></div><div class="dpi-dialog__body dpi-stack"><div class="dpi-field"><label class="dpi-label" for="dpi-3">Cerca</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><svg class="dpi-icon dpi-icon--md" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></span><input class="dpi-input" id="dpi-3" name="q" type="search" placeholder="Componente, proprietà o guida"></span></span></div><div aria-label="Risultati"><p class="dpi-text dpi-text--muted">Scrivi per cercare componenti, proprietà e guide.</p></div></div><div class="dpi-dialog__footer"></div></form></dialog></main></body></html>
