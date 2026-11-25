@@ -1,0 +1,66 @@
+/*
+ * dpi — caricamento automatico (skeleton) di un CONTENITORE DPI: l'elemento marcato con data-dpi-loading (di solito <main>). js/loading.js decide quando è pronto.
+ *
+ * SENZA JAVASCRIPT il contenuto resta visibile e utilizzabile: il nascondimento esiste solo dentro @media (scripting: enabled) e dentro html:not([data-dpi-ready]).
+ * AFFIDABILITÀ: se lo script non parte (rete, errore, blocco), una animazione CSS di sicurezza (7 s, senza JS) rivela comunque il contenuto: mai un caricamento infinito.
+ * Solo il contenitore viene nascosto: intestazioni, bottom bar e il resto del sito ospite non sono toccati. Niente stili in linea (CSP).
+ * Lo skeleton del primo frame è disegnato dal CSS (maschera di forme morbide + materiale neutro traslucido + riflesso che scorre): nessun markup da scrivere.
+ */
+.dpi-page-skeleton { display: none; }
+.dpi-page-skeleton {
+    position: fixed; inset: 0; z-index: 900; overflow: hidden; pointer-events: none;
+    background: var(--dpi-bg); color: var(--dpi-text);
+    padding-block: var(--dpi-space-4);
+}
+@keyframes dpi-load-failsafe-show { to { visibility: visible; } }
+@keyframes dpi-load-failsafe-hide { to { opacity: 0; visibility: hidden; } }
+@keyframes dpi-load-reveal { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dpi-load-sweep { from { background-position: 150% 0, 0 0; } to { background-position: -50% 0, 0 0; } }
+
+@media (scripting: enabled) {
+    /* primo caricamento: il contenuto del contenitore resta invisibile (ma impaginato: font e immagini iniziano a caricarsi) e al suo posto c'è lo skeleton */
+    html:not([data-dpi-ready]) [data-dpi-loading]:not([data-dpi-loading="off"]) { position: relative; min-height: 16rem; visibility: hidden; animation: dpi-load-failsafe-show 0s linear 7s forwards; }
+    html:not([data-dpi-ready]) [data-dpi-loading]:not([data-dpi-loading="off"])::before {
+        content: ""; position: absolute; inset: 0; visibility: visible; pointer-events: none; padding: var(--dpi-space-4);
+        --dpi-sk: light-dark(rgb(255 255 255 / 0.62), rgb(255 255 255 / 0.08));
+        --dpi-sk-shine: light-dark(rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.12));
+        background-image: linear-gradient(100deg, transparent 30%, var(--dpi-sk-shine) 50%, transparent 70%), linear-gradient(var(--dpi-sk), var(--dpi-sk));
+        background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; background-position: 150% 0, 0 0;
+        -webkit-mask-image: var(--dpi-sk-shapes); mask-image: var(--dpi-sk-shapes); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+        -webkit-mask-size: min(100%, 40rem) auto; mask-size: min(100%, 40rem) auto; -webkit-mask-position: var(--dpi-space-4) var(--dpi-space-4); mask-position: var(--dpi-space-4) var(--dpi-space-4);
+        animation: dpi-load-sweep 1.6s ease-in-out infinite, dpi-load-failsafe-hide 0s linear 7s forwards;
+    }
+    /* pronto: rivelazione breve e continua (la durata minima la gestisce js/loading.js) */
+    html[data-dpi-ready] [data-dpi-loading]:not([data-dpi-loading="off"]) { animation: dpi-load-reveal 0.16s ease-out; }
+}
+:root { --dpi-sk-shapes: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 330'%3E%3Crect width='300' height='30' rx='15'/%3E%3Crect y='56' width='600' height='13' rx='6.5'/%3E%3Crect y='80' width='600' height='13' rx='6.5'/%3E%3Crect y='104' width='380' height='13' rx='6.5'/%3E%3Crect y='142' width='600' height='170' rx='24'/%3E%3C/svg%3E"); }
+@media (prefers-reduced-motion: reduce) { html:not([data-dpi-ready]) [data-dpi-loading]::before { animation: dpi-load-failsafe-hide 0s linear 7s forwards; } }
+@media (forced-colors: active) { html:not([data-dpi-ready]) [data-dpi-loading]::before { background: GrayText; opacity: 0.35; } }
+/* durante una navigazione (js/loading.js clona lo skeleton della pagina e lo mostra se la risposta tarda) */
+.dpi-page-skeleton[data-dpi-nav] { display: block; animation: dpi-load-reveal 0.12s ease-out; }
+/* frammenti dinamici (DPI.loading.fragment) */
+.dpi-skeleton-fragment { display: grid; gap: var(--dpi-space-3); }
+
+/* La bottom bar NON fa parte del contenuto in attesa: non è nascosta, non ha rivelazione né aria-busy, e l'overlay si ferma sopra lo spazio che la pagina le riserva (--dpi-bar-space
+   include l'altezza misurata e la safe-area), così resta visibile e non coperta. */
+:root:has(.dpi-bottombar) .dpi-page-skeleton { inset-block-end: var(--dpi-bar-space); }
+
+/* ---- segnaposto di pagina: classi di forma sopra .dpi-skeleton__bar (materiale in widgets.css) ---- */
+.dpi-sk-stack { display: grid; gap: var(--dpi-space-4); align-content: start; } .dpi-sk-tight { gap: var(--dpi-space-2); }
+.dpi-sk-cluster { display: flex; flex-wrap: wrap; gap: var(--dpi-space-2); align-items: center; }
+.dpi-sk-grid { display: grid; gap: var(--dpi-space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.dpi-sk-card { padding: var(--dpi-space-4); border-radius: var(--dpi-radius-lg); background: light-dark(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.05)); box-shadow: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.05), rgb(255 255 255 / 0.07)); }
+.dpi-sk-nav { display: block; width: calc(100% - 2 * var(--dpi-space-4)); height: 3.25rem; margin: 0 auto var(--dpi-space-4); border-radius: var(--dpi-radius-pill); }
+.dpi-sk-h1 { display: block; height: 2rem; width: 55%; max-width: 28rem; border-radius: var(--dpi-radius-md); }
+.dpi-sk-h2 { display: block; height: 1.4rem; width: 38%; max-width: 20rem; border-radius: var(--dpi-radius-md); }
+.dpi-sk-line { display: block; height: 0.9rem; width: 100%; border-radius: var(--dpi-radius-pill); }
+.dpi-sk-label { display: block; height: 0.8rem; width: 22%; border-radius: var(--dpi-radius-pill); }
+.dpi-sk-field { display: block; height: var(--dpi-control-h); width: 100%; border-radius: var(--dpi-radius-md); }
+.dpi-sk-btn { display: block; height: var(--dpi-control-h); width: 7.5rem; border-radius: var(--dpi-radius-pill); }
+.dpi-sk-chip { display: block; height: 1.6rem; width: 5rem; border-radius: var(--dpi-radius-pill); }
+.dpi-sk-pills { display: block; height: 2.25rem; width: min(100%, 20rem); border-radius: var(--dpi-radius-pill); }
+.dpi-sk-row { display: block; height: 3rem; width: 100%; border-radius: var(--dpi-radius-md); }
+.dpi-sk-block { display: block; height: 9rem; width: 100%; border-radius: var(--dpi-radius-lg); } .dpi-sk-short { height: 5rem; }
+.dpi-sk-img { display: block; aspect-ratio: 4 / 3; width: 100%; max-width: 32rem; border-radius: var(--dpi-radius-lg); }
+.dpi-sk-circle { display: block; width: 3rem; height: 3rem; border-radius: 50%; }
+.dpi-sk-w-md { width: 60%; }

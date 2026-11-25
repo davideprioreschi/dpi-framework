@@ -1,0 +1,132 @@
+/*
+ * dpi — interruttore a lente. Il checkbox nativo (role=switch) sta SOPRA, trasparente: tastiera, form, reset e label restano nativi.
+ * Il binario è stretto; la manopola è una goccia di vetro (drop.js) più grande del binario: sporge sopra e sotto, rifrange il fondale e
+ * una copia del binario (testo/icone), si allunga quando viene trascinata e si assesta con un rimbalzo.
+ * Dimensioni in px senza unità (token) perché JS le legge per calcolare la forma di riposo.
+ */
+.dpi-check--switch { gap: var(--dpi-space-3); }
+.dpi-toggle {
+    --dpi-tw: 78; --dpi-th: 30; --dpi-knob-w: 46; --dpi-knob-h: 42;
+    position: relative; display: inline-block; flex: none; isolation: isolate; cursor: pointer;
+    width: calc(var(--dpi-tw) * 1px); height: calc(var(--dpi-th) * 1px); margin-block: 8px;
+    touch-action: pan-y; -webkit-tap-highlight-color: transparent; user-select: none;
+}
+.dpi-toggle--text { --dpi-tw: 136; --dpi-th: 36; --dpi-knob-w: 56; --dpi-knob-h: 52; }
+.dpi-toggle__input {
+    position: absolute; inset: 0; z-index: 5; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: inherit;
+    appearance: none; -webkit-appearance: none;
+}
+.dpi-toggle__track {
+    position: absolute; inset: 0; z-index: -1; border-radius: var(--dpi-radius-pill);
+    background: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.1));
+    box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.2), inset 0 -1px 1px rgb(255 255 255 / 0.25), 0 1px 0 rgb(255 255 255 / 0.5);
+    color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-medium);
+}
+.dpi-toggle__txt { position: absolute; top: 50%; translate: 0 -50%; transition: opacity var(--dpi-dur) ease; white-space: nowrap; }
+.dpi-toggle__txt--off { right: 16px; opacity: 1; }
+.dpi-toggle__txt--on { left: 16px; opacity: 0; }
+.dpi-toggle__input:checked ~ .dpi-toggle__track .dpi-toggle__txt--off { opacity: 0; }
+.dpi-toggle__input:checked ~ .dpi-toggle__track .dpi-toggle__txt--on { opacity: 1; }
+/* stato sull'HOST (data-dpi-checked, sincronizzato da toggle.js): governa anche i testi della COPIA del binario, dove il checkbox non esiste */
+.dpi-toggle[data-dpi-checked] .dpi-toggle__txt--off { opacity: 0; }
+.dpi-toggle[data-dpi-checked] .dpi-toggle__txt--on { opacity: 1; }
+.dpi-check:has(.dpi-toggle__input:disabled) { opacity: 0.55; cursor: not-allowed; }
+.dpi-toggle__input:focus-visible ~ .dpi-toggle__track { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 3px; }
+
+/* manopola: senza JS è un disco bianco; con JS (data-dpi-lens) il vetro lo disegna la goccia e qui resta solo l'icona */
+.dpi-toggle__knob {
+    position: absolute; z-index: 3; display: grid; place-items: center; pointer-events: none; color: var(--dpi-text);
+    left: 2px; top: calc((var(--dpi-th) - var(--dpi-knob-h)) * 0.5px);
+    width: calc(var(--dpi-knob-w) * 1px); height: calc(var(--dpi-knob-h) * 1px); border-radius: var(--dpi-radius-pill);
+    background: #fff; box-shadow: var(--dpi-shadow-sm); transition: translate var(--dpi-dur) var(--dpi-ease);
+}
+.dpi-toggle__input:checked ~ .dpi-toggle__knob { translate: calc((var(--dpi-tw) - var(--dpi-knob-w) - 4) * 1px) 0; }
+.dpi-toggle[data-dpi-lens] .dpi-toggle__knob { background: none; box-shadow: none; transition: none; translate: none; }
+.dpi-toggle__ico { position: absolute; display: grid; place-items: center; transition: opacity var(--dpi-dur) ease, scale var(--dpi-dur) ease; }
+.dpi-toggle__ico .dpi-icon { width: 1.35rem; height: 1.35rem; }
+.dpi-toggle__ico--on, .dpi-toggle__input:checked ~ .dpi-toggle__knob .dpi-toggle__ico--off { opacity: 0; scale: 0.5; }
+.dpi-toggle__input:checked ~ .dpi-toggle__knob .dpi-toggle__ico--on { opacity: 1; scale: 1; }
+.dpi-toggle > .dpi-drop__shadow { z-index: 0; }
+.dpi-toggle > .dpi-drop__stage { z-index: 1; }
+.dpi-toggle > .dpi-drop__tint { z-index: 2; background: transparent; }
+
+/*
+ * TOGGLE DEL TEMA (.dpi-toggle--theme, dalla proprietà theme): Liquid Glass come la bottom bar. Il binario è una superficie TRASLUCIDA (bianca in chiaro, scura in scuro) con la sua
+ * sfocatura del fondale e un riflesso discreto: niente grigio fumo, niente inset scuro. La manopola è la lente di drop.js (stessi parametri della barra: backdrop reale in Chromium,
+ * altrimenti stage con fondo che continua il materiale del binario) e non diventa mai piatta: rim, ombra morbida e luce del movimento sono quelli delle gocce.
+ */
+.dpi-toggle--theme { --dpi-toggle-tint: light-dark(rgb(255 255 255 / 0.62), rgb(34 34 38 / 0.5)); --dpi-drop-base: var(--dpi-toggle-tint); }
+.dpi-toggle--theme .dpi-toggle__track {
+    background: var(--dpi-toggle-tint);
+    -webkit-backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5);
+    box-shadow: var(--dpi-drop-rim), inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.1)), 0 6px 12px -8px light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.5));
+}
+.dpi-toggle--theme > .dpi-drop__lens { z-index: 2; }
+.dpi-toggle--theme > .dpi-drop__shadow { box-shadow: 0 8px 14px -8px rgb(0 0 0 / 0.28), 0 1px 2px rgb(0 0 0 / 0.1); }
+.dpi-toggle--theme > .dpi-drop__tint { box-shadow: var(--dpi-drop-rim); }
+/* la copia del binario che la lente rifrange (modalità con stage) non porta il suo fondo: altrimenti la lente erediterebbe un velo grigio o doppio */
+.dpi-toggle--theme .dpi-drop__clone .dpi-toggle__track { background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.dpi-toggle--theme .dpi-toggle__ico .dpi-icon { stroke-width: 2; }
+/* il fallback blur vale SOLO senza lente ottica né stage (la presenza effettiva, non il nome della modalità): con una lente montata il velo resta trasparente con rim e riflesso */
+.dpi-toggle--theme[data-dpi-glass-mode="blur"]:not(:has(> .dpi-drop__lens, > .dpi-drop__stage)) > .dpi-drop__tint { background: var(--dpi-glass-tint-blur); -webkit-backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); }
+/* con lente o stage effettivamente presenti la regola globale [data-dpi-glass-mode="blur"] > .dpi-drop__tint (drop.css) va ANNULLATA qui: il velo resta trasparente (rim e riflesso restano) */
+.dpi-toggle--theme[data-dpi-glass-mode="blur"]:has(> .dpi-drop__lens, > .dpi-drop__stage) > .dpi-drop__tint { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.dpi-toggle--theme[data-dpi-glass-mode="solid"] > .dpi-drop__tint { background: var(--dpi-surface); box-shadow: inset 0 0 0 1px var(--dpi-line); }
+.dpi-toggle--theme[data-dpi-glass-mode="solid"] > .dpi-drop__shadow { box-shadow: none; }
+/* solid (anche da configurazione dell'applicazione, non solo dalle media query): binario pieno, nessuna sfocatura */
+.dpi-toggle--theme[data-dpi-glass-mode="solid"] .dpi-toggle__track { background: var(--dpi-surface); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: inset 0 0 0 1px var(--dpi-line); }
+@media (prefers-reduced-transparency: reduce) {
+    .dpi-toggle--theme .dpi-toggle__track { background: var(--dpi-surface); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: inset 0 0 0 1px var(--dpi-line); }
+}
+
+/*
+ * PRIMA DELL'INIZIALIZZAZIONE del toggle del tema (solo .dpi-toggle--theme). Due indicatori distinti:
+ *   data-dpi-lens  = la GEOMETRIA della manopola è gestita da JS (left/top/width/height); la posizione via CSS vale solo finché manca;
+ *   data-dpi-ready = toggle COMPLETAMENTE inizializzato: checkbox sincronizzato, data-dpi-checked corretto, posizione impostata, materiale ottico montato e disegnato (toggle.js).
+ * Finché non è pronto, manopola (disco di vetro del tema, mai il disco bianco), colore dell'icona, sole/luna e testi sono quelli del TEMA EFFETTIVO calcolato dal CSS: data-dpi-theme
+ * esplicito oppure, se assente (auto), prefers-color-scheme. Nessuna transizione di posizione, opacity, scale o colore: all'avvio i valori sono già quelli finali; le animazioni
+ * approvate valgono dalle interazioni successive.
+ */
+.dpi-toggle--theme:not([data-dpi-ready]) :is(.dpi-toggle__knob, .dpi-toggle__ico, .dpi-toggle__txt) { transition: none; }
+.dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob { background: var(--dpi-toggle-tint); color: var(--dpi-text); box-shadow: var(--dpi-drop-rim), 0 2px 6px rgb(0 0 0 / 0.16); }
+:root[data-dpi-theme="dark"] .dpi-toggle--theme:not([data-dpi-lens]) .dpi-toggle__knob { translate: calc((var(--dpi-tw) - var(--dpi-knob-w) - 4) * 1px) 0; }
+:root[data-dpi-theme="dark"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--off { opacity: 0; scale: 0.5; }
+:root[data-dpi-theme="dark"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--on { opacity: 1; scale: 1; }
+:root[data-dpi-theme="dark"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--off { opacity: 0; }
+:root[data-dpi-theme="dark"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--on { opacity: 1; }
+:root[data-dpi-theme="light"] .dpi-toggle--theme:not([data-dpi-lens]) .dpi-toggle__knob { translate: 0 0; }
+:root[data-dpi-theme="light"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--off { opacity: 1; scale: 1; }
+:root[data-dpi-theme="light"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--on { opacity: 0; scale: 0.5; }
+:root[data-dpi-theme="light"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--off { opacity: 1; }
+:root[data-dpi-theme="light"] .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--on { opacity: 0; }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-lens]) .dpi-toggle__knob { translate: calc((var(--dpi-tw) - var(--dpi-knob-w) - 4) * 1px) 0; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--off { opacity: 0; scale: 0.5; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--on { opacity: 1; scale: 1; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--off { opacity: 0; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--on { opacity: 1; }
+}
+@media not (prefers-color-scheme: dark) {
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-lens]) .dpi-toggle__knob { translate: 0 0; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--off { opacity: 1; scale: 1; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob .dpi-toggle__ico--on { opacity: 0; scale: 0.5; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--off { opacity: 1; }
+    :root:not([data-dpi-theme]) .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__track .dpi-toggle__txt--on { opacity: 0; }
+}
+@media (prefers-reduced-transparency: reduce) {
+    .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob { background: var(--dpi-surface); box-shadow: inset 0 0 0 1px var(--dpi-line); }
+}
+@media (forced-colors: active) {
+    .dpi-toggle__track { border: 2px solid ButtonText; background: Canvas; box-shadow: none; }
+    /* i colori di sistema vincono sulle regole dei materiali: stessa specificità (o maggiore) di quelle per blur, solid e lente */
+    .dpi-toggle--theme .dpi-toggle__track,
+    .dpi-toggle--theme[data-dpi-glass-mode="solid"] .dpi-toggle__track { -webkit-backdrop-filter: none; backdrop-filter: none; background: Canvas; box-shadow: none; }
+    .dpi-toggle--theme > .dpi-drop__tint,
+    .dpi-toggle--theme[data-dpi-glass-mode="blur"] > .dpi-drop__tint,
+    .dpi-toggle--theme[data-dpi-glass-mode="blur"]:not(:has(> .dpi-drop__lens, > .dpi-drop__stage)) > .dpi-drop__tint,
+    .dpi-toggle--theme[data-dpi-glass-mode="blur"]:has(> .dpi-drop__lens, > .dpi-drop__stage) > .dpi-drop__tint,
+    .dpi-toggle--theme[data-dpi-glass-mode="solid"] > .dpi-drop__tint { background: Canvas; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; border: 1px solid CanvasText; }
+    .dpi-toggle__knob { background: ButtonText; }
+    .dpi-toggle--theme:not([data-dpi-ready]) .dpi-toggle__knob { background: ButtonText; box-shadow: none; }
+    .dpi-toggle[data-dpi-lens] .dpi-toggle__knob { background: none; }
+}

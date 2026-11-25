@@ -1,0 +1,162 @@
+/*
+ * dpi — MATERIALE condiviso delle famiglie con superficie CSS (senza lente per elemento): campi di form, checkbox/radio, badge, tabelle,
+ * card, pannelli. Un solo linguaggio: vetro NEUTRO e quasi trasparente, bordo luminoso direzionale (luce dall'alto a sinistra), corpo
+ * leggermente in ombra in basso, ombra morbida. Il colore semantico compare solo dove serve (errore, selezione, stato).
+ * Nessun carattere e nessuna cella è una lente indipendente: le superfici sono condivise e gerarchiche (pagina → card → campo).
+ * Modalità opaca (preferenze di accessibilità, `surface: solid`, `Material enabled=false`): tutte tornano superfici solide.
+ */
+:root:not([data-dpi-surface="solid"]) {
+    --_field-bg: light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.07));
+    --_field-bd: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.16));
+    --_field-sh: inset 0 2px 4px rgb(0 0 0 / 0.08), inset 0 -1px 0 rgb(255 255 255 / 0.35), 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.05));
+}
+
+/* ---------------------------------------------------------------- campi: vetro "scavato" (concavo) */
+:root:not([data-dpi-surface="solid"]) :is(.dpi-input, .dpi-select, .dpi-textarea) {
+    background: var(--_field-bg); border-color: var(--_field-bd); box-shadow: var(--_field-sh);
+    -webkit-backdrop-filter: blur(10px) saturate(1.3); backdrop-filter: blur(10px) saturate(1.3);
+}
+:root:not([data-dpi-surface="solid"]) :is(.dpi-input, .dpi-select, .dpi-textarea):focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 1px; }
+:root:not([data-dpi-surface="solid"]) :is(.dpi-input, .dpi-select, .dpi-textarea):disabled { background: var(--dpi-surface-2); }
+
+/* ---------------------------------------------------------------- checkbox e radio: gocce di vetro piccole (input NATIVI: label, checked, indeterminate, required, gruppi, tastiera, reset)
+   checkbox = squircle, radio = goccia circolare. Stessa luce (anello dinamico via --dpi-light-*), stessa elasticità (molla CSS linear()) dei pulsanti.
+   Nessun contorno blu: la selezione è un velo dell'accento + segno; il focus da tastiera è l'anello neutro (--dpi-focus). */
+.dpi-check > input[type="checkbox"]:not(.dpi-toggle__input), .dpi-check > input[type="radio"] {
+    appearance: none; -webkit-appearance: none; position: relative; display: inline-grid; place-items: center; flex: none;
+    width: 1.5rem; height: 1.5rem; margin: 0; border: 0; border-radius: 0.6rem;
+    background: var(--dpi-drop-body), var(--dpi-drop-tint); box-shadow: var(--dpi-drop-rim), 0 3px 7px -3px rgb(0 0 0 / 0.28); color: var(--dpi-text);
+    transition: scale var(--dpi-dur-release) var(--dpi-ease-spring), background var(--dpi-dur-press) ease, box-shadow var(--dpi-dur-release) var(--dpi-ease-out);
+}
+.dpi-check > input[type="radio"] { border-radius: 50%; }
+.dpi-check > input:is([type="checkbox"], [type="radio"]):not(.dpi-toggle__input):hover { box-shadow: var(--dpi-drop-rim), 0 4px 9px -3px rgb(0 0 0 / 0.34); }
+.dpi-check > input:is([type="checkbox"], [type="radio"]):not(.dpi-toggle__input):active { scale: 0.86; transition-duration: var(--dpi-dur-press), var(--dpi-dur-press), var(--dpi-dur-press); }
+.dpi-check > input:is([type="checkbox"], [type="radio"]):not(.dpi-toggle__input)::after {
+    content: ""; grid-area: 1 / 1; opacity: 0; scale: 0.3; transition: opacity var(--dpi-dur-press) ease, scale var(--dpi-dur-release) var(--dpi-ease-spring), rotate var(--dpi-dur-release) var(--dpi-ease-spring);
+}
+.dpi-check > input[type="checkbox"]:not(.dpi-toggle__input)::after { width: 0.38rem; height: 0.72rem; margin-top: -0.12rem; border: solid currentColor; border-width: 0 2.4px 2.4px 0; rotate: 35deg; color: color-mix(in srgb, var(--dpi-accent) 80%, var(--dpi-text)); }
+.dpi-check > input[type="radio"]::after { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: color-mix(in srgb, var(--dpi-accent) 80%, var(--dpi-text)); }
+.dpi-check > input:is([type="checkbox"], [type="radio"]):not(.dpi-toggle__input):checked { background: var(--dpi-drop-body), color-mix(in srgb, var(--dpi-accent) 20%, var(--dpi-drop-tint)); }
+.dpi-check > input:is([type="checkbox"], [type="radio"]):not(.dpi-toggle__input):checked::after { opacity: 1; scale: 1; rotate: 45deg; }
+.dpi-check > input[type="radio"]:checked::after { rotate: 0deg; }
+/* stato misto (indeterminate): trattino; la proprietà si imposta da JS (data-dpi-indeterminate) perché HTML non la ammette */
+.dpi-check > input[type="checkbox"]:indeterminate:not(.dpi-toggle__input) { background: var(--dpi-drop-body), color-mix(in srgb, var(--dpi-accent) 20%, var(--dpi-drop-tint)); }
+.dpi-check > input[type="checkbox"]:indeterminate:not(.dpi-toggle__input)::after { opacity: 1; scale: 1; width: 0.72rem; height: 0; margin: 0; border-width: 2.4px 0 0 0; border-radius: 2px; rotate: 0deg; }
+.dpi-check > input:is([type="checkbox"], [type="radio"]):not(.dpi-toggle__input):disabled { opacity: 0.5; }
+@media (prefers-reduced-motion: reduce) { .dpi-check > input:is([type="checkbox"], [type="radio"]):active { scale: 1; } }
+
+/* ---------------------------------------------------------------- badge ed etichette con superficie */
+:root:not([data-dpi-surface="solid"]) .dpi-badge {
+    background: color-mix(in srgb, var(--_c, var(--dpi-text-muted)) 14%, light-dark(rgb(255 255 255 / 0.45), rgb(255 255 255 / 0.08)));
+    box-shadow: inset 1px 1px 1px -1px rgb(255 255 255 / 0.9), inset 0 0 0 1px rgb(255 255 255 / 0.25), 0 1px 2px rgb(0 0 0 / 0.08);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+
+/* ---------------------------------------------------------------- card e pannelli: superfici condivise (vetro statico) */
+.dpi-card.dpi-glass[data-dpi-glass-mode="blur"], .dpi-card.dpi-glass[data-dpi-glass-mode="refraction"], .dpi-card.dpi-glass[data-dpi-glass-mode="nested"] {
+    background: var(--dpi-glass-tint-blur); border-color: transparent; box-shadow: var(--dpi-drop-rim), var(--dpi-drop-shadow);
+}
+.dpi-card.dpi-glass[data-dpi-glass-mode="blur"] { -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); }
+.dpi-card.dpi-glass .dpi-card__header, .dpi-card.dpi-glass .dpi-card__footer { border-color: light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.12)); }
+
+/* ---------------------------------------------------------------- TRATTEGGIO SOTTILE: card e separatori strutturali
+ * Variabili riutilizzabili (anche dalle applicazioni):
+ *   --dpi-dash-color        colore del tratteggio (neutro, chiaro/scuro)
+ *   --dpi-separator-dash    scorciatoia di `border` per i separatori: `border-top: var(--dpi-separator-dash)` (1px, tratteggiato)
+ *   --dpi-drop-rim-soft     ombreggiatura interna del materiale SENZA l'anello di 1px (--dpi-drop-rim = anello + ombreggiatura): serve dove il contorno lo fa già il bordo
+ * Card (.dpi-card): il BORDO diventa tratteggiato sottile e SOSTITUISCE il contorno ottico (l'anello inset del vetro): un solo contorno, mai due. Materiale, raggio e ombra non cambiano.
+ * Opt-out: .dpi-card--line (bordo pieno come prima). NON è una regola universale: campi, focus, bolle, contorni ottici di gocce/menu/sheet e sagome animate non sono toccati.
+ */
+:root {
+    --dpi-dash-color: light-dark(rgb(0 0 0 / 0.24), rgb(255 255 255 / 0.28));
+    --dpi-separator-dash: 1px dashed var(--dpi-dash-color);
+    --dpi-drop-rim-soft: inset 0 -6px 10px -7px rgb(0 0 0 / 0.07), inset 0 0 14px rgb(0 0 0 / 0.035);
+}
+.dpi-card:not(.dpi-card--line) { border: var(--dpi-separator-dash); }
+.dpi-card.dpi-glass:not(.dpi-card--line)[data-dpi-glass-mode="blur"], .dpi-card.dpi-glass:not(.dpi-card--line)[data-dpi-glass-mode="refraction"], .dpi-card.dpi-glass:not(.dpi-card--line)[data-dpi-glass-mode="nested"] {
+    border: var(--dpi-separator-dash); box-shadow: var(--dpi-drop-rim-soft), var(--dpi-drop-shadow);
+}
+.dpi-card:not(.dpi-card--line) :is(.dpi-card__header, .dpi-card__footer) { border-color: var(--dpi-dash-color); }
+.dpi-card:not(.dpi-card--line) .dpi-card__header { border-bottom-style: dashed; }
+.dpi-card:not(.dpi-card--line) .dpi-card__footer { border-top-style: dashed; }
+@media (forced-colors: active) { .dpi-card:not(.dpi-card--line) { border-color: CanvasText; } }
+
+/* utilità dei separatori strutturali (linee tra sezioni, divisori, bordi tra pannelli): tratteggiati sottili; la direzione segue il verso di scrittura */
+.dpi-divider--dashed { border-top: var(--dpi-separator-dash); }
+.dpi-divider--vertical { align-self: stretch; width: 0; height: auto; min-height: 1em; border: 0; border-inline-start: 1px solid var(--dpi-line); }
+.dpi-divider--vertical.dpi-divider--dashed { border-inline-start: var(--dpi-separator-dash); }
+.dpi-dash-top { border-top: var(--dpi-separator-dash); } .dpi-dash-bottom { border-bottom: var(--dpi-separator-dash); }
+.dpi-dash-start { border-inline-start: var(--dpi-separator-dash); } .dpi-dash-end { border-inline-end: var(--dpi-separator-dash); }
+
+/* ---------------------------------------------------------------- tabelle e selezione delle righe */
+:root:not([data-dpi-surface="solid"]) .dpi-table-wrap {
+    background: var(--dpi-glass-tint-blur); box-shadow: none;
+    -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4);
+}
+/* contenitore tratteggiato leggero (variante riutilizzabile, neutra, chiaro/scuro): un solo contorno, nessuna griglia sulle celle */
+.dpi-table-wrap--dashed { border: 1px dashed light-dark(rgb(0 0 0 / 0.22), rgb(255 255 255 / 0.26)); }
+.dpi-table-wrap--solid { border: 1px solid light-dark(rgb(0 0 0 / 0.12), rgb(255 255 255 / 0.16)); }
+:root:not([data-dpi-surface="solid"]) .dpi-table th, :root:not([data-dpi-surface="solid"]) .dpi-table td { border-bottom-color: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.1)); }
+:root:not([data-dpi-surface="solid"]) .dpi-table--striped tbody tr:nth-child(even) { background: light-dark(rgb(0 0 0 / 0.03), rgb(255 255 255 / 0.04)); }
+.dpi-table tbody tr { transition: background var(--dpi-dur-press) ease; }
+.dpi-table tbody tr:hover { background: light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.07)); }
+.dpi-table tbody tr[aria-selected="true"], .dpi-table tbody tr:has(input:checked) { background: color-mix(in srgb, var(--dpi-accent) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dpi-accent) 35%, transparent); }
+
+/* ---------------------------------------------------------------- navigazione: controlli di vetro con icona, non link blu sottolineati.
+   Restano <a href> (nuova scheda, cronologia, senza JS); l'aspetto è quello di un controllo. */
+:root:not([data-dpi-surface="solid"]) .dpi-navbar__link {
+    border-radius: var(--dpi-radius-pill); color: var(--dpi-text); text-decoration: none; padding-inline: 0.95rem;
+}
+:root:not([data-dpi-surface="solid"]) .dpi-navbar__link:hover { background: var(--dpi-drop-body), var(--dpi-drop-tint); box-shadow: var(--dpi-drop-rim); }
+:root:not([data-dpi-surface="solid"]) .dpi-navbar__link[aria-current="page"] { background: var(--dpi-drop-body), var(--dpi-drop-tint); box-shadow: var(--dpi-drop-rim), var(--dpi-drop-shadow); color: var(--dpi-text); }
+.dpi-menu__item[href] { text-decoration: none; }
+
+/* indicatore del segmented: stessa convessità delle gocce (corpo, bordo luminoso, ombra) */
+.dpi-segmented__indicator { background: var(--dpi-drop-body), light-dark(rgb(255 255 255 / 0.92), rgb(255 255 255 / 0.06)); box-shadow: var(--dpi-drop-rim), var(--dpi-drop-shadow); }
+
+/* Fondale PIATTO (backdrop_tone=neutral): sfocare un colore uniforme non cambia nulla e costa un filtro per superficie. Il corpo del materiale resta (tint). */
+.dpi-bg-flat :is(.dpi-card, .dpi-table-wrap, .dpi-input, .dpi-select, .dpi-textarea, .dpi-badge, .dpi-card.dpi-glass, .dpi-menu.dpi-glass, dialog.dpi-glass),
+.dpi-bg-flat [data-dpi-glass-mode="blur"] > .dpi-drop__tint { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+
+/* menu: la lista sta sopra gli strati della goccia; durante opening/closing il pannello non riceve il puntatore (la forma non è ancora quella finale) */
+.dpi-menu > .dpi-menu__list { position: relative; z-index: 1; }
+.dpi-dropdown[data-dpi-state="opening"]:not([data-dpi-menu-visible]) > .dpi-menu, .dpi-dropdown[data-dpi-state="closing"] > .dpi-menu { pointer-events: none; }
+.dpi-menu { border-radius: var(--dpi-menu-radius, 28px); }
+/* apertura/chiusura: il trigger resta cliccabile SOPRA il pannello (che collassa sul suo rettangolo) per invertire il gesto */
+.dpi-dropdown:is([data-dpi-state="opening"], [data-dpi-state="closing"]) > [data-dpi-dropdown-trigger] { position: relative; z-index: calc(var(--dpi-z-dropdown) + 1); }
+
+/* TRASFORMAZIONE trigger → menu (data-dpi-morph, impostato da dropdown.js): il menu ancora il proprio bordo al trigger e lo ricopre; la superficie nasce
+   dalla geometria del pulsante. Appena il gesto parte il materiale del trigger lascia il posto a quello del menu (una sola superficie visibile alla volta: nessuna doppia
+   superficie); il contenuto del trigger si dissolve (--dpi-menu-t) mentre quello del menu si rivela. A menu chiuso il trigger torna intatto. */
+.dpi-dropdown[data-dpi-morph] > .dpi-menu {
+    inset-block-start: var(--dpi-menu-top, 0px);
+    min-width: max(min(16rem, calc(100vw - 24px)), var(--dpi-menu-trigger-w, 0px));
+    min-height: var(--dpi-menu-trigger-h, 0px);
+}
+.dpi-dropdown[data-dpi-morph][data-dpi-placement="top"] > .dpi-menu { inset-block-start: auto; inset-block-end: var(--dpi-menu-bottom, 0px); }
+.dpi-dropdown[data-dpi-morph]:not([data-dpi-state="closed"]) > [data-dpi-dropdown-trigger] { opacity: var(--dpi-menu-t, 0); transition: none; }
+
+/* MATERIALE del menu: OPACO, senza lente, stage, copia del fondale né backdrop-filter. Il velo della goccia (la forma che si anima) è il corpo pieno: fondo + sfumatura lieve
+   del colore di base (più chiaro in alto, più scuro in basso: bombatura) + contorno sottile + rilievo interno; l'ombra è quella morbida del menu. Nessun riflesso del bordo. */
+.dpi-menu > .dpi-drop__tint {
+    background: radial-gradient(130% 150% at 50% 30%, var(--dpi-menu-hi) 0%, var(--dpi-menu-bg) 58%, var(--dpi-menu-lo) 100%), var(--dpi-menu-bg);
+    box-shadow: inset 0 0 0 1px var(--dpi-menu-border), var(--dpi-menu-relief);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.dpi-menu > .dpi-drop__tint::before { content: none; }
+.dpi-menu > .dpi-drop__shadow { box-shadow: var(--dpi-menu-shadow); }
+/* UNA SOLA SUPERFICIE. A menu chiuso il trigger di QUESTO menu (non gli altri pulsanti) è dipinto con lo stesso materiale opaco del pannello (stessi token, stessa bombatura, stesso
+   contorno, stessa ombra, nessuna lente): è identico al pannello collassato sulla sua forma. Dall'avvio del gesto fino alla chiusura completa il materiale del trigger NON si dipinge
+   più: la superficie visibile è soltanto quella del pannello, che parte dalla forma del pulsante e si espande (e viceversa). Nessun avvicendamento a dissolvenza: due superfici identiche
+   e sovrapposte nello stesso fotogramma, mai entrambe visibili. Il controllo HTML del trigger resta area interattiva e riferimento accessibile; il suo contenuto cede il posto alle voci. */
+.dpi-dropdown[data-dpi-morph] > [data-dpi-dropdown-trigger] > :is(.dpi-drop__stage, .dpi-drop__lens) { display: none; }
+.dpi-dropdown[data-dpi-morph] > [data-dpi-dropdown-trigger] > .dpi-drop__tint {
+    background: radial-gradient(130% 150% at 50% 30%, var(--dpi-menu-hi) 0%, var(--dpi-menu-bg) 58%, var(--dpi-menu-lo) 100%), var(--dpi-menu-bg);
+    box-shadow: inset 0 0 0 1px var(--dpi-menu-border), var(--dpi-menu-relief);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.dpi-dropdown[data-dpi-morph] > [data-dpi-dropdown-trigger] > .dpi-drop__tint::before { content: none; }
+.dpi-dropdown[data-dpi-morph] > [data-dpi-dropdown-trigger] > .dpi-drop__shadow { box-shadow: var(--dpi-menu-shadow); }
+.dpi-dropdown[data-dpi-morph] > [data-dpi-dropdown-trigger] { color: var(--dpi-menu-fg); }
+.dpi-dropdown[data-dpi-morph]:not([data-dpi-state="closed"]) > [data-dpi-dropdown-trigger] > :is(.dpi-drop__tint, .dpi-drop__shadow) { visibility: hidden; }
+@media (forced-colors: active) { .dpi-menu > .dpi-drop__tint { background: Canvas; box-shadow: none; border: 1px solid CanvasText; } .dpi-menu > .dpi-drop__shadow { display: none; } }

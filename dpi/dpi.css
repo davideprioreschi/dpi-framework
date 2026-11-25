@@ -1,0 +1,34 @@
+/* dpi — punto d'ingresso CSS. Inclusione: <link rel="stylesheet" href="dpi/dpi.css"> (percorso della TUA cartella dpi; i riferimenti interni sono relativi)
+   Il reset NON è incluso: aggiungi esplicitamente css/reset.css se vuoi la base tipografica (.dpi-root).
+   motion.css va per ULTIMO: è lo strato dei preset di movimento condivisi. */
+@import url("./css/fonts.css");
+@import url("./css/tokens.css");
+@import url("./css/layout.css");
+@import url("./css/components.css");
+@import url("./css/bottombar.css");
+@import url("./css/glass.css");
+@import url("./css/drop.css");
+@import url("./css/toggle.css");
+@import url("./css/expand.css");
+@import url("./css/material.css");
+@import url("./css/chatbot.css");
+@import url("./css/notify.css");
+@import url("./css/barsearch.css");
+@import url("./css/utilities.css");
+@import url("./css/widgets.css");
+@import url("./css/harmony.css");
+@import url("./css/forms.css");
+@import url("./css/richtext.css");
+@import url("./css/pickers.css");
+@import url("./css/overflow.css");
+@import url("./css/diff.css");
+@import url("./css/colorpicker.css");
+@import url("./css/audio.css");
+@import url("./css/chrome.css");
+@import url("./css/status.css");
+@import url("./css/badge.css");
+@import url("./css/metric.css");
+@import url("./css/progress.css");
+@import url("./css/loading.css");
+@import url("./css/glass-compat.css");
+@import url("./css/motion.css");

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <!-- Scena neutra per valutare la rifrazione: linee e cerchi a bassa saturazione su fondo chiaro. Opera del progetto (nessuna fonte esterna). -->
+  <rect width="1600" height="900" fill="#e4e5e9"/>
+  <g stroke="#b7bac5" stroke-width="1.2" opacity="0.9">
+    <path d="M0 45H1600M0 135H1600M0 225H1600M0 315H1600M0 405H1600M0 495H1600M0 585H1600M0 675H1600M0 765H1600M0 855H1600"/>
+    <path d="M45 0V900M135 0V900M225 0V900M315 0V900M405 0V900M495 0V900M585 0V900M675 0V900M765 0V900M855 0V900M945 0V900M1035 0V900M1125 0V900M1215 0V900M1305 0V900M1395 0V900M1485 0V900M1575 0V900"/>
+  </g>
+  <g fill="none" stroke="#8d93a3" stroke-width="2.2">
+    <circle cx="420" cy="360" r="60"/><circle cx="420" cy="360" r="120"/><circle cx="420" cy="360" r="180"/><circle cx="420" cy="360" r="240"/>
+    <circle cx="1180" cy="520" r="70"/><circle cx="1180" cy="520" r="140"/><circle cx="1180" cy="520" r="210"/><circle cx="1180" cy="520" r="280"/>
+  </g>
+  <g fill="#6d7486"><circle cx="420" cy="360" r="8"/><circle cx="1180" cy="520" r="8"/><circle cx="800" cy="200" r="5"/><circle cx="260" cy="700" r="5"/><circle cx="1400" cy="160" r="5"/></g>
+  <path d="M0 640C260 560 460 700 760 620S1260 540 1600 640" fill="none" stroke="#7b8294" stroke-width="3"/>
+</svg>

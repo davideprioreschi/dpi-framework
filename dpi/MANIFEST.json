@@ -1,0 +1,223 @@
+{
+  "name": "dpi",
+  "built_utc": "2026-11-24T15:44:18.773Z",
+  "entry": {
+    "css": "dpi.css",
+    "js": "dpi.js"
+  },
+  "requires": "server HTTP qualsiasi; nessun runtime",
+  "files": {
+    "LEGGIMI.txt": {
+      "bytes": 3069,
+      "sha256": "46b0475fc2ab7b07f98009dae3f60fb47977b0e7ae4b84ffbe17d05143053af4"
+    },
+    "THIRD-PARTY-LICENSES.txt": {
+      "bytes": 10480,
+      "sha256": "0a53ee046b9d2c620193f6fc6a7b83e8891ddddcf3e2ee72c2ebf1eebc9979e8"
+    },
+    "css/audio.css": {
+      "bytes": 3039,
+      "sha256": "f07f0d75d5947af79d139a8ae36e71f94138b7da233d21fada8db97efc7d9d7f"
+    },
+    "css/badge.css": {
+      "bytes": 1477,
+      "sha256": "1af33366aa7ebf5326f8da268adbac1dcd714647634937c3ea0834dd1e501f33"
+    },
+    "css/barsearch.css": {
+      "bytes": 6587,
+      "sha256": "d2909c3d3c5538160b76c33975604043b90dc2ca5236d1d4c6c691310046534e"
+    },
+    "css/bottombar.css": {
+      "bytes": 11702,
+      "sha256": "5aaaf899885b77e6ae6ff43cae46905fd0ead251e09452368a03beda6d09252b"
+    },
+    "css/chatbot.css": {
+      "bytes": 14731,
+      "sha256": "4995b23e63650432658fef7d96b9e27d5cf93445a7b6b145817fb219eb61d4e8"
+    },
+    "css/chrome.css": {
+      "bytes": 1307,
+      "sha256": "7cbcd130e51608d710ade2460e149c8e10c3de46ce2244472a9d618871bf7549"
+    },
+    "css/colorpicker.css": {
+      "bytes": 5613,
+      "sha256": "7405efb82304c2fcb0ec9c1cd3659daa8a1f9ba5f87992a0d7b8f9a08312971f"
+    },
+    "css/components.css": {
+      "bytes": 30556,
+      "sha256": "e23388531bdbec9553307375665709a2e08d54fab479e389ae4f76b74cbe5eec"
+    },
+    "css/diff.css": {
+      "bytes": 3929,
+      "sha256": "87662944b11bf106aeb7dcf091740793db3151dffa08ed5553d72a1e266ac3eb"
+    },
+    "css/drop.css": {
+      "bytes": 5678,
+      "sha256": "cf2fa973b32365a817ec52fb9f08c3135b12859a177108c1276daf739aaf1bd5"
+    },
+    "css/expand.css": {
+      "bytes": 5864,
+      "sha256": "98a5ad60da696380c65a42f5b979ab1a3cc422897c896d923cbedbee2733e0f4"
+    },
+    "css/fonts.css": {
+      "bytes": 2925,
+      "sha256": "b78c1f651a99cb1cab61129e68ad502a4b6d70834b0ca8a888762be2a2880af7"
+    },
+    "css/forms.css": {
+      "bytes": 29061,
+      "sha256": "b92b1e4b415a35dff9cb6cc92626f7927e4d4d278640b58fba4184244547f27c"
+    },
+    "css/glass-compat.css": {
+      "bytes": 4841,
+      "sha256": "d7abf4dc9f0dc971e2d6e0bc7493dbd17b90217f755ab76539d7907dd9c7e4dc"
+    },
+    "css/glass.css": {
+      "bytes": 7266,
+      "sha256": "077eef427b934dfe6dc1fe0e7ea126c22120f61b81bfdc5f2ad3bf81924337b3"
+    },
+    "css/harmony.css": {
+      "bytes": 7082,
+      "sha256": "b07fa5d4bcd879efd0fb12ba44327dd443eb1f0194a11df0f1f46bb087e742de"
+    },
+    "css/layout.css": {
+      "bytes": 6266,
+      "sha256": "e29d7a0203e6a38e0d791c49664894289929a434a361ea79104b4e4fe9d8fe96"
+    },
+    "css/loading.css": {
+      "bytes": 6633,
+      "sha256": "5ef115502e473b019d54adedc34b9c4eac9b3199777ffe528cce27de409923ca"
+    },
+    "css/material.css": {
+      "bytes": 16492,
+      "sha256": "4f0fecee9b3747e75e2d825f79c31a6008d8f79931656742c1173d5092a82144"
+    },
+    "css/metric.css": {
+      "bytes": 4269,
+      "sha256": "ac9354ee33225678699348dadfbcb23cfd3fcbb6a4038d451f054d64271ac1ce"
+    },
+    "css/motion.css": {
+      "bytes": 7574,
+      "sha256": "041e0ad462c588b0f94b003167d0e20c4612b3290c38b74635eef521e9107599"
+    },
+    "css/notify.css": {
+      "bytes": 7408,
+      "sha256": "ae8e8fa177ae083d8deeb64a7d1759c0f720e895e258d1fab2ba316e5813b68e"
+    },
+    "css/overflow.css": {
+      "bytes": 1938,
+      "sha256": "c9641757896f7db317111baafa135dd66586c019302a5cfb63ef2b92a78f2ab4"
+    },
+    "css/pickers.css": {
+      "bytes": 4074,
+      "sha256": "1ad2486ec9b00d944d6b0ba06c3f5f71d9645a96efdf9dae1386717c74542c4b"
+    },
+    "css/progress.css": {
+      "bytes": 4281,
+      "sha256": "23a7ce1165b6abe229eaa5ffe9b0277fe34aedfbb6152b49f876eb124e6c6bc1"
+    },
+    "css/reset.css": {
+      "bytes": 1275,
+      "sha256": "799994142c0e3f6a0720400701373cea075aaaa8760261c010d5c8b50a83c5a4"
+    },
+    "css/richtext.css": {
+      "bytes": 5028,
+      "sha256": "b34a8d202899e6eb88bce564274e0ae8cb1d8d5d53956de78a20545b47f960b2"
+    },
+    "css/status.css": {
+      "bytes": 1816,
+      "sha256": "8a7d48544bcb82ca32f4645508fb7212acf9ee0d2595cb78272c66ca11c9a334"
+    },
+    "css/toggle.css": {
+      "bytes": 12515,
+      "sha256": "024fbcceed6664ceee396b88a50a9c579cadba51015162f67550a54b7109d15a"
+    },
+    "css/tokens.css": {
+      "bytes": 7883,
+      "sha256": "1e4f4db8f44fc5c3541850f051465439f4827c1cb6a238d9a0778ae0ebf4a745"
+    },
+    "css/utilities.css": {
+      "bytes": 13734,
+      "sha256": "745650a21b2f810e45eba8f3e85f75540164cccff7d9f25a49e675f3d239fb44"
+    },
+    "css/widgets.css": {
+      "bytes": 35789,
+      "sha256": "8f6726fb117e969b303506a4218fce3f72db5cf594bea36e9bf8b805861b635a"
+    },
+    "dpi.css": {
+      "bytes": 1398,
+      "sha256": "24ad76f0fb86e68997b5fb218312910a5dc5396c94e8de8831d7606531032fd1"
+    },
+    "dpi.js": {
+      "bytes": 474066,
+      "sha256": "ab271f5ae8b91f2db841e0ac636853f75f215f040a50fc908cb061a7c680d689"
+    },
+    "fonts/OFL.txt": {
+      "bytes": 4384,
+      "sha256": "8503c30a4d7e09c4c09015fee42f829f18acbe6330755e9930ba50ea44eaa157"
+    },
+    "fonts/PROVENANCE.json": {
+      "bytes": 1680,
+      "sha256": "f57a4ef351662f627b6998f7c22003b3effff929c633636331ba16b2fda9dcf8"
+    },
+    "fonts/poppins-latin-400-normal.woff2": {
+      "bytes": 7884,
+      "sha256": "7d93459d86585bfcdbb7e0376056226adb25821ee54b96236fe2123e9560929f"
+    },
+    "fonts/poppins-latin-500-normal.woff2": {
+      "bytes": 7748,
+      "sha256": "cd36de204aca2d5fa263a731f7c20009b5e3d754ba1f1e03c33e93a48f3e7446"
+    },
+    "fonts/poppins-latin-600-normal.woff2": {
+      "bytes": 8000,
+      "sha256": "f4e80d9dfd374d02989b87a27b5ed4cb78fbb177c27f1478e9a8b0afb7513149"
+    },
+    "fonts/poppins-latin-700-normal.woff2": {
+      "bytes": 7816,
+      "sha256": "9338e65fc077355c7a87ae0d64cc101e23b9bf8ad78ae65f0f319c857311b526"
+    },
+    "fonts/poppins-latin-ext-400-normal.woff2": {
+      "bytes": 5552,
+      "sha256": "a526dac26fcc645d428764b07fd6ae2ad3399129b75c22c8e149278157291189"
+    },
+    "fonts/poppins-latin-ext-500-normal.woff2": {
+      "bytes": 5416,
+      "sha256": "75cd1c2bbd47db72c1a7a720e764c7672a95bdae7033c570d549ac88c9add234"
+    },
+    "fonts/poppins-latin-ext-600-normal.woff2": {
+      "bytes": 5484,
+      "sha256": "26fd27fb6bb1dc4c64a687124cc328a5ed13d89155dbfcd218eda64a45835174"
+    },
+    "fonts/poppins-latin-ext-700-normal.woff2": {
+      "bytes": 5400,
+      "sha256": "3d52320b7513a9e20df42e02b61709b91a5c2c2a25708225c664eb4639f3b0fd"
+    },
+    "icons/lucide/LICENSE": {
+      "bytes": 3208,
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    "icons/lucide/PROVENANCE.json": {
+      "bytes": 20711,
+      "sha256": "153b3467279bbc5f5c121e8d44d8366934f775655cb394f14f525d1b5f3a23e9"
+    },
+    "img/grid.svg": {
+      "bytes": 1353,
+      "sha256": "ff917c6711d1ac8c7bdb8fa122e458bb064fa08738469edb3b072b80fa28c817"
+    },
+    "img/scene.svg": {
+      "bytes": 16831,
+      "sha256": "2b234b4e7451c903c713ed63d4247630dea604831f6dccbb521c07d1fd4ba7e0"
+    },
+    "theme-init.js": {
+      "bytes": 1168,
+      "sha256": "40d11cf81e2d7a7c92845dc27144eecc7c5b741c7a37306659dc0a84e108c882"
+    },
+    "vendor/liquidglass/LICENSE": {
+      "bytes": 1064,
+      "sha256": "d450a6ba35c35dc88b721d48b9930695024df6ded6553cecc4cacdb95e4364e1"
+    },
+    "vendor/liquidglass/PROVENANCE.json": {
+      "bytes": 1870,
+      "sha256": "207df7d8b66d5628c43517b87376ce3c908d82cf94dd307221b61c163511f41e"
+    }
+  }
+}

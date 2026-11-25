@@ -1,0 +1,45 @@
+/* dpi-diff — differenze di codice (o codice con numeri di riga) a righe selezionabili.
+   Markup: .dpi-diff[data-dpi-diff] > .dpi-diff__row (--add | --del | --ctx | --hunk | --file) > .dpi-diff__num + .dpi-diff__sign + .dpi-diff__text.
+   Righe aggiunte e rimosse si distinguono con superficie (token success/danger soft), segno (+ / -) e testo nascosto per gli screen reader: nessuna striscia laterale, nessun pallino.
+   Selezione: il numero di riga è un <button class="dpi-diff__num" data-dpi-diff-pick> (clic = una riga, Maiusc+clic = intervallo); lo stato è dato da .dpi-diff__row--selected + aria-pressed.
+   Il testo va a capo (nessuno scorrimento orizzontale: note e pannello restano nella larghezza visibile). Token: --dpi-surface, --dpi-surface-2, --dpi-line, --dpi-text, --dpi-text-muted, --dpi-accent, --dpi-success(-soft), --dpi-danger(-soft). */
+.dpi-diff {
+    min-width: 0; max-width: 100%; overflow: hidden;
+    border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-md);
+    background: var(--dpi-surface); color: var(--dpi-text);
+    font: var(--dpi-text-sm) / 1.5 var(--dpi-font-mono);
+}
+.dpi-diff__row { --dpi-diff-bg: transparent; display: flex; align-items: flex-start; min-width: 0; background: var(--dpi-diff-bg); }
+.dpi-diff__row--add { --dpi-diff-bg: var(--dpi-success-soft); }
+.dpi-diff__row--del { --dpi-diff-bg: var(--dpi-danger-soft); }
+.dpi-diff__row--hunk { --dpi-diff-bg: var(--dpi-surface-2); color: var(--dpi-text-muted); }
+.dpi-diff__row--file { --dpi-diff-bg: var(--dpi-surface-2); font-weight: var(--dpi-weight-bold); padding-block: var(--dpi-space-1); }
+.dpi-diff__row--file .dpi-diff__text, .dpi-diff__row--hunk .dpi-diff__text { padding-inline-start: var(--dpi-space-3); }
+.dpi-diff__num {
+    flex: none; box-sizing: border-box; min-width: 4.5ch; margin: 0; padding: 0 var(--dpi-space-2);
+    text-align: right; font: inherit; color: var(--dpi-text-muted); background: transparent; border: 0; border-radius: 0;
+    user-select: none; -webkit-user-select: none;
+}
+button.dpi-diff__num { cursor: pointer; }
+button.dpi-diff__num:hover { color: var(--dpi-accent); text-decoration: underline; }
+button.dpi-diff__num:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+.dpi-diff__sign { flex: none; width: 2ch; text-align: center; font-weight: var(--dpi-weight-bold); user-select: none; -webkit-user-select: none; }
+.dpi-diff__row--add .dpi-diff__sign { color: var(--dpi-success); }
+.dpi-diff__row--del .dpi-diff__sign { color: var(--dpi-danger); }
+.dpi-diff--plain .dpi-diff__sign { display: none; }
+.dpi-diff__text { flex: 1 1 auto; min-width: 0; padding-inline-end: var(--dpi-space-3); font: inherit; background: none; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; }
+.dpi-diff__row--selected { background: color-mix(in srgb, var(--dpi-accent) 20%, var(--dpi-diff-bg)); }
+.dpi-diff__row--selected .dpi-diff__num { color: var(--dpi-accent); font-weight: var(--dpi-weight-bold); }
+.dpi-diff__row--focus { background: color-mix(in srgb, var(--dpi-accent) 30%, var(--dpi-diff-bg)); }
+.dpi-diff__row--focus .dpi-diff__num { color: var(--dpi-accent); font-weight: var(--dpi-weight-bold); }
+/* contenuto dell'applicazione sotto una riga: note esistenti (.dpi-diff__notes) e pannello di commento (.dpi-diff__panel, spostato sotto la selezione) */
+.dpi-diff__notes, .dpi-diff__panel {
+    padding: var(--dpi-space-3) var(--dpi-space-4); background: var(--dpi-surface); color: var(--dpi-text);
+    border-block: 1px solid var(--dpi-line); font: var(--dpi-text-sm) / 1.5 var(--dpi-font);
+}
+.dpi-diff__panel[hidden] { display: none; }
+@media (forced-colors: active) {
+    .dpi-diff { border: 1px solid CanvasText; }
+    .dpi-diff__row--selected, .dpi-diff__row--focus { outline: 2px solid Highlight; outline-offset: -2px; }
+    .dpi-diff__row--add .dpi-diff__sign, .dpi-diff__row--del .dpi-diff__sign { color: CanvasText; }
+}

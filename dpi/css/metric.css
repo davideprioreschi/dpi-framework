@@ -1,0 +1,36 @@
+/*
+ * dpi — metriche (etichetta + valore). Una riga di numeri chiave (Aperti 12, Ticket 0, Fatti 26…) senza capsule, fondi o bordi: il VALORE è grande e tabulare, l'ETICHETTA piccola e attenuata sotto di lui.
+ * Markup semantico: <dl class="dpi-metrics"><div class="dpi-metric"><dt class="dpi-metric__label">Aperti</dt><dd class="dpi-metric__value">12</dd></div>…</dl>
+ * (il valore è scritto dopo l'etichetta nel DOM — così la lettura assistita è «Aperti: 12» — ma si vede sopra: order).
+ * La griglia usa lo spazio reale: colonne di almeno --dpi-metric-min (default 6.5rem), tutte uguali, a capo senza tagliare. Testi lunghi vanno a capo (overflow-wrap) e non spingono i vicini.
+ * Toni (solo sul valore, mai sul fondo): .dpi-metric--success | --info | --warning | --danger. Variante compatta: .dpi-metrics--sm (valore più piccolo, per card strette).
+ * Token: --dpi-metric-min, --dpi-text-*, --dpi-space-*, --dpi-success/-info/-warning/-danger.
+ * Variante a RIQUADRI: .dpi-metrics--cards — ogni metrica è un riquadro (superficie del tema, bordo tratteggiato sottile (--dpi-separator-dash), rilievo leggero) con TRE informazioni distinte e nell'ordine di lettura:
+ *   etichetta (dt.dpi-metric__label) → valore grande tabulare (dd.dpi-metric__value) → spiegazione secondaria più piccola (dd.dpi-metric__note, facoltativa).
+ *   La griglia è di MASSIMO DUE colonne (2×2 con quattro metriche) quando il CONTENITORE ha spazio per due riquadri da almeno --dpi-metric-min (default 12rem), altrimenti una per riga: mai quattro riquadri
+ *   compressi sulla stessa riga. Se il riquadro è interattivo (link) usa .dpi-metric--link sul contenitore: focus evidente con l'anello standard.
+ */
+.dpi-metrics { --dpi-metric-min: 6.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dpi-metric-min)), 1fr)); gap: var(--dpi-space-4) var(--dpi-space-5); margin: 0; padding: 0; min-width: 0; }
+.dpi-metric { display: grid; align-content: start; gap: var(--dpi-space-1); min-width: 0; margin: 0; }
+.dpi-metric__value { order: -1; margin: 0; font-size: var(--dpi-text-xl); font-weight: var(--dpi-weight-bold); line-height: var(--dpi-leading-tight); font-variant-numeric: tabular-nums; color: var(--dpi-text); overflow-wrap: anywhere; }
+.dpi-metric__label { margin: 0; font-size: var(--dpi-text-sm); line-height: 1.35; color: var(--dpi-text-muted); overflow-wrap: anywhere; }
+.dpi-metrics--sm .dpi-metric__value { font-size: var(--dpi-text-lg); }
+.dpi-metric--success .dpi-metric__value { color: var(--dpi-success); }
+.dpi-metric--info .dpi-metric__value { color: var(--dpi-info); }
+.dpi-metric--warning .dpi-metric__value { color: var(--dpi-warning); }
+.dpi-metric--danger .dpi-metric__value { color: var(--dpi-danger); }
+
+/* nota secondaria (facoltativa): più piccola e attenuata, sotto il valore */
+.dpi-metric__note { margin: 0; order: 1; font-size: var(--dpi-text-xs); line-height: 1.4; color: var(--dpi-text-muted); overflow-wrap: anywhere; }
+
+/* variante a riquadri */
+.dpi-metrics--cards { --dpi-metric-min: 12rem; gap: var(--dpi-space-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--dpi-metric-min), calc((100% - var(--dpi-space-3)) / 2))), 1fr)); }
+.dpi-metrics--cards .dpi-metric { gap: var(--dpi-space-1); padding: var(--dpi-space-4); border: var(--dpi-separator-dash, 1px dashed var(--dpi-dash-color, var(--dpi-line))); border-radius: var(--dpi-radius-lg); background: var(--dpi-surface-2); box-shadow: var(--dpi-shadow-sm, none); }
+.dpi-metrics--cards .dpi-metric__label { order: 0; font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-medium); color: var(--dpi-text); }
+.dpi-metrics--cards .dpi-metric__value { order: 0; margin-block: var(--dpi-space-1); font-size: var(--dpi-text-2xl); }
+.dpi-metric--link { position: relative; }
+.dpi-metric--link:has(a:focus-visible) { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 2px; }
+.dpi-metric--link a { color: inherit; text-decoration: none; }
+.dpi-metric--link a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+.dpi-metric--zero .dpi-metric__value { color: var(--dpi-text-muted); }
+@media (forced-colors: active) { .dpi-metrics--cards .dpi-metric { border-color: CanvasText; } }

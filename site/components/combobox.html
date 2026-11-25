@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>combobox · DPI</title><meta name="description" content="Documentazione del framework frontend DPI: componenti HTML, guide, esempi e icone."><link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../dpi/dpi.css">
+<link rel="stylesheet" href="../../dpi/css/reset.css">
+<script src="../../dpi/dpi.js" defer></script>
+<script src="../assets/search-index.js" defer></script>
+<script src="../assets/portal.js" defer></script>
+</head><body class="dpi-root"><a class="dpi-skip-link" href="#dpi-1-main">Vai al contenuto</a><header class="dpi-navbar dpi-navbar--sticky dpi-glass" data-dpi-navbar data-dpi-glass="bar"><div class="dpi-navbar__inner dpi-container"><a class="dpi-navbar__brand" href="../index.html">DPI</a><button class="dpi-btn dpi-btn--plain dpi-navbar__toggle" type="button" data-dpi-navbar-toggle aria-controls="dpi-2-menu" aria-expanded="false"><span class="dpi-btn__content">Menu</span></button><div class="dpi-navbar__collapse" id="dpi-2-menu" data-dpi-navbar-collapse><nav aria-label="Documentazione"><ul class="dpi-navbar__list"><li><a class="dpi-navbar__link" href="../index.html">Docs</a></li><li><a class="dpi-navbar__link" href="../components.html">Componenti</a></li><li><a class="dpi-navbar__link" href="../examples.html">Esempi</a></li><li><a class="dpi-navbar__link" href="../icons.html">Icone</a></li><li><a class="dpi-navbar__link" href="../guide.html">Guide</a></li></ul></nav><div class="dpi-navbar__end"><button class="dpi-btn dpi-btn--tinted dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-glass="button" data-dpi-drop="button" data-dpi-dialog-open="cerca" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span class="dpi-btn__label">Cerca</span></span></button><fieldset class="dpi-segmented dpi-glass dpi-glass--pill" data-dpi-glass="button"><legend class="dpi-visually-hidden">Aspetto</legend><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="auto" data-dpi-theme-pref checked><span class="dpi-segmented__label">Auto</span></label><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="light" data-dpi-theme-pref><span class="dpi-segmented__label">Chiaro</span></label><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="dark" data-dpi-theme-pref><span class="dpi-segmented__label">Scuro</span></label></fieldset></div></div></div></header><main data-dpi-loading id="dpi-1-main" class="dpi-container dpi-page dpi-stack"><nav class="dpi-breadcrumb" aria-label="Percorso"><ol class="dpi-breadcrumb__list"><li class="dpi-breadcrumb__item"><a class="dpi-breadcrumb__link" href="../index.html">Docs</a></li><li class="dpi-breadcrumb__item"><a class="dpi-breadcrumb__link" href="../components.html">Componenti</a></li><li class="dpi-breadcrumb__item"><span class="dpi-breadcrumb__current" aria-current="page">combobox</span></li></ol></nav><h1 class="dpi-heading dpi-heading--1">combobox</h1><p class="dpi-text dpi-text--muted">Campo con suggerimenti filtrati: scrittura, frecce, Invio per scegliere, Escape per chiudere (pattern ARIA combobox con listbox). Il valore inviato è quello dell&apos;opzione.</p><nav class="dpi-nav dpi-nav--underline dpi-nav--scroll" aria-label="In questa pagina" data-dpi-nav><ul class="dpi-nav__list"><li class="dpi-nav__item"><a class="dpi-nav__link" href="#esempi"><span>Esempi</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#quando"><span>Quando usarlo</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#proprieta"><span>Classi e attributi</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#comportamento"><span>Comportamento</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#limiti"><span>Parti incomplete</span></a></li></ul></nav><h2 class="dpi-heading dpi-heading--2" id="esempi" tabindex="-1">Esempi</h2><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="esempio-1" tabindex="-1">Campo con suggerimenti</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><div class="dpi-field">
+  <label class="dpi-label" for="ex1-1">Città</label>
+  <div class="dpi-combobox" data-dpi-combobox>
+    <input class="dpi-input dpi-combobox__input" type="text" id="ex1-1" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ex1-1-list" autocomplete="off" placeholder="Scrivi per filtrare" value="">
+    <input type="hidden" name="citta" value="" data-dpi-combobox-value>
+    <ul class="dpi-combobox__list" role="listbox" id="ex1-1-list" hidden>
+      <li class="dpi-combobox__option" role="option" id="ex1-1-o0" data-value="mi" aria-selected="false">
+        Milano
+      </li>
+      <li class="dpi-combobox__option" role="option" id="ex1-1-o1" data-value="to" aria-selected="false">
+        Torino
+      </li>
+      <li class="dpi-combobox__option" role="option" id="ex1-1-o2" data-value="bo" aria-selected="false">
+        Bologna
+      </li>
+      <li class="dpi-combobox__option" role="option" id="ex1-1-o3" data-value="bz" aria-selected="false">
+        Bolzano
+      </li>
+      <li class="dpi-combobox__option" role="option" id="ex1-1-o4" data-value="na" aria-selected="false">
+        Napoli
+      </li>
+      <li class="dpi-combobox__option" role="option" id="ex1-1-o5" data-value="pa" aria-selected="false">
+        Palermo
+      </li>
+      <li class="dpi-combobox__empty" role="presentation" hidden>
+        Nessun risultato
+      </li>
+    </ul>
+  </div>
+</div>
+</div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;div class=&quot;dpi-field&quot;&gt;
+  &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-1&quot;&gt;Città&lt;/label&gt;
+  &lt;div class=&quot;dpi-combobox&quot; data-dpi-combobox&gt;
+    &lt;input class=&quot;dpi-input dpi-combobox__input&quot; type=&quot;text&quot; id=&quot;dpi-1&quot; role=&quot;combobox&quot; aria-autocomplete=&quot;list&quot; aria-expanded=&quot;false&quot; aria-controls=&quot;dpi-1-list&quot; autocomplete=&quot;off&quot; placeholder=&quot;Scrivi per filtrare&quot; value=&quot;&quot;&gt;
+    &lt;input type=&quot;hidden&quot; name=&quot;citta&quot; value=&quot;&quot; data-dpi-combobox-value&gt;
+    &lt;ul class=&quot;dpi-combobox__list&quot; role=&quot;listbox&quot; id=&quot;dpi-1-list&quot; hidden&gt;
+      &lt;li class=&quot;dpi-combobox__option&quot; role=&quot;option&quot; id=&quot;dpi-1-o0&quot; data-value=&quot;mi&quot; aria-selected=&quot;false&quot;&gt;
+        Milano
+      &lt;/li&gt;
+      &lt;li class=&quot;dpi-combobox__option&quot; role=&quot;option&quot; id=&quot;dpi-1-o1&quot; data-value=&quot;to&quot; aria-selected=&quot;false&quot;&gt;
+        Torino
+      &lt;/li&gt;
+      &lt;li class=&quot;dpi-combobox__option&quot; role=&quot;option&quot; id=&quot;dpi-1-o2&quot; data-value=&quot;bo&quot; aria-selected=&quot;false&quot;&gt;
+        Bologna
+      &lt;/li&gt;
+      &lt;li class=&quot;dpi-combobox__option&quot; role=&quot;option&quot; id=&quot;dpi-1-o3&quot; data-value=&quot;bz&quot; aria-selected=&quot;false&quot;&gt;
+        Bolzano
+      &lt;/li&gt;
+      &lt;li class=&quot;dpi-combobox__option&quot; role=&quot;option&quot; id=&quot;dpi-1-o4&quot; data-value=&quot;na&quot; aria-selected=&quot;false&quot;&gt;
+        Napoli
+      &lt;/li&gt;
+      &lt;li class=&quot;dpi-combobox__option&quot; role=&quot;option&quot; id=&quot;dpi-1-o5&quot; data-value=&quot;pa&quot; aria-selected=&quot;false&quot;&gt;
+        Palermo
+      &lt;/li&gt;
+      &lt;li class=&quot;dpi-combobox__empty&quot; role=&quot;presentation&quot; hidden&gt;
+        Nessun risultato
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><h2 class="dpi-heading dpi-heading--2" id="quando" tabindex="-1">Quando usarlo</h2><p class="dpi-text">Per scegliere da un elenco lungo filtrandolo con la tastiera.</p><h3 class="dpi-heading dpi-heading--3">Rispetto a componenti simili</h3><ul class="dpi-list" aria-label="Componenti simili"><li><a class="dpi-list__row dpi-list__row_link" href="../components/select.html"><span class="dpi-list__text"><span class="dpi-list__label">select</span><span class="dpi-list__detail">select non filtra e ha l&apos;aspetto nativo.</span></span></a></li></ul><h2 class="dpi-heading dpi-heading--2" id="proprieta" tabindex="-1">Classi e attributi</h2><div class="dpi-table-wrap dpi-table-wrap--dashed"><table class="dpi-table dpi-table--stack"><caption class="dpi-visually-hidden">Classi e attributi usati negli esempi di combobox</caption><thead><tr><th scope="col">Nome</th><th scope="col">Tipo</th></tr></thead><tbody><tr><td data-label="Nome">dpi-combobox</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-combobox__empty</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-combobox__input</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-combobox__list</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-combobox__option</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-field</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-input</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-label</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">data-dpi-combobox</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-combobox-value</td><td data-label="Tipo">attributo</td></tr></tbody></table></div><p class="dpi-text dpi-text--muted">Le varianti e gli stati sono quelli mostrati negli esempi: copia il markup e cambia le classi di variante (es. dpi-btn--primary). Gli strati ottici di lenti e animazioni li crea il framework.</p><h2 class="dpi-heading dpi-heading--2" id="comportamento" tabindex="-1">Comportamento: tastiera, eventi e stati</h2><div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Tastiera</h4><p class="dpi-text">Scrittura filtra; frecce su/giù, Home/End; Invio sceglie; Escape chiude e ripristina l&apos;ultima scelta. Testo e valore inviato non divergono: modificare il testo annulla il valore, uscire senza una corrispondenza ripristina la scelta, svuotare il campo cancella; reset del form ripristina entrambi.</p></div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Eventi</h4><p class="dpi-text">dpi:combobox-select (value, label); change sul valore.</p></div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Stati e varianti</h4><p class="dpi-text">aperto/chiuso, opzione attiva, nessun risultato; free = testo libero.</p></div></div><h2 class="dpi-heading dpi-heading--2" id="limiti" tabindex="-1">Parti incomplete</h2><ul><li><p class="dpi-text">Selezione singola, elenco statico (niente ricerca asincrona né raggruppamenti).</p></li><li><p class="dpi-text">Combobox (parziale): Selezione singola su elenco statico; niente ricerca asincrona.</p></li></ul><dialog class="dpi-dialog dpi-glass dpi-glass--strong" id="cerca" aria-labelledby="cerca-title" data-dpi-dismissible><form class="dpi-dialog__form" method="dialog"><div class="dpi-dialog__header"><h2 class="dpi-dialog__title" id="cerca-title">Cerca nella documentazione</h2></div><div class="dpi-dialog__body dpi-stack"><div class="dpi-field"><label class="dpi-label" for="dpi-3">Cerca</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><svg class="dpi-icon dpi-icon--md" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></span><input class="dpi-input" id="dpi-3" name="q" type="search" placeholder="Componente, proprietà o guida"></span></span></div><div aria-label="Risultati"><p class="dpi-text dpi-text--muted">Scrivi per cercare componenti, proprietà e guide.</p></div></div><div class="dpi-dialog__footer"></div></form></dialog></main></body></html>

@@ -1,0 +1,176 @@
+/*
+ * DPI chatbot: pulsante persistente e pannello non modale. Un'unica sagoma
+ * SVG passa dal germe al collo e al pannello; nessun materiale viene scambiato.
+ * Il contenuto resta nascosto finché la goccia non si è separata, poi viene
+ * ritagliato dalla forma corrente. Il pulsante conserva materiale e icona.
+ * Posizione: --dpi-chatbot-top / --dpi-chatbot-w / --dpi-chatbot-gap,
+ * topFrom misura la barra superiore; fondo e tastiera usano visualViewport.
+ */
+.dpi-chatbot {
+    display: contents;
+    --dpi-chatbot-gap: 0.75rem;
+    --dpi-chatbot-radius: 28px;
+    /* MATERIALE (stessi valori dei token del menu) */
+    --dpi-menu-bg: var(--dpi-chatbot-bg, var(--dpi-surface));
+    --dpi-menu-fg: var(--dpi-chatbot-fg, var(--dpi-text));
+    --dpi-menu-border: color-mix(in srgb, var(--dpi-menu-fg) 16%, var(--dpi-menu-bg));
+    --dpi-menu-convex: 6%;
+    --dpi-menu-hi: color-mix(in srgb, var(--dpi-menu-bg) calc(100% - var(--dpi-menu-convex)), #fff);
+    --dpi-menu-lo: color-mix(in srgb, var(--dpi-menu-bg) calc(100% - var(--dpi-menu-convex) * 1.6), #000);
+    --dpi-menu-relief: inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.07)), inset 0 -7px 11px -8px rgb(0 0 0 / 0.09);
+    --dpi-menu-shadow: 0 12px 24px -10px rgb(0 0 0 / 0.26), 0 2px 6px rgb(0 0 0 / 0.1);
+    --dpi-menu-hover: color-mix(in srgb, var(--dpi-menu-fg) 8%, transparent);
+    /* distanza dal fondo: sopra la bottom bar (se c'è) oppure safe area + gap; con la tastiera virtuale, sopra la tastiera */
+    --_reserve: calc(env(safe-area-inset-bottom, 0px) + var(--dpi-chatbot-gap));
+    --_bottom: var(--dpi-chatbot-kb-b, var(--_reserve));
+    --_edge: max(env(safe-area-inset-right, 0px), var(--dpi-chatbot-gap));
+    --_top: var(--dpi-chatbot-top, calc(env(safe-area-inset-top, 0px) + var(--dpi-chatbot-gap)));
+    --_pbottom: var(--_bottom);
+}
+:root:has(.dpi-bottombar:not(.dpi-bottombar--embedded)) .dpi-chatbot { --_reserve: var(--dpi-bar-space); }   /* la barra incorporata (in flusso, nella barra superiore) non riserva nulla in fondo */
+.dpi-chatbot[data-dpi-kb] { --dpi-chatbot-kb-b: calc(var(--dpi-chatbot-kb, 0px) + var(--dpi-chatbot-gap) / 2); }
+.dpi-chatbot [hidden] { display: none; }
+
+/* ------------------------------------------------------------------ pulsante (trigger): sopra la bottom bar, mai sovrapposto */
+.dpi-chatbot > [data-dpi-chatbot-trigger] {
+    position: fixed; z-index: var(--dpi-z-overlay); margin: 0;
+    inset-inline-end: var(--_edge); inset-block-end: calc(var(--_bottom) + var(--dpi-chatbot-lift, 0px));
+}
+/* pannello aperto (interno): lo spazio del pulsante (altezza misurata + gap) è riservato sotto il pannello, che non lo copre */
+.dpi-chatbot[data-dpi-chatbot-internal] { --_pbottom: calc(var(--_bottom) + var(--dpi-chatbot-lift, 0px) + var(--dpi-chatbot-trig-h, 3.25rem) + var(--dpi-chatbot-gap)); }
+
+/* ------------------------------------------------------------------ pannello */
+.dpi-chatbot__panel {
+    position: fixed; z-index: var(--dpi-z-overlay); box-sizing: border-box; display: block; margin: 0; padding: 0; border: 0;
+    inset-inline-end: var(--_edge); inset-block-end: var(--_pbottom); inset-block-start: auto;
+    width: min(var(--dpi-chatbot-w, 26rem), calc(100vw - var(--dpi-chatbot-gap) * 2));
+    height: calc(100dvh - var(--_top) - var(--_pbottom));
+    max-height: var(--dpi-chatbot-max-height, none);
+    border-radius: var(--dpi-chatbot-radius, 28px);
+    background: none; color: var(--dpi-menu-fg); box-shadow: none;
+    font-size: var(--dpi-text-sm);
+}
+/* trigger ESTERNO a sinistra: il pannello si ancora a sinistra, sotto il pulsante (placeSide in chatbot.js); resta nel viewport */
+@media (min-width: 36rem) {
+    .dpi-chatbot[data-dpi-side-start] .dpi-chatbot__panel {
+        inset-inline-end: auto;
+        inset-inline-start: max(var(--dpi-chatbot-gap), min(var(--dpi-chatbot-x, 0px), calc(100vw - min(var(--dpi-chatbot-w, 26rem), 100vw - var(--dpi-chatbot-gap) * 2) - var(--_edge))));
+    }
+}
+.dpi-chatbot__panel[hidden] { display: none; }
+.dpi-chatbot__panel:focus { outline: none; }
+/* One SVG paints the attached bud and the resting panel; no renderer swap. */
+.dpi-chatbot__surface { position: fixed; left: 0; top: 0; max-width: none; max-height: none; overflow: hidden; pointer-events: none; z-index: 0; }
+.dpi-chatbot__surface-fill { stroke: none; }
+.dpi-chatbot__surface-rim { fill: none; stroke: var(--dpi-menu-border); stroke-width: 1; stroke-linejoin: round; stroke-linecap: round; }
+.dpi-chatbot__surface-shadow { fill: #000; opacity: 0.12; stroke: none; }
+.dpi-chatbot[data-dpi-state="opening"] > .dpi-chatbot__panel,
+.dpi-chatbot[data-dpi-state="closing"] > .dpi-chatbot__panel { pointer-events: none; }
+@media (forced-colors: active) {
+    .dpi-chatbot__surface-fill { fill: Canvas; }
+    .dpi-chatbot__surface-rim { stroke: CanvasText; }
+    .dpi-chatbot__surface-shadow { display: none; }
+}
+
+/* contenuto: sopra gli strati della goccia, ritagliato da JS sulla finestra derivata dalla forma corrente (clip-path e visibility inline temporanei, nessuna opacity) */
+.dpi-chatbot__inner { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; min-height: 0; border-radius: inherit; overflow: hidden; }
+.dpi-chatbot__header { display: flex; align-items: center; gap: var(--dpi-space-1); padding: var(--dpi-space-2) var(--dpi-space-2) var(--dpi-space-2) var(--dpi-space-4); border-block-end: 1px solid var(--dpi-menu-border); flex: none; }
+.dpi-chatbot__heading { flex: 1 1 auto; min-width: 0; }
+.dpi-chatbot__title { margin: 0; font-size: var(--dpi-text-md); font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+.dpi-chatbot__subtitle { margin: 0; font-size: var(--dpi-text-xs); color: var(--dpi-text-muted); }
+.dpi-chatbot__header-actions { display: flex; align-items: center; gap: 2px; flex: none; }
+
+.dpi-chatbot__main { position: relative; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.dpi-chatbot__log {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+    display: flex; flex-direction: column; gap: var(--dpi-space-3); padding: var(--dpi-space-4);
+}
+.dpi-chatbot__log:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+.dpi-chatbot__main[data-dpi-empty] > .dpi-chatbot__log { flex: 0 0 0; padding: 0; overflow: hidden; }
+.dpi-chatbot__empty { flex: 1 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--dpi-space-4); padding: var(--dpi-space-5) var(--dpi-space-4); text-align: center; }
+.dpi-chatbot__empty-text { margin: 0; color: var(--dpi-text-muted); max-width: 22rem; }
+.dpi-chatbot__suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--dpi-space-2); }
+.dpi-chatbot__chips { flex: none; padding: 0 var(--dpi-space-3) var(--dpi-space-2); overflow-x: auto; scrollbar-width: none; }
+.dpi-chatbot__chips .dpi-chatbot__suggestions { flex-wrap: nowrap; justify-content: flex-start; }
+.dpi-chatbot__chips .dpi-chatbot__chip { flex: none; }
+.dpi-chatbot__chip {
+    font: inherit; color: inherit; cursor: pointer; min-height: var(--dpi-control-h-sm); padding: 0 var(--dpi-space-3);
+    background: transparent; border: 1px solid var(--dpi-menu-border); border-radius: var(--dpi-radius-pill);
+}
+.dpi-chatbot__chip:hover { background: var(--dpi-menu-hover); }
+.dpi-chatbot__chip:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 2px; }
+.dpi-chatbot__chip:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* messaggi */
+.dpi-chatbot__msg { display: flex; flex-direction: column; gap: var(--dpi-space-1); min-width: 0; }
+.dpi-chatbot__msg[data-role="user"] { align-items: flex-end; }
+.dpi-chatbot__msg[data-role="assistant"] { align-items: flex-start; }
+.dpi-chatbot__msg[data-role="system"] { align-items: center; text-align: center; }
+.dpi-chatbot__bubble {
+    max-width: 92%; padding: var(--dpi-space-2) var(--dpi-space-3); border-radius: 1.125rem; overflow-wrap: anywhere; line-height: 1.45;
+    background: color-mix(in srgb, var(--dpi-menu-fg) 7%, var(--dpi-menu-bg));
+}
+.dpi-chatbot__msg[data-role="user"] .dpi-chatbot__bubble { background: var(--dpi-accent); color: var(--dpi-on-accent); border-end-end-radius: 0.375rem; }
+.dpi-chatbot__msg[data-role="assistant"] .dpi-chatbot__bubble { border-end-start-radius: 0.375rem; }
+.dpi-chatbot__msg[data-role="system"] .dpi-chatbot__bubble { background: transparent; border: 1px dashed var(--dpi-menu-border); color: var(--dpi-text-muted); }
+.dpi-chatbot__msg[data-status="error"] .dpi-chatbot__bubble { box-shadow: inset 0 0 0 1px var(--dpi-danger); }
+.dpi-chatbot__text--plain { white-space: pre-wrap; }
+.dpi-chatbot__text > :first-child { margin-top: 0; } .dpi-chatbot__text > :last-child { margin-bottom: 0; }
+.dpi-chatbot__text p { margin: 0 0 var(--dpi-space-2); }
+.dpi-chatbot__msg[data-role="user"] .dpi-chatbot__bubble a { color: inherit; }
+.dpi-chatbot__meta { margin: 0; padding-inline: var(--dpi-space-2); font-size: var(--dpi-text-xs); color: var(--dpi-text-muted); overflow-wrap: anywhere; }
+.dpi-chatbot__sources { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--dpi-space-1) var(--dpi-space-2); padding-inline: var(--dpi-space-2); font-size: var(--dpi-text-xs); max-width: 100%; }
+.dpi-chatbot__sources-label { color: var(--dpi-text-muted); }
+.dpi-chatbot__source-list { display: flex; flex-wrap: wrap; gap: var(--dpi-space-1) var(--dpi-space-3); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.dpi-chatbot__source-list a, .dpi-chatbot__source-list span { overflow-wrap: anywhere; }
+.dpi-chatbot__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+.dpi-chatbot__foot .dpi-btn[aria-pressed="true"] { background: var(--dpi-accent-soft); color: var(--dpi-accent); }
+
+/* indicatore di attesa */
+.dpi-chatbot__typing { display: flex; align-items: center; gap: var(--dpi-space-2); color: var(--dpi-text-muted); font-size: var(--dpi-text-xs); }
+.dpi-chatbot__dots { display: inline-flex; align-items: center; gap: 3px; margin-inline-start: 2px; }
+.dpi-chatbot__dots > i { width: 0.3125rem; height: 0.3125rem; border-radius: 50%; background: currentColor; opacity: 0.35; animation: dpi-chatbot-dot 1.1s ease-in-out infinite; }
+.dpi-chatbot__dots > i:nth-child(2) { animation-delay: 0.15s; } .dpi-chatbot__dots > i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dpi-chatbot-dot { 0%, 70%, 100% { opacity: 0.3; translate: 0 0; } 35% { opacity: 1; translate: 0 -2px; } }
+@media (prefers-reduced-motion: reduce) { .dpi-chatbot__dots > i { animation: none; opacity: 0.6; } }
+
+/* errore, slot, allegati */
+.dpi-chatbot__error { flex: none; margin: 0 var(--dpi-space-3) var(--dpi-space-2); padding: var(--dpi-space-2) var(--dpi-space-3); border-radius: var(--dpi-radius-md); color: var(--dpi-danger); background: color-mix(in srgb, var(--dpi-danger) 12%, var(--dpi-menu-bg)); overflow-wrap: anywhere; }
+.dpi-chatbot__above { flex: none; padding: 0 var(--dpi-space-4) var(--dpi-space-2); color: var(--dpi-text-muted); font-size: var(--dpi-text-xs); overflow-wrap: anywhere; }
+.dpi-chatbot__above:empty { display: none; }
+.dpi-chatbot__files { flex: none; display: flex; flex-wrap: wrap; gap: var(--dpi-space-1); margin: 0; padding: 0 var(--dpi-space-3) var(--dpi-space-1); list-style: none; font-size: var(--dpi-text-xs); }
+.dpi-chatbot__file { display: inline-flex; align-items: center; gap: 2px; padding-inline-start: var(--dpi-space-3); border: 1px solid var(--dpi-menu-border); border-radius: var(--dpi-radius-pill); }
+
+/* pannello secondario (elenco conversazioni…): copre l'area dei messaggi, il compositore resta raggiungibile */
+.dpi-chatbot__aside { position: absolute; inset: 0; z-index: 2; overflow-y: auto; overscroll-behavior: contain; padding: var(--dpi-space-3) var(--dpi-space-4); background: var(--dpi-menu-bg); }
+
+/* compositore STABILE in basso: il campo cresce fino a --dpi-chatbot-input-max, poi scorre */
+.dpi-chatbot__composer { flex: none; display: flex; align-items: flex-end; gap: var(--dpi-space-2); padding: var(--dpi-space-2) var(--dpi-space-3) var(--dpi-space-3); border-block-start: 1px solid var(--dpi-menu-border); }
+.dpi-chatbot__tools { display: flex; align-items: center; gap: 2px; flex: none; }
+.dpi-chatbot__field { flex: 1 1 auto; min-width: 0; }
+.dpi-chatbot__input.dpi-textarea { display: block; width: 100%; resize: none; min-height: var(--dpi-control-h); max-height: var(--dpi-chatbot-input-max, 9rem); overflow-y: hidden; border-radius: 1.375rem; padding-inline: var(--dpi-space-4); font-size: max(1rem, var(--dpi-text-sm)); }
+.dpi-chatbot__composer > .dpi-btn { flex: none; }
+.dpi-chatbot__composer .dpi-btn--primary { border-radius: var(--dpi-radius-pill); }
+.dpi-chatbot[data-dpi-disabled] .dpi-chatbot__chip { opacity: 0.5; pointer-events: none; }
+
+/* ------------------------------------------------------------------ telefono: tutta la larghezza e l'altezza utile (visualViewport scrive --dpi-chatbot-vt/-kb con la tastiera) */
+@media (max-width: 35.999rem) {
+    .dpi-chatbot__panel {
+        inset-inline-start: max(env(safe-area-inset-left, 0px), var(--dpi-chatbot-gap)); inset-inline-end: var(--_edge);
+        inset-block-start: max(calc(var(--dpi-chatbot-vt, 0px) + env(safe-area-inset-top, 0px) + var(--dpi-chatbot-gap)), var(--dpi-chatbot-top, 0px)); inset-block-end: var(--_pbottom);
+        width: auto; height: auto; max-height: none;
+    }
+}
+/* schermo basso (telefono in orizzontale): il pannello aperto può coprire la bottom bar (il pulsante chiuso no) per non ridursi a una striscia; con la tastiera resta sopra di essa */
+
+@media (forced-colors: active) {
+    .dpi-chatbot__neck { display: none; }
+    .dpi-chatbot__panel { background: none; color: CanvasText; border: 0; box-shadow: none; }
+    .dpi-chatbot__panel > .dpi-drop__shadow { display: none; }
+    .dpi-chatbot__msg[data-role="user"] .dpi-chatbot__bubble { background: Canvas; color: CanvasText; border: 1px solid Highlight; }
+    .dpi-chatbot__bubble { border: 1px solid CanvasText; }
+}
+@media print { .dpi-chatbot { display: none; } }
+
+/* ------------------------------------------------------------------ trigger ESTERNO (js/chatbot.js: data-dpi-chatbot-trigger-for): pulsante dell'app, riceve solo la classe .dpi-chatbot-trigger (aggancio per
+   l'app). NESSUN materiale, colore, velo o filtro è imposto né in quiete né in apertura/chiusura: resta il dpi-btn del tema, uguale agli altri pulsanti DPI. */

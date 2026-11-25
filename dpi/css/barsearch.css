@@ -1,0 +1,68 @@
+/*
+ * dpi — RICERCA DENTRO LA BOTTOM BAR (bar-search.js, 2026-11-24). Attivata da data-dpi-bar-search sulla barra: senza l'attributo la barra non cambia di un pixel.
+ * A riposo: un pulsante lente a SINISTRA delle voci (.dpi-bottombar__search) e la lista delle voci (flessibile). In ricerca la barra è una massa (.dpi-bbn, vedi bottombar.css:
+ * la stessa dei morph delle notifiche) = lente ∪ campo lungo quanto la barra; il campo (.dpi-bar-search) è ritagliato da JavaScript con clip-path dalla sagoma corrente.
+ * Materiale: nessun cambio (vetro della barra per tutta la durata); in Chromium il vetro è la superficie reale della barra, ritagliata (nessun salto di ciò che vede dietro).
+ */
+.dpi-bottombar[data-dpi-bar-searchable] { display: flex; align-items: stretch; }
+.dpi-bottombar[data-dpi-bar-searchable] > .dpi-bottombar__list { flex: 1 1 0; min-width: 0; }
+/* la lente toglie spazio alle voci: nessuna etichetta troncata (se non entrano, la lista scorre come sempre). :where() = specificità minima: l'applicazione può ancora sovrascrivere le colonne */
+:where(.dpi-bottombar[data-dpi-bar-searchable]) > .dpi-bottombar__list { grid-auto-columns: minmax(max(var(--dpi-bar-item-min), min-content), 1fr); }
+
+/* data-dpi-bar-search="off" (anche scritto dopo l'avvio): la lente sparisce e la barra torna quella di prima */
+.dpi-bottombar[data-dpi-bar-search="off"] > .dpi-bottombar__search { display: none; }
+.dpi-bottombar[data-dpi-bar-search="off"][data-dpi-bar-searchable] { display: block; }
+
+.dpi-bottombar__search {
+    position: relative; z-index: 4; flex: none; align-self: stretch; display: flex; align-items: center; justify-content: center;
+    inline-size: 2.75rem; margin: 0; padding: 0; border: 0; border-radius: var(--dpi-radius-pill); background: none;
+    color: var(--dpi-text); font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.dpi-bottombar__search .dpi-icon { width: 1.5rem; height: 1.5rem; stroke-width: var(--dpi-icon-stroke-bar, 1.9); }
+.dpi-bottombar__search::after { content: ""; position: absolute; inset-block: 24%; inset-inline-end: 0; inline-size: 1px; background: var(--dpi-line); opacity: calc(0.9 * var(--dpi-bs-fade, 1)); pointer-events: none; }
+.dpi-bottombar__search:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -3px; }
+.dpi-bottombar__search[aria-expanded="true"] { color: color-mix(in srgb, var(--dpi-accent) 72%, var(--dpi-text)); }
+.dpi-bottombar__search:active .dpi-icon { transform: scale(0.88); }
+
+/* mentre la ricerca è aperta/in transizione: la lente di selezione svanisce con le voci (nessun movimento della lente durante il morph) */
+.dpi-bottombar[data-dpi-bbn-kind="search"] > :is(.dpi-drop__shadow, .dpi-drop__stage, .dpi-drop__tint, .dpi-drop__lens) { opacity: var(--dpi-bs-lens, 1); pointer-events: none; }
+/* Chromium: il vetro della barra resta quello REALE (superficie rifrattiva), ritagliato dalla sagoma in JavaScript */
+.dpi-bottombar[data-dpi-bbn-kind="search"][data-dpi-live] > .dpi-bottombar__surface { visibility: visible; }
+/* barra fissa in basso con tastiera virtuale: si solleva sopra la tastiera (--dpi-bar-kb da visualViewport); la barra incorporata non si sposta */
+.dpi-bottombar:not(.dpi-bottombar--embedded)[data-dpi-bbn-kind="search"] { translate: 0 calc(-1 * var(--dpi-bar-kb, 0px)); transition: none; }
+
+.dpi-bar-search { position: absolute; z-index: 5; margin: 0; padding: 0; border: 0; pointer-events: none; opacity: 0; }
+.dpi-bar-search__field { position: absolute; display: flex; align-items: center; gap: 2px; box-sizing: border-box; padding-inline: 1.1rem var(--bsr-pad-r, 12px); pointer-events: auto; }
+.dpi-bar-search__field::before { content: ""; position: absolute; inset: 4px; border-radius: var(--dpi-radius-pill); box-shadow: inset 0 0 0 2px var(--dpi-focus); opacity: 0; pointer-events: none; transition: opacity var(--dpi-dur-release, 200ms) ease; }
+.dpi-bar-search__field:has(.dpi-bar-search__input:focus-visible)::before { opacity: 0.55; }
+.dpi-bar-search__input {
+    flex: 1 1 0; min-width: 0; height: 2.75rem; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; outline: none;
+    color: var(--dpi-text); font: inherit; font-size: max(16px, 1rem); line-height: 1.25; -webkit-appearance: none; appearance: none;   /* ≥ 16px: iOS non ingrandisce la pagina al fuoco */
+}
+.dpi-bar-search__input::placeholder { color: var(--dpi-text-muted); opacity: 1; }
+.dpi-bar-search__input::-webkit-search-cancel-button, .dpi-bar-search__input::-webkit-search-decoration, .dpi-bar-search__input::-webkit-search-results-button { -webkit-appearance: none; appearance: none; display: none; }
+.dpi-bar-search__btn.dpi-btn { --_fg: var(--dpi-text-muted); flex: none; inline-size: 2.5rem; min-height: 2.5rem; block-size: 2.5rem; padding: 0; border-radius: var(--dpi-radius-pill); touch-action: manipulation; }
+.dpi-bar-search__btn.dpi-btn:hover { --_fg: var(--dpi-text); }
+.dpi-bar-search__btn[hidden] { display: none; }
+.dpi-bar-search__close.dpi-btn { --_fg: var(--dpi-text); }
+.dpi-bar-search__sep { flex: none; inline-size: 1px; block-size: 1.5rem; margin-inline: 2px; background: var(--dpi-line); }
+.dpi-bar-search__btn[hidden] + .dpi-bar-search__sep { margin-inline-start: 0; }
+
+/* suggerimenti (facoltativi): fuori dalla sagoma, sotto (barra in alto) o sopra (barra in basso) */
+.dpi-bar-search__suggest {
+    position: absolute; z-index: 6; margin: 0; padding: 0.3rem; list-style: none; box-sizing: border-box; max-height: 16rem; overflow: auto;
+    background: var(--dpi-surface); color: var(--dpi-text); border: 1px solid var(--dpi-line); border-radius: 1.4rem; box-shadow: var(--dpi-shadow-lg);
+}
+.dpi-bar-search__suggest[hidden] { display: none; }
+.dpi-bar-search__suggest[data-side="below"] { top: calc(100% + 8px); }
+.dpi-bar-search__suggest[data-side="above"] { bottom: calc(100% + 8px); }
+.dpi-bar-search__option { padding: 0.65rem 0.95rem; border-radius: 1.05rem; cursor: pointer; font-size: max(16px, 1rem); }
+.dpi-bar-search__option:hover, .dpi-bar-search__option[data-active] { background: var(--dpi-accent-soft); }
+
+@media (prefers-reduced-motion: reduce) { .dpi-bar-search__field::before { transition: none; } }
+@media (forced-colors: active) {
+    .dpi-bar-search__input { color: CanvasText; }
+    .dpi-bottombar__search::after, .dpi-bar-search__sep { background: CanvasText; }
+    .dpi-bar-search__suggest { border-color: CanvasText; background: Canvas; }
+    .dpi-bar-search__option[data-active] { outline: 2px solid Highlight; }
+}

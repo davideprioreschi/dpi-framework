@@ -1,0 +1,131 @@
+/*
+ * dpi — bottom bar: navigazione PRINCIPALE, capsula flottante in basso. Sono LINK tra pagine (aria-current="page"),
+ * non tab che cambiano pannelli: nessun role tablist/tab. Funziona senza JavaScript:
+ *   - la voce corrente si vede per colore e per l'indicatore, posizionato da CSS dagli attributi data-dpi-count/-index;
+ *   - JavaScript aggiunge il trascinamento della lente, i movimenti e la gestione della tastiera virtuale.
+ * Spazio riservato: .dpi-has-bottombar (aggiunto da `page`) e scroll-padding, così il contenuto e i campi in focus non finiscono sotto la barra.
+ * Safe area: bottom/left/right usano env(safe-area-inset-*) (richiede viewport-fit=cover, impostato da `page`).
+ */
+:root {
+    --dpi-bar-gap: 0.75rem;
+    --dpi-bar-pad: 4px;
+    --dpi-bar-radius: 2rem;
+    --dpi-bar-max: 30rem;
+    --dpi-bar-h-measured: 4.75rem;   /* aggiornato da JS con l'altezza reale */
+    --dpi-bar-space: calc(var(--dpi-bar-h-measured) + 2 * var(--dpi-bar-gap) + env(safe-area-inset-bottom, 0px));
+}
+.dpi-has-bottombar { padding-bottom: var(--dpi-bar-space); }
+:root:has(.dpi-bottombar:not(.dpi-bottombar--embedded)) { scroll-padding-bottom: calc(var(--dpi-bar-space) + 0.5rem); }
+
+.dpi-bottombar {
+    position: fixed; z-index: var(--dpi-z-sticky);
+    left: env(safe-area-inset-left, 0px); right: env(safe-area-inset-right, 0px);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + var(--dpi-bar-gap));
+    margin-inline: auto; width: min(calc(100% - 2 * var(--dpi-bar-gap)), var(--dpi-bar-max));
+    padding: var(--dpi-bar-pad); border-radius: var(--dpi-bar-radius);
+    background: var(--dpi-surface); color: var(--dpi-text); border: 1px solid var(--dpi-line); box-shadow: var(--dpi-shadow-lg);
+    touch-action: pan-y; user-select: none; -webkit-user-select: none;
+    --dpi-bar-item-min: 3.75rem;   /* larghezza minima di una voce: sotto, la barra scorre in orizzontale invece di comprimere le voci */
+    transition: opacity var(--dpi-dur-release) ease, translate var(--dpi-dur-release) var(--dpi-ease-out), visibility 0s linear var(--dpi-dur-release);
+}
+.dpi-bottombar.dpi-glass { --dpi-glass-radius: var(--dpi-bar-radius); --dpi-glass-tint: light-dark(rgb(255 255 255 / 0.82), rgb(28 28 30 / 0.8)); }   /* le etichette restano leggibili su qualunque fondale */
+/* in flusso (anteprime): non fissa, non riserva spazio */
+.dpi-bottombar--inline { position: relative; inset: auto; margin-inline: auto; z-index: 0; }
+/* INCORPORATA (data-dpi-embedded): STESSO componente (materiale, lente, trascinamento), ma in flusso dentro un'altra barra, per esempio quella superiore dell'applicazione.
+   Non è fissa, non riserva spazio in fondo alla pagina (--dpi-bar-space torna a 0 per chatbot, scheletri e padding) e non si ritira con la tastiera virtuale. Larghezza: --dpi-bar-embedded-max. */
+.dpi-bottombar--embedded { position: relative; inset: auto; z-index: 0; margin-inline: auto; width: min(100%, var(--dpi-bar-embedded-max, 26rem)); }
+:root:has(.dpi-bottombar--embedded):not(:has(.dpi-bottombar:not(.dpi-bottombar--embedded))) { --dpi-bar-space: 0px; }
+/* tastiera virtuale aperta su un campo: la barra si ritira (la imposta bottombar.js) */
+.dpi-bottombar[data-dpi-hidden] { opacity: 0; visibility: hidden; pointer-events: none; translate: 0 calc(100% + 2rem); transition-delay: 0s, 0s, var(--dpi-dur-release); }
+
+.dpi-bottombar__list {
+    position: relative; z-index: 1; display: grid; margin: 0; padding: 0; list-style: none;
+    /* N voci QUALUNQUE: una colonna per voce, mai più strette di --dpi-bar-item-min; se lo spazio non basta scorre in orizzontale (le voci non si comprimono) */
+    grid-auto-flow: column; grid-auto-columns: minmax(var(--dpi-bar-item-min), 1fr);
+    overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-snap-type: x proximity;
+    /* la lista è un contenitore di scorrimento: il touch-action effettivo di un tocco su una voce si calcola fino a lei, quindi va impostato QUI (non basta sulla barra) */
+    touch-action: pan-y; -webkit-touch-callout: none;
+}
+.dpi-bottombar__list::-webkit-scrollbar { display: none; }
+.dpi-bottombar__list > li { scroll-snap-align: center; min-width: 0; }
+/* con più voci dello spazio il movimento orizzontale NON scorre in modo nativo (touch-action: pan-y): è il trascinamento della lente, uguale su mouse e touch; ai bordi la lista scorre da sola (bottombar.js) */
+.dpi-bottombar[data-dpi-dragging] .dpi-bottombar__list { scroll-snap-type: none; }
+/* la lente non resta a mezz'aria quando la voce corrente è scorsa fuori dalla barra */
+.dpi-bottombar[data-dpi-lens-offscreen] > :is(.dpi-drop__shadow, .dpi-drop__stage, .dpi-drop__tint, .dpi-drop__lens) { visibility: hidden; }
+/* senza JS (nessuna lente): la voce corrente è evidenziata dalla voce stessa */
+.dpi-bottombar:not([data-dpi-lens]) .dpi-bottombar__item[aria-current="page"] { background: var(--dpi-accent-soft); }
+
+.dpi-bottombar__item {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    min-height: 3.5rem; padding: 0.35rem 0.25rem; border-radius: var(--dpi-radius-pill);
+    color: var(--dpi-text); text-decoration: none; font-size: var(--dpi-text-xs); font-weight: var(--dpi-weight-medium); line-height: 1.15;
+}
+.dpi-bottombar__item:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -3px; }
+.dpi-bottombar__icon { display: flex; transition: transform var(--dpi-dur-release) var(--dpi-ease-spring); }
+.dpi-bottombar__icon .dpi-icon { width: 1.5rem; height: 1.5rem; stroke-width: var(--dpi-icon-stroke-bar, 1.9); }
+.dpi-bottombar__label { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: transform var(--dpi-dur-release) var(--dpi-ease-spring);
+    /* overflow:hidden (serve all'ellisse) taglia al bordo del riempimento: con line-height 1.15 le discendenti di g, j, p, q e y escono dalla riga e venivano tagliate. Lo spazio in più sta nel riempimento e si annulla col margine negativo: la scatola nel layout (altezza, posizione delle voci, barra) NON cambia. */
+    padding-bottom: 0.3em; margin-bottom: -0.3em; }
+.dpi-bottombar__item[aria-current="page"], .dpi-bottombar__item[data-dpi-candidate] { color: color-mix(in srgb, var(--dpi-accent) 72%, var(--dpi-text)); font-weight: var(--dpi-weight-bold); }
+/* pressione: icona e voce si comprimono, poi tornano elastiche */
+.dpi-bottombar__item:active .dpi-bottombar__icon, .dpi-bottombar__item[data-dpi-pressed] .dpi-bottombar__icon { transform: scale(0.84); transition-duration: var(--dpi-dur-press); }
+.dpi-bottombar__item:active .dpi-bottombar__label, .dpi-bottombar__item[data-dpi-pressed] .dpi-bottombar__label { transform: scale(0.94); transition-duration: var(--dpi-dur-press); }
+/* risposta dell'icona alla selezione (impostata da JS per un attimo) */
+.dpi-bottombar__item[data-dpi-pop] .dpi-bottombar__icon { animation: dpi-icon-pop var(--dpi-dur-icon) var(--dpi-ease-spring); }
+
+.dpi-bottombar__badge {
+    position: absolute; top: 0.2rem; left: calc(50% + 0.45rem); min-width: 1.1rem; height: 1.1rem; padding: 0 0.3rem; border-radius: var(--dpi-radius-pill);
+    background: var(--dpi-danger); color: var(--dpi-on-danger); font-size: 0.68rem; font-weight: var(--dpi-weight-label); line-height: 1.1rem; text-align: center;
+}
+
+@media (forced-colors: active) {
+    .dpi-bottombar { border: 1px solid CanvasText; background: Canvas; }
+    .dpi-bottombar__item[aria-current="page"] { outline: 2px solid Highlight; }
+}
+
+/* ---- lente = goccia (drop.js): sporge dalla barra, rifrange fondale e contenuti; l'indicatore CSS resta solo come ripiego senza JS ---- */
+.dpi-bottombar > .dpi-drop__shadow { z-index: 0; }
+.dpi-bottombar > .dpi-drop__stage { z-index: 2; }
+.dpi-bottombar > .dpi-drop__tint { z-index: 3; background: transparent; }
+.dpi-bottombar[data-dpi-lens="none"] > .dpi-drop__shadow, .dpi-bottombar[data-dpi-lens="none"] > .dpi-drop__stage, .dpi-bottombar[data-dpi-lens="none"] > .dpi-drop__tint { display: none; }
+.dpi-bottombar > .dpi-drop__shadow { box-shadow: 0 10px 20px -8px rgb(0 0 0 / 0.3), 0 1px 3px rgb(0 0 0 / 0.12); }
+.dpi-bottombar > .dpi-drop__tint { box-shadow: var(--dpi-drop-rim); }
+.dpi-bottombar .dpi-drop__base { background: var(--dpi-glass-tint); }
+
+/* ---- barra LIVE (Chromium): la superficie è un figlio con backdrop-filter del motore; il tint è suo. Niente copia opaca del fondale. ---- */
+:root { --dpi-bar-tint: light-dark(rgb(255 255 255 / 0.4), rgb(34 34 38 / 0.44)); }
+.dpi-bottombar[data-dpi-live][data-dpi-glass-mode="refraction"]::before { content: none; }
+.dpi-bottombar__surface { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--dpi-bar-tint); pointer-events: none; }
+.dpi-bottombar > .dpi-drop__lens { z-index: 2; }
+
+/* ---- NOTIFICA DALLA BARRA (esperimento «morph», bar-notify.js): per la durata della notifica la UNICA massa `.dpi-bbn` (figlia della barra, sotto le voci) sostituisce il materiale
+   della barra: la barra smette di disegnare sfondo, bordo, ombra e superficie rifrattiva, che sono ridisegnati dalla massa con la stessa sagoma. Il materiale passa in modo continuo
+   (--bbn-m: 0 = barra, 1 = corpo opaco) dal vetro (rifrazione reale solo Chromium, alternativa blur altrove: stessi valori della barra) al corpo opaco del tema con lieve bombatura. */
+.dpi-bottombar[data-dpi-bbn] {
+    background: none !important; border-color: transparent !important; box-shadow: none !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+}
+.dpi-bottombar[data-dpi-bbn]::before { content: none !important; }
+.dpi-bottombar[data-dpi-bbn] > :is(.dpi-bottombar__surface, .dpi-glass__layer) { visibility: hidden; }
+.dpi-bbn {
+    position: absolute; z-index: -1; pointer-events: none; --bbn-m: 0;
+    --dpi-menu-bg: var(--dpi-notify-bg, var(--dpi-surface));
+    --dpi-menu-fg: var(--dpi-notify-fg, var(--dpi-text));
+    --dpi-menu-border: var(--dpi-notify-border, color-mix(in srgb, var(--dpi-menu-fg) 16%, var(--dpi-menu-bg)));
+    --dpi-menu-convex: var(--dpi-notify-convex, 6%);
+    --dpi-menu-hi: color-mix(in srgb, var(--dpi-menu-bg) calc(100% - var(--dpi-menu-convex)), #fff);
+    --dpi-menu-lo: color-mix(in srgb, var(--dpi-menu-bg) calc(100% - var(--dpi-menu-convex) * 1.6), #000);
+}
+.dpi-bbn__glass { position: absolute; inset: 0; background: var(--dpi-bar-tint); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); opacity: calc(1 - var(--bbn-m)); }
+:root[data-dpi-glass-engine="blur"] .dpi-bbn__glass {
+    background: linear-gradient(180deg, light-dark(rgb(255 255 255 / 0.38), rgb(255 255 255 / 0.07)) 0%, transparent 55%), var(--dpi-bar-tint-blur);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8); backdrop-filter: blur(20px) saturate(1.8);
+}
+.dpi-bbn__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dpi-bbn__shadow { fill: #000; stroke: none; opacity: calc(0.18 - 0.06 * var(--bbn-m)); }
+.dpi-bbn__fill { stroke: none; opacity: var(--bbn-m); }
+.dpi-bbn__rim { fill: none; stroke-width: 1; stroke-linejoin: round; stroke: color-mix(in srgb, var(--dpi-glass-border) calc((1 - var(--bbn-m)) * 100%), var(--dpi-menu-border)); }
+@media (prefers-reduced-transparency: reduce) { .dpi-bbn__glass { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--dpi-surface); } }
+@media (forced-colors: active) {
+    .dpi-bbn__glass { display: none; } .dpi-bbn__fill { fill: Canvas; opacity: 1; } .dpi-bbn__rim { stroke: CanvasText; } .dpi-bbn__shadow { display: none; }
+}

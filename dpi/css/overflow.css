@@ -1,0 +1,18 @@
+/* dpi — overflow di tabs e navigazioni con voce «Altro» (opt-in: data-dpi-overflow; vedi js/overflow.js e site/components/overflow.html).
+   Le voci in eccesso restano nel DOM con l'attributo hidden: serve display:none esplicito perché le regole di tab/link impostano display. */
+[data-dpi-overflow] { min-width: 0; max-width: 100%; }
+[data-dpi-overflow] > :is(.dpi-tabs__list, .dpi-nav__list) { flex-wrap: nowrap; overflow: visible; }   /* il menu «Altro» non deve essere ritagliato dalla lista */
+[data-dpi-overflow] :is(.dpi-tabs__tab, .dpi-nav__item) { flex: none; }
+[data-dpi-overflow] :is(.dpi-tabs__tab, .dpi-nav__item, .dpi-overflow)[hidden] { display: none; }
+.dpi-overflow { flex: none; align-self: center; }
+.dpi-overflow[hidden] { display: none; }
+/* pulsante «Altro»: stessa forma di tab/link; lo stato attivo (voce attiva nel menu) ricalca la selezione */
+.dpi-overflow__more { cursor: pointer; font: inherit; font-weight: var(--dpi-weight-medium); }
+.dpi-nav__link.dpi-overflow__more { background: none; border: 0; }
+.dpi-nav__link.dpi-overflow__more:hover { color: var(--dpi-text); background: color-mix(in srgb, var(--dpi-text) 6%, transparent); }
+.dpi-tabs__tab.dpi-overflow__more[data-dpi-overflow-active] { color: var(--dpi-text); background: var(--dpi-sel-bg, var(--dpi-accent-soft)); box-shadow: var(--dpi-sel-shadow, none); }
+.dpi-tabs__tab.dpi-overflow__more:focus-visible, .dpi-nav__link.dpi-overflow__more:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+/* menu: la voce attiva dei link (nav) è evidenziata; per le tab c'è già il segno di spunta di menuitemradio */
+.dpi-overflow__menu a.dpi-menu__item[aria-current] { color: var(--dpi-accent); font-weight: var(--dpi-weight-bold); }
+.dpi-overflow__menu a.dpi-menu__item[aria-current]::after { content: "✓"; margin-inline-start: auto; }
+.dpi-overflow__menu .dpi-menu__label { white-space: nowrap; }

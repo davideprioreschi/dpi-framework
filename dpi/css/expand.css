@@ -1,0 +1,59 @@
+/*
+ * dpi — azioni espandibili. Il pannello sta SEMPRE nella sua posizione finale (area di interazione prevedibile): quello che si muove è la superficie.
+ * Un solo gesto, senza dissolvenze. I materiali reali di trigger e pannello restano sempre visibili (a riposo, in movimento, a fine corsa): in movimento si aggiunge soltanto il livello ponte
+ * (allungamento e collo), dipinto con la stessa definizione del velo e ritagliato per NON coprire i materiali reali. Le icone sono ritagliate dalla forma del pannello da expand.js.
+ * Senza JS il gruppo è sempre visibile.
+ */
+.dpi-expand { position: relative; display: inline-flex; align-self: flex-start; max-width: 100%; align-items: center; gap: 18px; isolation: isolate; }
+.dpi-expand__trigger { --dpi-expand-size: 52px; width: var(--dpi-expand-size); min-height: var(--dpi-expand-size); height: var(--dpi-expand-size); padding: 0; }
+.dpi-expand__trigger .dpi-icon { width: 1.5rem; height: 1.5rem; transition: rotate var(--dpi-dur-select) var(--dpi-ease-spring); }
+.dpi-expand[data-dpi-open] .dpi-expand__trigger .dpi-icon { rotate: 45deg; }
+.dpi-expand__panel { display: inline-flex; align-items: center; padding: 4px; border-radius: var(--dpi-radius-pill); }
+.dpi-expand__items { display: inline-flex; align-items: center; gap: 4px; position: relative; z-index: 1; }
+.dpi-expand__item {
+    position: relative; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
+    background: transparent; color: var(--dpi-text); font: inherit; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.dpi-expand__item .dpi-icon { width: 1.35rem; height: 1.35rem; }
+/* le azioni interne non hanno materiale proprio (quello è della capsula): velo e ombra creati da elasticOnly non si vedono */
+.dpi-expand__item > :is(.dpi-drop__tint, .dpi-drop__shadow) { display: none; }
+.dpi-expand__item:hover { background: light-dark(rgb(255 255 255 / 0.35), rgb(255 255 255 / 0.12)); }
+.dpi-expand__item:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 1px; }
+.dpi-expand__item:disabled, .dpi-expand__item[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.dpi-expand[data-dpi-ready] .dpi-expand__panel[inert], .dpi-expand[data-dpi-ready]:not([data-dpi-open]) .dpi-expand__panel { pointer-events: none; }
+.dpi-expand[data-dpi-collapsed] .dpi-expand__panel { visibility: hidden; }
+/* UNA SOLA SUPERFICIE quando le gocce si toccano o si sovrappongono: il materiale del PANNELLO si estende sull'unione (expand.js, senza dilatare il trigger) e quello del trigger è nascosto (nessun bordo interno,
+   doppio riflesso o scurimento da due veli trasparenti). Prima della fusione e dopo il distacco i materiali reali sono entrambi visibili. */
+.dpi-expand[data-dpi-merged] .dpi-expand__trigger > :is(.dpi-drop__tint, .dpi-drop__shadow, .dpi-drop__stage, .dpi-drop__lens) { visibility: hidden; }
+/* ogni azione compare quando la sagoma del pannello può contenerla (expand.js); inerte finché l'apertura non è assestata (nodi invariati nel DOM) */
+.dpi-expand__item[data-dpi-pending] { visibility: hidden; }
+/* movimento: i materiali reali di trigger e pannello NON vengono mai nascosti né sostituiti; il ponte (allungamento e collo) è un livello separato che non li copre */
+.dpi-expand__goo { position: absolute; inset: 0; z-index: -4; pointer-events: none; visibility: hidden; }
+.dpi-expand[data-dpi-motion] .dpi-expand__goo { visibility: visible; }
+.dpi-expand__goo-body { position: absolute; z-index: auto; }
+.dpi-expand__goo-body[hidden] { display: none; }
+/* LIVELLI: materiali (z negativi), icone (contenuto del trigger), icone delle azioni (.dpi-expand__items, z 1), aree interattive. Il trigger sta sopra il pannello nello stesso contesto
+   (.dpi-expand è isolato): il materiale (velo, lente, stage) e le icone del pannello non possono dipingere sopra l'icona del trigger, nemmeno quando il pannello è collassato su di esso. */
+.dpi-expand__trigger { position: relative; z-index: 2; }
+@media (forced-colors: active) { .dpi-expand__goo { display: none; } }
+
+/* Opening has one shared optical silhouette. The contour follows that same path,
+   rather than the rectangular bounds or either component's original pill rim. */
+.dpi-expand[data-dpi-opening-surface] .dpi-expand__trigger > :is(.dpi-drop__tint, .dpi-drop__shadow, .dpi-drop__stage, .dpi-drop__lens) { visibility: hidden; }
+.dpi-expand[data-dpi-opening-surface] .dpi-expand__panel > .dpi-drop__shadow { visibility: hidden; }
+.dpi-expand[data-dpi-opening-surface] .dpi-expand__panel > .dpi-drop__tint { border-radius: 0 !important; box-shadow: none; }
+.dpi-expand[data-dpi-opening-surface] .dpi-expand__panel > .dpi-drop__tint::before { content: none; }
+.dpi-expand__contour { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; z-index: 1; fill: none; stroke: light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.14)); stroke-width: 2; }   /* stesso anello interno di 1px del velo nativo (--dpi-drop-rim): tracciato di 2px ritagliato dentro la sagoma */
+@media (forced-colors: active) { .dpi-expand__contour { stroke: CanvasText; } }
+
+/* During fusion the shared silhouette retains depth and the same specular material.
+   The shadow filter emits only the outer shadow; the glass itself remains transparent. */
+.dpi-expand__surface-shadow { fill: #000; stroke: none; }
+.dpi-expand__surface-light { width: 100%; height: 100%; pointer-events: none; }
+@media (forced-colors: active) {
+    .dpi-expand__surface-shadow, .dpi-expand__surface-light { display: none !important; }
+}
+
+/* Whole-host brightness filters introduce a separate compositing surface and
+   change glass rendering when hover ends. The drop already owns its lighting. */
+.dpi-expand__trigger.dpi-btn.dpi-glass[data-dpi-drop-ready] { filter: none; }

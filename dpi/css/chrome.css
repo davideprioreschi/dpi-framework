@@ -1,0 +1,18 @@
+/*
+ * dpi — barra di controlli tematizzabile (.dpi-chrome). Una barra (es. la barra superiore di un'applicazione) i cui pulsanti e campi seguono i token --dpi-chrome-*:
+ *   --dpi-chrome-bg     fondo della barra (default trasparente: nessuna fascia sopra il design)
+ *   --dpi-chrome-fg     testo e icone dei controlli
+ *   --dpi-chrome-line   bordo dei controlli
+ *   --dpi-chrome-field  superficie dei controlli (pulsanti, campi, ricerca)
+ *   --dpi-chrome-tint   materiale (corpo della goccia) dei pulsanti con vetro
+ * I token si ridefiniscono sulla barra o su un antenato (tema colorato, brand di un'area): i controlli non dipendono più da bianco/nero. Valgono solo per pulsanti, campi e ricerca
+ * DENTRO la barra: i componenti approvati con materiale proprio (toggle del tema, bottom bar, menu, notifiche) non vengono toccati.
+ */
+.dpi-chrome { background: var(--dpi-chrome-bg); color: var(--dpi-chrome-fg); }
+.dpi-chrome :is(.dpi-btn, .dpi-input, .dpi-searchbar) {
+    --dpi-surface-2: var(--dpi-chrome-field);
+    --dpi-control-border: var(--dpi-chrome-line);
+    --dpi-drop-tint: var(--dpi-chrome-tint);
+}
+.dpi-chrome :is(.dpi-btn:not(.dpi-btn--primary, .dpi-btn--danger), .dpi-input) { color: var(--dpi-chrome-fg); }
+@media (forced-colors: active) { .dpi-chrome { background: transparent; } }

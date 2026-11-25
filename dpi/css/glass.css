@@ -1,0 +1,105 @@
+/*
+ * dpi — superfici "vetro". Tre modalità, scelte da js/glass.js e visibili in data-dpi-glass-mode:
+ *
+ *   refraction  vetro con rifrazione reale (motore upstream): richiede un fondale marcato
+ *               (data-dpi-backdrop) e JavaScript. SOLO in Chromium (data-dpi-glass-engine="refraction"); su Firefox e WebKit glass.js sceglie sempre `blur` (alternativa visiva, vedi glass-compat.css).
+ *   blur        fallback: backdrop-filter sfocato, senza rifrazione. È anche lo stato iniziale / senza JS.
+ *   solid       superficie opaca: reduced-transparency, forced-colors, data-dpi-surface="solid",
+ *               data-dpi-opaque, o browser senza backdrop-filter.
+ *
+ * Leggibilità: il tint (--dpi-glass-tint) è volutamente non trasparente. Dati densi (tabelle, form lunghi)
+ * vanno su superfici solide (.dpi-card, .dpi-table-wrap): il vetro è per chrome e contenitori di accento.
+ * Personalizzazione: --dpi-glass-tint, --dpi-glass-border, --dpi-glass-radius, --dpi-glass-blur su un contenitore.
+ */
+
+/* Fondale: il contenitore che ospita l'immagine che il vetro rifrange */
+.dpi-scene { position: relative; overflow: hidden; isolation: isolate; background: var(--dpi-surface-2); }
+.dpi-scene__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+.dpi-scene__content { position: relative; padding: var(--dpi-space-5) var(--dpi-gutter); }
+@media (max-width: 40rem) { .dpi-scene__content { padding: min(var(--dpi-space-3), 3vw); } }
+.dpi-scene--neutral { background: var(--dpi-scene-neutral); }
+.dpi-scene__img { filter: var(--dpi-scene-img-filter, none); }   /* in tema scuro l'immagine si attenua: la scena segue il tema della pagina (la copia rifratta eredita il filtro) */
+.dpi-scene--sm { min-height: 14rem; }
+.dpi-scene--md { min-height: 26rem; }
+.dpi-scene--lg { min-height: 38rem; }
+
+/* Superficie vetro (stato base = blur) */
+:where(.dpi-glass:not(.dpi-menu, dialog, .dpi-navbar, .dpi-bottombar)) { position: relative; }
+.dpi-glass {
+    isolation: isolate;
+    color: var(--dpi-text);
+    background: var(--dpi-glass-tint);
+    border: 1px solid var(--dpi-glass-border);
+    border-radius: var(--dpi-glass-radius);
+    box-shadow: var(--dpi-glass-shadow);
+    -webkit-backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5);
+    backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5);
+}
+.dpi-glass--pill { --dpi-glass-radius: var(--dpi-radius-pill); }
+
+/* Modalità refraction: tint sopra la copia rifratta del fondale */
+.dpi-glass[data-dpi-glass-mode="refraction"] { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.dpi-glass[data-dpi-glass-mode="refraction"]::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--dpi-glass-tint); pointer-events: none;
+}
+.dpi-glass__layer { position: absolute; inset: 0; z-index: -2; border-radius: inherit; overflow: hidden; pointer-events: none; }
+.dpi-glass__copy { position: absolute; left: 0; top: 0; display: block; max-width: none; max-height: none; margin: 0; user-select: none; }
+
+/* Modalità solid */
+.dpi-glass[data-dpi-glass-mode="solid"], .dpi-glass--solid,
+[data-dpi-surface="solid"] .dpi-glass, .dpi-glass[data-dpi-opaque] {
+    background: var(--dpi-surface); -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.dpi-glass[data-dpi-glass-mode="solid"]::before { content: none; }
+
+/* Vetro dentro un vetro che già rifrange: NESSUNA seconda lente (costosa e inutile), solo materiale traslucido */
+.dpi-glass[data-dpi-glass-mode="nested"] { background: var(--dpi-glass-tint); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+.dpi-glass[data-dpi-glass-mode="nested"]::before { content: none; }
+
+@media (prefers-reduced-transparency: reduce) {
+    .dpi-glass { background: var(--dpi-surface); -webkit-backdrop-filter: none; backdrop-filter: none; }
+    .dpi-glass::before { content: none !important; }
+}
+@media (forced-colors: active) {
+    .dpi-glass { background: Canvas; border-color: CanvasText; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+    .dpi-glass::before { content: none !important; }
+    .dpi-glass__layer { display: none; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .dpi-glass { background: var(--dpi-surface); }
+}
+
+/* Varianti */
+.dpi-glass--strong { --dpi-glass-tint: light-dark(rgb(255 255 255 / 0.78), rgb(28 28 30 / 0.78)); }
+.dpi-glass--clear  { --dpi-glass-tint: light-dark(rgb(255 255 255 / 0.45), rgb(28 28 30 / 0.45)); }
+
+/* Dialog vetro: il resto del dialog usa i token normali */
+dialog.dpi-glass { background: var(--dpi-glass-tint); }
+
+/* Vetro sui controlli: tint e testo coerenti con la variante */
+.dpi-btn.dpi-glass { border-color: var(--dpi-glass-border); }
+/* Colore semantico MIRATO: un velo del colore (vetro tinto) e testo/icone nel colore scuro corrispondente; la superficie resta vetro */
+.dpi-btn--primary.dpi-glass { --dpi-drop-tint: light-dark(color-mix(in srgb, var(--dpi-accent) 26%, transparent), color-mix(in srgb, var(--dpi-accent) 12%, transparent)); --dpi-glass-tint: color-mix(in srgb, var(--dpi-accent) 30%, rgb(255 255 255 / 0.12)); color: light-dark(color-mix(in srgb, var(--dpi-accent) 58%, var(--dpi-text)), color-mix(in srgb, var(--dpi-accent) 15%, #fff)); }
+.dpi-btn--danger.dpi-glass  { --dpi-drop-tint: light-dark(color-mix(in srgb, var(--dpi-danger) 24%, transparent), color-mix(in srgb, var(--dpi-danger) 12%, transparent)); --dpi-glass-tint: color-mix(in srgb, var(--dpi-danger) 28%, rgb(255 255 255 / 0.12)); color: light-dark(color-mix(in srgb, var(--dpi-danger) 58%, var(--dpi-text)), color-mix(in srgb, var(--dpi-danger) 40%, #fff)); }
+.dpi-btn--tinted.dpi-glass  { color: var(--dpi-text); }
+.dpi-btn--plain.dpi-glass   { color: var(--dpi-text); }
+.dpi-btn.dpi-glass:hover:not(:disabled):not([aria-disabled="true"]) { filter: brightness(1.04) saturate(1.08); }   /* un pulsante disabilitato non reagisce all'hover */
+/* NIENTE scale sull'host rifrattivo: la pressione è nel sistema di movimento (si comprime il contenuto) */
+.dpi-navbar.dpi-glass { border-bottom-color: var(--dpi-glass-border); }
+.dpi-segmented.dpi-glass .dpi-segmented__input:checked + .dpi-segmented__label { background: var(--dpi-surface); }
+.dpi-menu.dpi-glass { border-color: var(--dpi-glass-border); }
+/* Sul vetro il testo secondario usa il colore principale: il contrasto dipende dallo sfondo, non solo dal tint */
+.dpi-glass .dpi-segmented__label, .dpi-segmented.dpi-glass .dpi-segmented__label { color: var(--dpi-text); }
+.dpi-navbar.dpi-glass .dpi-btn--plain, .dpi-glass .dpi-btn--plain { color: var(--dpi-text); }
+.dpi-glass .dpi-text--muted, .dpi-glass .dpi-hint { color: var(--dpi-text); }
+.dpi-card.dpi-glass { border-color: var(--dpi-glass-border); }
+
+/* Skin: tavolozze condivise. Si applicano a pagina, scena o card (data-dpi-skin). */
+[data-dpi-skin="violet"] {
+    --dpi-accent: light-dark(#6b3fc9, #b79bff); --dpi-on-accent: light-dark(#ffffff, #1d0b4a);
+    --dpi-accent-soft: light-dark(#efe8fb, #2a1b52);
+}
+[data-dpi-skin="forest"] {
+    --dpi-accent: light-dark(#0b6b4a, #5fe0b0); --dpi-on-accent: light-dark(#ffffff, #04281c);
+    --dpi-accent-soft: light-dark(#e3f4ec, #0c2e22);
+}

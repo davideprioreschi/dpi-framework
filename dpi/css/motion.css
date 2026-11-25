@@ -1,0 +1,111 @@
+/*
+ * dpi — SISTEMA DI MOVIMENTO condiviso. Token e preset: i componenti NON definiscono durate o curve proprie, le
+ * leggono da qui. Sono 6 preset:
+ *
+ *   PRESSIONE    compressione breve all'inizio, ritorno ELASTICO al rilascio      (--dpi-dur-press / --dpi-dur-release)
+ *   SELEZIONE    un indicatore che scorre e cambia forma (bottom bar, segmented)   (--dpi-dur-select)
+ *   SOLLEVAMENTO il controllo si stacca dalla superficie (traslazione + ombra)     (--dpi-lift-y / --dpi-lift-shadow)
+ *   APERTURA     menu/popover che emerge dal proprio trigger (clip-path circolare) (--dpi-dur-open)
+ *   SHEET        ingresso elastico, trascinamento, chiusura animata                (--dpi-dur-sheet)
+ *   ICONE        risposta discreta alla selezione o alla pressione                 (--dpi-dur-icon)
+ *
+ * REGOLA OTTICA: le superfici che rifrangono (.dpi-glass in modalità refraction) NON vengono mai scalate né deformate:
+ * la copia del fondale non resterebbe allineata. Su di esse il movimento è solo di traslazione (translate), apertura
+ * con clip-path e variazioni di colore/ombra; la scala si applica ai CONTENUTI (.dpi-btn__content, icone) o a elementi
+ * non rifrattivi (indicatore del segmented).
+ *
+ * prefers-reduced-motion: durate ≈ 0 (nessuna animazione); lo stato finale è identico.
+ */
+:root {
+    /* curve: spring con leggero overshoot (linear() = baseline 2023) e uscita decisa */
+    --dpi-ease-spring: linear(0, 0.18 4%, 0.55 10%, 0.88 16%, 1.04 22%, 1.07 28%, 1.04 35%, 1.01 45%, 0.995 60%, 1);
+    --dpi-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --dpi-dur-press: 110ms;
+    --dpi-dur-release: 420ms;
+    --dpi-dur-select: 460ms;
+    --dpi-dur-open: 340ms;
+    --dpi-dur-sheet: 460ms;
+    --dpi-dur-icon: 380ms;
+    --dpi-press-scale: 0.94;
+    --dpi-press-scale-content: 0.93;
+    --dpi-lift-y: -5px;
+    --dpi-lift-shadow: 0 14px 30px rgb(0 0 0 / 0.28);
+}
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --dpi-ease-spring: linear;
+        --dpi-dur-press: 0.01ms;
+        --dpi-dur-release: 0.01ms;
+        --dpi-dur-select: 0.01ms;
+        --dpi-dur-open: 0.01ms;
+        --dpi-dur-sheet: 0.01ms;
+        --dpi-dur-icon: 0.01ms;
+    }
+}
+
+/* ---------------------------------------------------------------- PRESSIONE */
+:is(.dpi-btn, .dpi-menu__item, .dpi-bottombar__item, .dpi-segmented__item, .dpi-navbar__link, .dpi-sheet__handle) { -webkit-tap-highlight-color: transparent; }
+
+.dpi-btn { transition: transform var(--dpi-dur-release) var(--dpi-ease-spring), filter var(--dpi-dur-press) ease, box-shadow var(--dpi-dur-release) var(--dpi-ease-out); }
+.dpi-btn:active { transition-duration: var(--dpi-dur-press), var(--dpi-dur-press), var(--dpi-dur-press); }
+/* superfici NON rifrattive: si comprime il pulsante intero */
+.dpi-btn:not(.dpi-glass):not(:disabled):not([aria-disabled="true"]):active { transform: scale(var(--dpi-press-scale)); }
+/* superfici rifrattive: il vetro resta fermo, si comprime il contenuto e il materiale si schiarisce */
+.dpi-btn__content { display: inline-flex; align-items: center; justify-content: center; gap: 0.5em; transition: transform var(--dpi-dur-release) var(--dpi-ease-spring); }
+.dpi-btn:not([data-dpi-drop-ready]):not(:disabled):not([aria-disabled="true"]):active .dpi-btn__content { transform: scale(var(--dpi-press-scale-content)); transition-duration: var(--dpi-dur-press); }
+.dpi-btn.dpi-glass:not([data-dpi-drop-ready]):not(:disabled):not([aria-disabled="true"]):active { filter: brightness(1.08) saturate(1.1); }
+
+/* reduced-motion: nessuna compressione/spostamento in pressione; il feedback e' solo cromatico (piu scuro dell'hover), visibile e senza movimento */
+@media (prefers-reduced-motion: reduce) {
+    .dpi-btn:not(.dpi-glass):not(:disabled):not([aria-disabled="true"]):active { transform: none; filter: brightness(0.88); }
+    .dpi-btn:not([data-dpi-drop-ready]):not(:disabled):not([aria-disabled="true"]):active .dpi-btn__content { transform: none; }
+    .dpi-btn.dpi-glass:not([data-dpi-drop-ready]):not(:disabled):not([aria-disabled="true"]):active { filter: brightness(0.9) saturate(1.1); }
+}
+
+.dpi-menu__item, .dpi-navbar__link { transition: background var(--dpi-dur-press) ease, transform var(--dpi-dur-release) var(--dpi-ease-spring); }
+.dpi-menu__item:active, .dpi-navbar__link:active { transform: scale(0.97); transition-duration: var(--dpi-dur-press); }
+
+/* ---------------------------------------------------------------- SOLLEVAMENTO */
+[data-dpi-lifted] {
+    translate: 0 var(--dpi-lift-y);
+    box-shadow: var(--dpi-lift-shadow);
+}
+
+/* ---------------------------------------------------------------- SELEZIONE: indicatore del segmented */
+.dpi-segmented { position: relative; isolation: isolate; }
+.dpi-segmented__item { z-index: 1; }
+.dpi-segmented__indicator {
+    position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; border-radius: var(--dpi-radius-pill);
+    background: var(--dpi-drop-body), light-dark(rgb(255 255 255 / 0.92), rgb(255 255 255 / 0.06)); box-shadow: var(--dpi-drop-rim), var(--dpi-drop-shadow); transform-origin: center;
+    transition: none;
+}
+.dpi-segmented__indicator[data-dpi-ready] {
+    transition: transform var(--dpi-dur-select) var(--dpi-ease-spring), width var(--dpi-dur-select) var(--dpi-ease-spring), height var(--dpi-dur-select) var(--dpi-ease-spring);
+}
+/* cambio di forma durante la corsa: l'indicatore si allunga e si riassesta */
+.dpi-segmented__indicator[data-dpi-moving] { animation: dpi-stretch var(--dpi-dur-select) var(--dpi-ease-out); }
+@keyframes dpi-stretch { 0% { scale: 1 1; } 35% { scale: 1.14 0.9; } 100% { scale: 1 1; } }
+/* con l'indicatore attivo (JS) lo sfondo del segmento selezionato lo disegna l'indicatore; senza JS resta lo sfondo dell'etichetta */
+.dpi-segmented--indicator.dpi-segmented.dpi-segmented .dpi-segmented__input:checked + .dpi-segmented__label { background: transparent; box-shadow: none; }
+
+/* ---------------------------------------------------------------- ICONE */
+.dpi-segmented__input:checked + .dpi-segmented__label .dpi-icon { animation: dpi-icon-pop var(--dpi-dur-icon) var(--dpi-ease-spring); }
+@keyframes dpi-icon-pop { 0% { scale: 0.82; } 55% { scale: 1.14; } 100% { scale: 1; } }
+
+/* ---------------------------------------------------------------- APERTURA: emerge dal trigger (clip-path, niente scala sul vetro) */
+@keyframes dpi-rise { from { translate: 0 -6px; opacity: 0; } }
+.dpi-js .dpi-navbar__collapse[data-dpi-open] { animation: dpi-rise var(--dpi-dur-open) var(--dpi-ease-out); }
+
+/* ---------------------------------------------------------------- SHEET */
+.dpi-sheet[open] .dpi-sheet__panel { animation: dpi-sheet-in var(--dpi-dur-sheet) var(--dpi-ease-spring); }
+@keyframes dpi-sheet-in { from { transform: translateY(100%); } }
+.dpi-sheet::backdrop { animation: dpi-fade var(--dpi-dur-press) ease-out; }
+@keyframes dpi-fade { from { opacity: 0; } }
+.dpi-sheet[data-dpi-closing]::backdrop { opacity: 0; transition: opacity var(--dpi-dur-release) ease-in; }
+
+/* ---------------------------------------------------------------- SWITCH: la manopola si allunga alla pressione */
+.dpi-switch { transition: background var(--dpi-dur-press) ease; }
+.dpi-switch::before { transition: transform var(--dpi-dur-release) var(--dpi-ease-spring), width var(--dpi-dur-press) ease; }
+.dpi-switch:active::before { width: 1.5rem; aspect-ratio: auto; }
+.dpi-switch:checked:active::before { transform: translateX(1rem); }
+.dpi-sheet[data-dpi-closing] .dpi-sheet__panel { translate: 0 100%; transition: translate var(--dpi-dur-release) var(--dpi-ease-out); }

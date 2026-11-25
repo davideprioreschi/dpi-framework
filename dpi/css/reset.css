@@ -1,0 +1,22 @@
+/*
+ * dpi — reset OPZIONALE ed esplicito. Non incluso da dpi.css: va caricato di proposito.
+ * Agisce SOLO dentro .dpi-root (es. <body class="dpi-root">), mai sull'intera pagina ospite.
+ * Specificità azzerata con :where(): non può mai sovrascrivere un componente, qualunque sia l'ordine di caricamento.
+ */
+:where(.dpi-root) {
+    margin: 0;
+    background: var(--dpi-bg);
+    color: var(--dpi-text);
+    font: var(--dpi-text-md) / var(--dpi-leading) var(--dpi-font);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+:where(.dpi-root) :where(*, *::before, *::after) { box-sizing: border-box; }
+:where(.dpi-root) :where(h1, h2, h3, h4, p, ul, ol, figure, dl, dd) { margin: 0; }
+:where(.dpi-root) :where(h1, h2, h3, h4) { line-height: var(--dpi-leading-tight); font-weight: var(--dpi-weight-bold); }
+:where(.dpi-root) :where(h1) { font-size: var(--dpi-text-xl); }
+:where(.dpi-root) :where(h2) { font-size: var(--dpi-text-lg); }
+:where(.dpi-root) :where(h3) { font-size: var(--dpi-text-md); }
+:where(.dpi-root) :where(ul[role="list"], ol[role="list"]) { list-style: none; padding: 0; }
+:where(.dpi-root) :where(img, svg, video) { max-width: 100%; height: auto; }
+:where(.dpi-root) :where(button, input, select, textarea) { font: inherit; color: inherit; }

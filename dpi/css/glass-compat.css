@@ -1,0 +1,55 @@
+/*
+ * dpi — ALTERNATIVA VISIVA del vetro (Firefox, Safari/WebKit, motori senza rifrazione reale).
+ *
+ * glass.js scrive data-dpi-glass-engine="refraction|blur" su <html>:
+ *   refraction  RIFRAZIONE REALE (solo Chromium): la scena dietro il vetro viene piegata dal filtro SVG. Questo file NON la tocca: ogni regola qui sotto è
+ *               scritta per :root[data-dpi-glass-engine="blur"] e in Chromium non si applica mai (stesso aspetto e stesse animazioni di prima, al pixel).
+ *   blur        ALTERNATIVA VISIVA: nessuna deformazione della scena. Il vetro è sfocatura + saturazione del backdrop (-webkit-backdrop-filter / backdrop-filter),
+ *               velo tinto, riflesso speculare sul bordo, ombra. Non è rifrazione e non la imita con copie del fondale (che Firefox e WebKit rendono in modo diverso).
+ *
+ * Cosa cambia rispetto alla rifrazione reale: la barra, la lente e le manopole NON piegano i pixel dietro di sé (icone, testo e colori che scorrono sotto restano
+ * dritti, solo sfocati); la lente della barra e la manopola del toggle del tema sono pillole dello stesso materiale che si muovono con le stesse molle (drop.js, invariato).
+ * Pulsanti, card, dialog, navbar e interruttori ordinari usano già questo materiale in ogni browser: qui non cambiano.
+ * Reduced-transparency e forced-colors: glass.js sceglie la modalità `solid` (nessuna di queste regole si applica: valgono le superfici piene di glass.css e drop.css).
+ */
+
+:root[data-dpi-glass-engine="blur"] {
+    --dpi-bar-tint-blur: light-dark(rgb(255 255 255 / 0.62), rgb(30 30 34 / 0.6));
+    --dpi-lens-body: light-dark(rgb(255 255 255 / 0.34), rgb(255 255 255 / 0.12));
+    --dpi-lens-sheen: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.2));
+    --dpi-lens-edge: light-dark(rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.3));
+}
+
+/* ---- bottom bar: capsula di vetro sfocato, con luce dall'alto e bordo luminoso (il bordo 1px è quello di .dpi-glass) ---- */
+:root[data-dpi-glass-engine="blur"] .dpi-bottombar.dpi-glass[data-dpi-glass-mode="blur"] {
+    background: linear-gradient(180deg, light-dark(rgb(255 255 255 / 0.38), rgb(255 255 255 / 0.07)) 0%, transparent 55%), var(--dpi-bar-tint-blur);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8); backdrop-filter: blur(20px) saturate(1.8);
+    box-shadow: var(--dpi-glass-shadow), inset 0 1px 0 var(--dpi-lens-edge), inset 0 -1px 0 light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.3));
+}
+
+/* ---- lente della bottom bar: pillola di vetro SOTTO le voci (le etichette non vengono velate né sfocate), con riflesso speculare (.dpi-drop__tint::before di drop.css) ---- */
+:root[data-dpi-glass-engine="blur"] .dpi-bottombar[data-dpi-glass-mode="blur"] > .dpi-drop__tint {
+    z-index: 0;
+    background: linear-gradient(180deg, var(--dpi-lens-sheen) 0%, transparent 46%, light-dark(rgb(0 0 0 / 0.045), rgb(0 0 0 / 0.12)) 100%), var(--dpi-lens-body);
+    -webkit-backdrop-filter: blur(8px) saturate(1.6) brightness(1.06); backdrop-filter: blur(8px) saturate(1.6) brightness(1.06);
+    box-shadow: var(--dpi-drop-rim), inset 0 1px 1px var(--dpi-lens-edge), inset 0 -3px 6px -3px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.35));
+}
+
+/* ---- manopola del toggle del TEMA (nelle altre il vetro è già quello sfocato): stessa pillola della lente, il disco bianco opaco di glass-tint-blur la velava ---- */
+:root[data-dpi-glass-engine="blur"] .dpi-toggle--theme[data-dpi-glass-mode="blur"] > .dpi-drop__tint {
+    background: linear-gradient(180deg, var(--dpi-lens-sheen) 0%, transparent 46%, light-dark(rgb(0 0 0 / 0.045), rgb(0 0 0 / 0.12)) 100%), light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.2));
+    -webkit-backdrop-filter: blur(8px) saturate(1.6) brightness(1.06); backdrop-filter: blur(8px) saturate(1.6) brightness(1.06);
+    box-shadow: var(--dpi-drop-rim), inset 0 1px 1px var(--dpi-lens-edge), inset 0 -3px 6px -3px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.35));
+}
+
+/* senza backdrop-filter il velo della barra e della lente diventa più pieno (il vetro non può sfocare: serve corpo per la leggibilità) */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root[data-dpi-glass-engine="blur"] .dpi-bottombar.dpi-glass[data-dpi-glass-mode="blur"] { background: var(--dpi-surface); }
+}
+@media (prefers-reduced-transparency: reduce) {
+    :root[data-dpi-glass-engine="blur"] .dpi-bottombar.dpi-glass, :root[data-dpi-glass-engine="blur"] .dpi-bottombar > .dpi-drop__tint,
+    :root[data-dpi-glass-engine="blur"] .dpi-toggle--theme > .dpi-drop__tint { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+}
+@media (forced-colors: active) {
+    :root[data-dpi-glass-engine="blur"] .dpi-bottombar.dpi-glass, :root[data-dpi-glass-engine="blur"] .dpi-bottombar > .dpi-drop__tint { background: Canvas; box-shadow: none; }
+}

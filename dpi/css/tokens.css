@@ -1,0 +1,137 @@
+/*
+ * dpi — token visivi. Solo custom properties: nessuna regola su elementi o classi.
+ *
+ * Temi: di default segue il sistema (color-scheme: light dark). Si forza con
+ *   <html data-dpi-theme="light|dark">  oppure su un singolo contenitore.
+ * Personalizzazione per contenitore/cliente: ridefinire i token su un selettore,
+ *   .tenant-acme { --dpi-accent: #7a2bd1; --dpi-radius-md: 4px; }
+ * I colori usano light-dark(): richiede browser con supporto (Chrome 123+, Safari 17.5+, Firefox 120+).
+ */
+:root {
+    color-scheme: light dark;
+}
+[data-dpi-theme="light"] { color-scheme: light; }
+[data-dpi-theme="dark"]  { color-scheme: dark; }
+
+:root {
+    /* Colori semantici */
+    --dpi-bg:            light-dark(#f2f2f7, #000000);
+    --dpi-surface:       light-dark(#ffffff, #1c1c1e);
+    --dpi-surface-2:     light-dark(#f7f7fa, #2c2c2e);
+    --dpi-text:          light-dark(#1c1c1e, #f2f2f7);
+    --dpi-text-muted:    light-dark(#5f5f66, #b9b9c0);
+    --dpi-line:          light-dark(#d1d1d6, #3a3a3c);
+    --dpi-accent:        light-dark(#0a60c8, #4da3ff);
+    --dpi-on-accent:     light-dark(#ffffff, #00152e);
+    --dpi-accent-soft:   light-dark(#e6f0fc, #0f2a4a);
+    --dpi-danger:        light-dark(#b3261e, #ff8a80);
+    --dpi-on-danger:     light-dark(#ffffff, #3b0a07);
+    --dpi-danger-soft:   light-dark(#fdecea, #3b1512);
+    --dpi-success:       light-dark(#1b6e3a, #7ddc9a);
+    --dpi-success-soft:  light-dark(#e7f5ec, #11301b);
+    --dpi-warning:       light-dark(#7a4b00, #ffd27a);
+    --dpi-warning-soft:  light-dark(#fff3d6, #3a2a00);
+    --dpi-info:          light-dark(#0a4fa3, #8fc3ff);
+    --dpi-info-soft:     light-dark(#e6f0fc, #0f2a4a);
+    /* FOCUS da tastiera: anello NEUTRO ad alto contrasto, uguale per tutti i controlli. Configurabile: --dpi-focus (colore), --dpi-focus-width (spessore).
+       Non è mai rimosso: solo :focus-visible (tastiera), niente anello al clic del mouse. Il blu dell'accento resta per selezione e azione primaria, non per il contorno. */
+    --dpi-focus:         light-dark(rgb(24 24 28 / 0.9), rgb(255 255 255 / 0.92));
+    --dpi-focus-width:   2px;
+    --dpi-control-border: light-dark(#8a8a90, #8e8e93);   /* bordo dei controlli: >= 3:1 sulle superfici */
+    --dpi-control-off:   light-dark(#8a8a90, #8e8e93);     /* traccia switch spento */
+    --dpi-control-on:    light-dark(#1b6e3a, #34c759);     /* traccia switch acceso */
+    --dpi-scrim:         rgb(0 0 0 / 0.45);
+
+    /* Tipografia */
+    --dpi-font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;   /* Poppins è locale (css/fonts.css); i fallback valgono solo finché il file non è caricato (font-display: swap) */
+    --dpi-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --dpi-text-xs: 0.75rem;
+    --dpi-text-sm: 0.875rem;
+    --dpi-text-md: 1.0625rem;
+    --dpi-text-lg: 1.25rem;
+    --dpi-text-xl: 1.75rem;
+    --dpi-text-2xl: 2.25rem;
+    --dpi-leading: 1.45;
+    --dpi-leading-tight: 1.2;
+    --dpi-weight-medium: 500;
+    --dpi-weight-bold: 600;      /* solo titoli */
+    --dpi-weight-label: 500;     /* pulsanti, badge, valori di stato */
+    --dpi-weight-field: 400;     /* etichette dei campi, legende, intestazioni di tabella: la gerarchia la dà la dimensione, non il grassetto */
+
+    /* Spaziature (scala 4px) */
+    --dpi-space-1: 0.25rem;
+    --dpi-space-2: 0.5rem;
+    --dpi-space-3: 0.75rem;
+    --dpi-space-4: 1rem;
+    --dpi-space-5: 1.5rem;
+    --dpi-space-6: 2rem;
+    --dpi-space-7: 3rem;
+    --dpi-space-8: 4rem;
+
+    /* Dimensioni */
+    --dpi-control-h: 2.75rem;      /* 44px: bersaglio tattile minimo */
+    --dpi-control-h-sm: 2.25rem;
+    --dpi-control-h-lg: 3.25rem;
+    --dpi-container-max: 64rem;
+    --dpi-gutter: min(1rem, 4vw);   /* le unità di viewport non crescono con lo zoom del testo: il contenuto resta largo */
+
+    /* Raggi */
+    --dpi-radius-sm: 0.5rem;
+    --dpi-radius-md: 0.75rem;
+    --dpi-radius-lg: 1.25rem;
+    --dpi-radius-pill: 999px;
+
+    /* Ombre */
+    --dpi-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.08);
+    --dpi-shadow-md: 0 4px 14px rgb(0 0 0 / 0.12);
+    --dpi-shadow-lg: 0 16px 40px rgb(0 0 0 / 0.22);
+
+    /* Livelli di sovrapposizione */
+    --dpi-z-sticky: 100;
+    --dpi-z-dropdown: 200;
+    --dpi-z-overlay: 300;
+    --dpi-z-modal: 400;
+    --dpi-z-toast: 500;
+
+    /* Movimento */
+    --dpi-dur-fast: 120ms;
+    --dpi-dur: 200ms;
+    --dpi-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    /* Vetro: vedi glass.css. Il tint è volutamente abbastanza opaco da garantire la leggibilità del testo. */
+    /* BARRE DI CONTROLLI TEMATIZZABILI (.dpi-chrome, css/chrome.css): superficie, testo, bordo e materiale dei controlli di una barra. Di default coincidono con i token del tema;
+       un tema colorato li ridefinisce su .dpi-chrome (o su un antenato) e barra e controlli lo seguono senza fasce aggiunte e senza essere vincolati a bianco/nero. */
+    --dpi-chrome-bg:     transparent;
+    --dpi-chrome-fg:     var(--dpi-text);
+    --dpi-chrome-line:   var(--dpi-control-border);
+    --dpi-chrome-field:  var(--dpi-surface-2);
+    --dpi-chrome-tint:   var(--dpi-drop-tint);
+    --dpi-glass-tint:    light-dark(rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.09));   /* NEUTRO e trasparente: il colore semantico è solo dove serve (primary/danger) */
+    --dpi-glass-tint-blur: light-dark(rgb(255 255 255 / 0.62), rgb(40 40 44 / 0.66));   /* senza rifrazione il vetro si appoggia al contenuto: serve più corpo per la leggibilità */
+    --dpi-glass-border:  light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.18));
+    --dpi-glass-shadow:  0 8px 28px rgb(0 0 0 / 0.18);
+    /* Superficie convessa: luce dall'alto a sinistra (come lightAngle del motore), bordo chiaro direzionale, corpo in ombra in basso */
+    /* Bordo NEUTRO e simmetrico: filo scuro/chiaro uniforme + leggera ombra interna di convessità. Il riflesso luminoso NON è qui: è l'anello dinamico
+       di .dpi-drop__tint::before (drop.css), che segue puntatore e movimento. Un'unica fonte per il riflesso (il motore non disegna più il suo). */
+    --dpi-drop-rim: inset 0 0 0 1px light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.14)), inset 0 -6px 10px -7px rgb(0 0 0 / 0.07), inset 0 0 14px rgb(0 0 0 / 0.035);
+    --dpi-drop-tint: light-dark(rgb(0 0 0 / 0.03), rgb(255 255 255 / 0.07));   /* corpo neutro della goccia: appena più scuro dello sfondo in chiaro, più chiaro in scuro */
+    --dpi-drop-body: radial-gradient(130% 150% at 50% 30%, light-dark(rgb(255 255 255 / 0.32), rgb(255 255 255 / 0.1)) 0%, light-dark(rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.02)) 58%, light-dark(rgb(0 0 0 / 0.13), rgb(0 0 0 / 0.2)) 100%);   /* convessità: centro più chiaro, bordo che si scurisce */
+    --dpi-drop-shadow: 0 10px 22px -8px rgb(0 0 0 / 0.28), 0 2px 5px rgb(0 0 0 / 0.1);
+    --dpi-glass-blur:    14px;    /* solo fallback senza rifrazione */
+    --dpi-glass-radius:  var(--dpi-radius-lg);
+    --dpi-glass-tint-nested: light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.12));   /* vetro dentro un altro vetro: niente seconda lente */
+    --dpi-scene-neutral: light-dark(#e9e9ec, #2b2c31);   /* scena neutra per valutare forma e riflessi */
+    --dpi-icon-stroke: 2;
+    --dpi-bg-veil: 0.2;   /* opacità del fondale di pagina sopra --dpi-bg: il testo direttamente sulla pagina resta leggibile (la copia rifratta la eredita). light-dark() vale solo per i colori: il tema scuro è sotto. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --dpi-dur-fast: 0.01ms;
+        --dpi-dur: 0.01ms;
+    }
+}
+
+@media (prefers-color-scheme: dark) { :root:not([data-dpi-theme="light"]) { --dpi-bg-veil: 0.3; --dpi-scene-img-filter: brightness(0.26) saturate(0.8); } }
+:root[data-dpi-theme="dark"] { --dpi-bg-veil: 0.3; --dpi-scene-img-filter: brightness(0.26) saturate(0.8); }
+:root[data-dpi-theme="light"] { --dpi-scene-img-filter: none; }

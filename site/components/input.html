@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>input · DPI</title><meta name="description" content="Documentazione del framework frontend DPI: componenti HTML, guide, esempi e icone."><link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../dpi/dpi.css">
+<link rel="stylesheet" href="../../dpi/css/reset.css">
+<script src="../../dpi/dpi.js" defer></script>
+<script src="../assets/search-index.js" defer></script>
+<script src="../assets/portal.js" defer></script>
+</head><body class="dpi-root"><a class="dpi-skip-link" href="#dpi-1-main">Vai al contenuto</a><header class="dpi-navbar dpi-navbar--sticky dpi-glass" data-dpi-navbar data-dpi-glass="bar"><div class="dpi-navbar__inner dpi-container"><a class="dpi-navbar__brand" href="../index.html">DPI</a><button class="dpi-btn dpi-btn--plain dpi-navbar__toggle" type="button" data-dpi-navbar-toggle aria-controls="dpi-2-menu" aria-expanded="false"><span class="dpi-btn__content">Menu</span></button><div class="dpi-navbar__collapse" id="dpi-2-menu" data-dpi-navbar-collapse><nav aria-label="Documentazione"><ul class="dpi-navbar__list"><li><a class="dpi-navbar__link" href="../index.html">Docs</a></li><li><a class="dpi-navbar__link" href="../components.html">Componenti</a></li><li><a class="dpi-navbar__link" href="../examples.html">Esempi</a></li><li><a class="dpi-navbar__link" href="../icons.html">Icone</a></li><li><a class="dpi-navbar__link" href="../guide.html">Guide</a></li></ul></nav><div class="dpi-navbar__end"><button class="dpi-btn dpi-btn--tinted dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-glass="button" data-dpi-drop="button" data-dpi-dialog-open="cerca" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span class="dpi-btn__label">Cerca</span></span></button><fieldset class="dpi-segmented dpi-glass dpi-glass--pill" data-dpi-glass="button"><legend class="dpi-visually-hidden">Aspetto</legend><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="auto" data-dpi-theme-pref checked><span class="dpi-segmented__label">Auto</span></label><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="light" data-dpi-theme-pref><span class="dpi-segmented__label">Chiaro</span></label><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="dark" data-dpi-theme-pref><span class="dpi-segmented__label">Scuro</span></label></fieldset></div></div></div></header><main data-dpi-loading id="dpi-1-main" class="dpi-container dpi-page dpi-stack"><nav class="dpi-breadcrumb" aria-label="Percorso"><ol class="dpi-breadcrumb__list"><li class="dpi-breadcrumb__item"><a class="dpi-breadcrumb__link" href="../index.html">Docs</a></li><li class="dpi-breadcrumb__item"><a class="dpi-breadcrumb__link" href="../components.html">Componenti</a></li><li class="dpi-breadcrumb__item"><span class="dpi-breadcrumb__current" aria-current="page">input</span></li></ol></nav><h1 class="dpi-heading dpi-heading--1">input</h1><p class="dpi-text dpi-text--muted">Campo di testo (testo, email, password, ricerca, …) con etichetta, suggerimento ed errore.</p><nav class="dpi-nav dpi-nav--underline dpi-nav--scroll" aria-label="In questa pagina" data-dpi-nav><ul class="dpi-nav__list"><li class="dpi-nav__item"><a class="dpi-nav__link" href="#esempi"><span>Esempi</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#quando"><span>Quando usarlo</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#campi-forms"><span>Altezze, stati e barra di filtri</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#proprieta"><span>Classi e attributi</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#comportamento"><span>Comportamento</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#limiti"><span>Parti incomplete</span></a></li></ul></nav><h2 class="dpi-heading dpi-heading--2" id="esempi" tabindex="-1">Esempi</h2><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="esempio-1" tabindex="-1">Tipi e stati</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><div class="dpi-stack dpi-stack--sm">
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex1-1">Nome</label>
+    <input class="dpi-input" id="ex1-1" name="n1" type="text" placeholder="Il tuo nome">
+  </div>
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex1-2">Email</label>
+    <input class="dpi-input" id="ex1-2" name="n2" type="email" aria-describedby="ex1-2-hint">
+    <p class="dpi-hint" id="ex1-2-hint">
+      Non la condividiamo.
+    </p>
+  </div>
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex1-3">Codice</label>
+    <input class="dpi-input" id="ex1-3" name="n3" type="text" aria-describedby="ex1-3-err" aria-invalid="true">
+    <p class="dpi-error" id="ex1-3-err">
+      Il codice non è valido.
+    </p>
+  </div>
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex1-4">Bloccato</label>
+    <input class="dpi-input" id="ex1-4" name="n4" type="text" value="Sola lettura" readonly>
+  </div>
+</div>
+</div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;div class=&quot;dpi-stack dpi-stack--sm&quot;&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-1&quot;&gt;Nome&lt;/label&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-1&quot; name=&quot;n1&quot; type=&quot;text&quot; placeholder=&quot;Il tuo nome&quot;&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-2&quot;&gt;Email&lt;/label&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-2&quot; name=&quot;n2&quot; type=&quot;email&quot; aria-describedby=&quot;dpi-2-hint&quot;&gt;
+    &lt;p class=&quot;dpi-hint&quot; id=&quot;dpi-2-hint&quot;&gt;
+      Non la condividiamo.
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-3&quot;&gt;Codice&lt;/label&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-3&quot; name=&quot;n3&quot; type=&quot;text&quot; aria-describedby=&quot;dpi-3-err&quot; aria-invalid=&quot;true&quot;&gt;
+    &lt;p class=&quot;dpi-error&quot; id=&quot;dpi-3-err&quot;&gt;
+      Il codice non è valido.
+    &lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-4&quot;&gt;Bloccato&lt;/label&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-4&quot; name=&quot;n4&quot; type=&quot;text&quot; value=&quot;Sola lettura&quot; readonly&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="esempio-2" tabindex="-1">Adornamenti (input group)</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><div class="dpi-stack dpi-stack--sm">
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex2-1">Importo</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><span>€</span></span>
+    <input class="dpi-input" id="ex2-1" name="imp" type="number">
+    <span class="dpi-input-group__addon"><span>EUR</span></span></span></span>
+  </div>
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex2-2">Sito</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><span>https://</span></span>
+    <input class="dpi-input" id="ex2-2" name="sito" type="text">
+    </span></span>
+  </div>
+  <div class="dpi-field">
+    <label class="dpi-label" for="ex2-3">Cerca</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><span data-dpi-icon="search"></span></span>
+    <input class="dpi-input" id="ex2-3" name="q" type="search">
+    </span></span>
+  </div>
+</div>
+</div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;div class=&quot;dpi-stack dpi-stack--sm&quot;&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-1&quot;&gt;Importo&lt;/label&gt;&lt;span class=&quot;dpi-input-wrap&quot;&gt;&lt;span class=&quot;dpi-input-group&quot;&gt;&lt;span class=&quot;dpi-input-group__addon&quot;&gt;&lt;span&gt;€&lt;/span&gt;&lt;/span&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-1&quot; name=&quot;imp&quot; type=&quot;number&quot;&gt;
+    &lt;span class=&quot;dpi-input-group__addon&quot;&gt;&lt;span&gt;EUR&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-2&quot;&gt;Sito&lt;/label&gt;&lt;span class=&quot;dpi-input-wrap&quot;&gt;&lt;span class=&quot;dpi-input-group&quot;&gt;&lt;span class=&quot;dpi-input-group__addon&quot;&gt;&lt;span&gt;https://&lt;/span&gt;&lt;/span&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-2&quot; name=&quot;sito&quot; type=&quot;text&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-3&quot;&gt;Cerca&lt;/label&gt;&lt;span class=&quot;dpi-input-wrap&quot;&gt;&lt;span class=&quot;dpi-input-group&quot;&gt;&lt;span class=&quot;dpi-input-group__addon&quot;&gt;&lt;span data-dpi-icon=&quot;search&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-3&quot; name=&quot;q&quot; type=&quot;search&quot;&gt;
+    &lt;/span&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="esempio-3" tabindex="-1">Etichetta flottante</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><div class="dpi-stack dpi-stack--sm">
+  <div class="dpi-field dpi-field--floating">
+    <label class="dpi-label" for="ex3-1">Email</label>
+    <input class="dpi-input" id="ex3-1" name="fe" type="email" placeholder=" ">
+  </div>
+  <div class="dpi-field dpi-field--floating">
+    <label class="dpi-label" for="ex3-2">Cognome</label>
+    <input class="dpi-input" id="ex3-2" name="fc" type="text" placeholder=" ">
+  </div>
+</div>
+</div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;div class=&quot;dpi-stack dpi-stack--sm&quot;&gt;
+  &lt;div class=&quot;dpi-field dpi-field--floating&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-1&quot;&gt;Email&lt;/label&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-1&quot; name=&quot;fe&quot; type=&quot;email&quot; placeholder=&quot; &quot;&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;dpi-field dpi-field--floating&quot;&gt;
+    &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-2&quot;&gt;Cognome&lt;/label&gt;
+    &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-2&quot; name=&quot;fc&quot; type=&quot;text&quot; placeholder=&quot; &quot;&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="esempio-4" tabindex="-1">Password: robustezza e mostra/nascondi</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><div class="dpi-field">
+  <label class="dpi-label" for="ex4-1">Password</label><span class="dpi-input-wrap" data-dpi-password data-dpi-strength="ex4-1-meter"><span class="dpi-input-group">
+  <input class="dpi-input" id="ex4-1" name="pw" type="password" aria-describedby="ex4-1-hint">
+  <span class="dpi-input-group__addon">
+  <button class="dpi-btn dpi-btn--plain dpi-btn--sm dpi-btn--icon-only" title="Mostra o nascondi la password" type="button">
+    <span class="dpi-btn__content"><span data-dpi-icon="eye" data-dpi-icon-size="sm"></span><span class="dpi-visually-hidden">Mostra o nascondi la password</span></span>
+  </button>
+  </span></span><span class="dpi-strength" id="ex4-1-meter" role="status" aria-live="polite"><span class="dpi-strength__bar" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span class="dpi-strength__label" data-dpi-strength-label>Robustezza: —</span></span></span>
+  <p class="dpi-hint" id="ex4-1-hint">
+    La robustezza è calcolata nel browser.
+  </p>
+</div>
+</div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;div class=&quot;dpi-field&quot;&gt;
+  &lt;label class=&quot;dpi-label&quot; for=&quot;dpi-1&quot;&gt;Password&lt;/label&gt;&lt;span class=&quot;dpi-input-wrap&quot; data-dpi-password data-dpi-strength=&quot;dpi-1-meter&quot;&gt;&lt;span class=&quot;dpi-input-group&quot;&gt;
+  &lt;input class=&quot;dpi-input&quot; id=&quot;dpi-1&quot; name=&quot;pw&quot; type=&quot;password&quot; aria-describedby=&quot;dpi-1-hint&quot;&gt;
+  &lt;span class=&quot;dpi-input-group__addon&quot;&gt;
+  &lt;button class=&quot;dpi-btn dpi-btn--plain dpi-btn--sm dpi-btn--icon-only&quot; title=&quot;Mostra o nascondi la password&quot; type=&quot;button&quot;&gt;
+    &lt;span class=&quot;dpi-btn__content&quot;&gt;&lt;span data-dpi-icon=&quot;eye&quot; data-dpi-icon-size=&quot;sm&quot;&gt;&lt;/span&gt;&lt;span class=&quot;dpi-visually-hidden&quot;&gt;Mostra o nascondi la password&lt;/span&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;dpi-strength&quot; id=&quot;dpi-1-meter&quot; role=&quot;status&quot; aria-live=&quot;polite&quot;&gt;&lt;span class=&quot;dpi-strength__bar&quot; aria-hidden=&quot;true&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;dpi-strength__label&quot; data-dpi-strength-label&gt;Robustezza: —&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;p class=&quot;dpi-hint&quot; id=&quot;dpi-1-hint&quot;&gt;
+    La robustezza è calcolata nel browser.
+  &lt;/p&gt;
+&lt;/div&gt;
+</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><h2 class="dpi-heading dpi-heading--2" id="quando" tabindex="-1">Quando usarlo</h2><p class="dpi-text">Per un valore di testo, numero, email, password o ricerca, con etichetta, suggerimento ed errore.</p><h3 class="dpi-heading dpi-heading--3">Rispetto a componenti simili</h3><ul class="dpi-list" aria-label="Componenti simili"><li><a class="dpi-list__row dpi-list__row_link" href="../components/textarea.html"><span class="dpi-list__text"><span class="dpi-list__label">textarea</span><span class="dpi-list__detail">textarea per testo su più righe.</span></span></a></li><li><a class="dpi-list__row dpi-list__row_link" href="../components/combobox.html"><span class="dpi-list__text"><span class="dpi-list__label">combobox</span><span class="dpi-list__detail">combobox per scegliere da un elenco scrivendo.</span></span></a></li><li><a class="dpi-list__row dpi-list__row_link" href="../components/select.html"><span class="dpi-list__text"><span class="dpi-list__label">select</span><span class="dpi-list__detail">select per scegliere da pochi valori noti.</span></span></a></li><li><a class="dpi-list__row dpi-list__row_link" href="../components/datepicker.html"><span class="dpi-list__text"><span class="dpi-list__label">datepicker</span><span class="dpi-list__detail">datepicker per una data.</span></span></a></li></ul><h2 class="dpi-heading dpi-heading--2" id="campi-forms" tabindex="-1">Altezze, stati e barra di filtri</h2><p class="dpi-text"><code>dpi-input</code>, <code>dpi-select</code> e <code>dpi-btn</code> hanno la stessa altezza (<code>--dpi-control-h</code>) e, con <code>--sm</code>, <code>--dpi-control-h-sm</code>. Stati: hover, focus-visible (anello neutro), <code>readonly</code> (bordo tratteggiato), <code>disabled</code>, <code>aria-invalid="true"</code> e <code>:user-invalid</code> (bordo e anello interno in colore di errore, senza cambiare lo spessore), <code>[required]:user-valid</code>. I tipi date/time/number/search/password restano nativi (icona del calendario inclusa, solo ritoccata).</p><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="nuovo-3" tabindex="-1">Barra di filtri (dpi-toolbar)</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><form class="dpi-toolbar" aria-label="Filtri" onsubmit="return false">
+  <div class="dpi-field dpi-field--grow"><label class="dpi-label" for="t-q">Cerca</label><input class="dpi-input" id="t-q" type="search" name="q" placeholder="Nome o codice"></div>
+  <div class="dpi-field"><label class="dpi-label" for="t-d">Dal</label><input class="dpi-input" id="t-d" type="date" name="dal"></div>
+  <div class="dpi-field"><label class="dpi-label" for="t-s">Stato</label><select class="dpi-select" id="t-s" name="stato"><option value="">Tutti</option><option>Attivo</option><option>Sospeso</option></select></div>
+  <div class="dpi-toolbar__actions dpi-toolbar__end"><button class="dpi-btn" type="reset">Azzera</button><button class="dpi-btn dpi-btn--primary" type="submit">Applica</button></div>
+</form></div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;form class=&quot;dpi-toolbar&quot; aria-label=&quot;Filtri&quot; onsubmit=&quot;return false&quot;&gt;
+  &lt;div class=&quot;dpi-field dpi-field--grow&quot;&gt;&lt;label class=&quot;dpi-label&quot; for=&quot;t-q&quot;&gt;Cerca&lt;/label&gt;&lt;input class=&quot;dpi-input&quot; id=&quot;t-q&quot; type=&quot;search&quot; name=&quot;q&quot; placeholder=&quot;Nome o codice&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;&lt;label class=&quot;dpi-label&quot; for=&quot;t-d&quot;&gt;Dal&lt;/label&gt;&lt;input class=&quot;dpi-input&quot; id=&quot;t-d&quot; type=&quot;date&quot; name=&quot;dal&quot;&gt;&lt;/div&gt;
+  &lt;div class=&quot;dpi-field&quot;&gt;&lt;label class=&quot;dpi-label&quot; for=&quot;t-s&quot;&gt;Stato&lt;/label&gt;&lt;select class=&quot;dpi-select&quot; id=&quot;t-s&quot; name=&quot;stato&quot;&gt;&lt;option value=&quot;&quot;&gt;Tutti&lt;/option&gt;&lt;option&gt;Attivo&lt;/option&gt;&lt;option&gt;Sospeso&lt;/option&gt;&lt;/select&gt;&lt;/div&gt;
+  &lt;div class=&quot;dpi-toolbar__actions dpi-toolbar__end&quot;&gt;&lt;button class=&quot;dpi-btn&quot; type=&quot;reset&quot;&gt;Azzera&lt;/button&gt;&lt;button class=&quot;dpi-btn dpi-btn--primary&quot; type=&quot;submit&quot;&gt;Applica&lt;/button&gt;&lt;/div&gt;
+&lt;/form&gt;</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><p class="dpi-text"><code>dpi-toolbar</code>: flex con a capo; i campi (<code>dpi-field</code>, etichetta + controllo) hanno larghezza di base 12rem (<code>dpi-field--grow</code> si allarga, <code>dpi-field--narrow</code> 8rem); i pulsanti diretti o in <code>dpi-toolbar__actions</code> si allineano al bordo inferiore dei campi e hanno la stessa altezza; <code>dpi-toolbar__end</code> spinge il gruppo al lato opposto. Sotto 36rem ogni campo occupa la riga. Dentro <code>dpi-input-group</code> altezza e anello di focus sono unici.</p><h2 class="dpi-heading dpi-heading--2" id="proprieta" tabindex="-1">Classi e attributi</h2><div class="dpi-table-wrap dpi-table-wrap--dashed"><table class="dpi-table dpi-table--stack"><caption class="dpi-visually-hidden">Classi e attributi usati negli esempi di input</caption><thead><tr><th scope="col">Nome</th><th scope="col">Tipo</th></tr></thead><tbody><tr><td data-label="Nome">dpi-btn</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-btn--icon-only</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-btn--plain</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-btn--sm</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-btn__content</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-error</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-field</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-field--floating</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-hint</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-input</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-input-group</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-input-group__addon</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-input-wrap</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-label</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-stack</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-stack--sm</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-strength</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-strength__bar</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-strength__label</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-visually-hidden</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">data-dpi-icon</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-icon-size</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-password</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-strength</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-strength-label</td><td data-label="Tipo">attributo</td></tr></tbody></table></div><p class="dpi-text dpi-text--muted">Le varianti e gli stati sono quelli mostrati negli esempi: copia il markup e cambia le classi di variante (es. dpi-btn--primary). Gli strati ottici di lenti e animazioni li crea il framework.</p><h2 class="dpi-heading dpi-heading--2" id="comportamento" tabindex="-1">Comportamento: tastiera, eventi e stati</h2><div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Tastiera</h4><p class="dpi-text">Come un campo nativo; reveal: pulsante Mostra/nascondi con aria-pressed.</p></div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Eventi</h4><p class="dpi-text">input/change/invalid nativi.</p></div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Stati e varianti</h4><p class="dpi-text">hint, error (aria-invalid), required, disabled, readonly; floating; strength.</p></div></div><h2 class="dpi-heading dpi-heading--2" id="limiti" tabindex="-1">Parti incomplete</h2><ul><li><p class="dpi-text">La robustezza password è un&apos;euristica semplice (lunghezza e varietà), non una verifica contro password note.</p></li><li><p class="dpi-text">Password strength (parziale): Euristica semplice calcolata nel browser.</p></li></ul><dialog class="dpi-dialog dpi-glass dpi-glass--strong" id="cerca" aria-labelledby="cerca-title" data-dpi-dismissible><form class="dpi-dialog__form" method="dialog"><div class="dpi-dialog__header"><h2 class="dpi-dialog__title" id="cerca-title">Cerca nella documentazione</h2></div><div class="dpi-dialog__body dpi-stack"><div class="dpi-field"><label class="dpi-label" for="dpi-3">Cerca</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><svg class="dpi-icon dpi-icon--md" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></span><input class="dpi-input" id="dpi-3" name="q" type="search" placeholder="Componente, proprietà o guida"></span></span></div><div aria-label="Risultati"><p class="dpi-text dpi-text--muted">Scrivi per cercare componenti, proprietà e guide.</p></div></div><div class="dpi-dialog__footer"></div></form></dialog></main></body></html>

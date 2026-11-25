@@ -1,0 +1,48 @@
+/*
+ * dpi — barra di avanzamento. <progress> nativo (semantica e valore reali: role progressbar, valuenow/valuemax, lettori di schermo) con presentazione DPI: traccia sobria incassata, riempimento
+ * bombato (gradiente verticale appena percettibile e filo di luce in alto, stessa grammatica dei pulsanti), estremi arrotondati. Nessuna striscia, nessun colore casuale.
+ *   --dpi-progress-color   colore del riempimento (default: --dpi-accent, cioè il colore del tema/progetto); si ridefinisce su un antenato o sul <progress>
+ *   --dpi-progress-track   colore della traccia (default: testo al 10% sul fondo)
+ * Varianti di tono: .dpi-progress--success | --warning | --danger. Piccola: .dpi-progress--sm.
+ * L'avanzamento NON è comunicato solo dal colore: il componente composto .dpi-progressbar affianca SEMPRE l'etichetta e il valore in testo («12 di 40 · 30%»), e la sola barra ha comunque nome e valore accessibili.
+ * Senza `value` la barra è indeterminata (attesa): si anima con un lento respiro dell'opacità; con prefers-reduced-motion resta ferma a metà. Nessun elemento da completare: usa value="0" e un testo che lo dica.
+ * Aggiornamenti fluidi: la larghezza del riempimento ha una transizione breve (disattivata con prefers-reduced-motion).
+ */
+.dpi-progress {
+    --_c: var(--dpi-progress-color, var(--dpi-accent));
+    appearance: none; -webkit-appearance: none; display: block; inline-size: 100%; block-size: 0.75rem; margin: 0; border: 0; border-radius: var(--dpi-radius-pill); overflow: hidden;
+    background: var(--dpi-progress-track, color-mix(in srgb, var(--dpi-text) 10%, transparent));
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.18), inset 0 0 0 1px color-mix(in srgb, var(--dpi-text) 8%, transparent);
+    accent-color: var(--_c);
+}
+.dpi-progress--sm { block-size: 0.5rem; }
+.dpi-progress--success { --_c: var(--dpi-success); }
+.dpi-progress--warning { --_c: var(--dpi-warning); }
+.dpi-progress--danger { --_c: var(--dpi-danger); }
+.dpi-progress::-webkit-progress-bar { background: transparent; border-radius: var(--dpi-radius-pill); }
+.dpi-progress::-webkit-progress-value {
+    border-radius: var(--dpi-radius-pill); transition: width var(--dpi-dur) var(--dpi-ease);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--_c) 82%, white) 0%, var(--_c) 52%, color-mix(in srgb, var(--_c) 84%, black) 100%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.38), 0 0 0 0.5px color-mix(in srgb, var(--_c) 70%, black);
+}
+.dpi-progress::-moz-progress-bar {
+    border-radius: var(--dpi-radius-pill);
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--_c) 82%, white) 0%, var(--_c) 52%, color-mix(in srgb, var(--_c) 84%, black) 100%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.38), 0 0 0 0.5px color-mix(in srgb, var(--_c) 70%, black);
+}
+.dpi-progress:indeterminate { background-image: linear-gradient(to right, transparent 25%, color-mix(in srgb, var(--_c) 55%, transparent) 25% 75%, transparent 75%); animation: dpi-progress-breathe 1.8s var(--dpi-ease) infinite alternate; }
+@keyframes dpi-progress-breathe { from { opacity: 0.45; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+    .dpi-progress::-webkit-progress-value { transition: none; }
+    .dpi-progress:indeterminate { animation: none; }
+}
+@media (forced-colors: active) {
+    .dpi-progress { border: 1px solid CanvasText; background: Canvas; box-shadow: none; }
+    .dpi-progress::-webkit-progress-value, .dpi-progress::-moz-progress-bar { background: Highlight; box-shadow: none; }
+}
+
+/* componente composto: intestazione (etichetta a sinistra, valore a destra, testo reale) + barra. Etichette e valori lunghi vanno a capo senza spingere via la barra. */
+.dpi-progressbar { display: grid; gap: var(--dpi-space-2); min-width: 0; }
+.dpi-progressbar__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: var(--dpi-space-3); row-gap: var(--dpi-space-1); min-width: 0; }
+.dpi-progressbar__label { min-width: 0; overflow-wrap: anywhere; font-size: var(--dpi-text-sm); color: var(--dpi-text-muted); }
+.dpi-progressbar__value { margin-inline-start: auto; font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-medium); font-variant-numeric: tabular-nums; color: var(--dpi-text); }

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>navbar · DPI</title><meta name="description" content="Documentazione del framework frontend DPI: componenti HTML, guide, esempi e icone."><link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../dpi/dpi.css">
+<link rel="stylesheet" href="../../dpi/css/reset.css">
+<script src="../../dpi/dpi.js" defer></script>
+<script src="../assets/search-index.js" defer></script>
+<script src="../assets/portal.js" defer></script>
+</head><body class="dpi-root"><a class="dpi-skip-link" href="#dpi-1-main">Vai al contenuto</a><header class="dpi-navbar dpi-navbar--sticky dpi-glass" data-dpi-navbar data-dpi-glass="bar"><div class="dpi-navbar__inner dpi-container"><a class="dpi-navbar__brand" href="../index.html">DPI</a><button class="dpi-btn dpi-btn--plain dpi-navbar__toggle" type="button" data-dpi-navbar-toggle aria-controls="dpi-2-menu" aria-expanded="false"><span class="dpi-btn__content">Menu</span></button><div class="dpi-navbar__collapse" id="dpi-2-menu" data-dpi-navbar-collapse><nav aria-label="Documentazione"><ul class="dpi-navbar__list"><li><a class="dpi-navbar__link" href="../index.html">Docs</a></li><li><a class="dpi-navbar__link" href="../components.html">Componenti</a></li><li><a class="dpi-navbar__link" href="../examples.html">Esempi</a></li><li><a class="dpi-navbar__link" href="../icons.html">Icone</a></li><li><a class="dpi-navbar__link" href="../guide.html">Guide</a></li></ul></nav><div class="dpi-navbar__end"><button class="dpi-btn dpi-btn--tinted dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-glass="button" data-dpi-drop="button" data-dpi-dialog-open="cerca" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg><span class="dpi-btn__label">Cerca</span></span></button><fieldset class="dpi-segmented dpi-glass dpi-glass--pill" data-dpi-glass="button"><legend class="dpi-visually-hidden">Aspetto</legend><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="auto" data-dpi-theme-pref checked><span class="dpi-segmented__label">Auto</span></label><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="light" data-dpi-theme-pref><span class="dpi-segmented__label">Chiaro</span></label><label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="dark" data-dpi-theme-pref><span class="dpi-segmented__label">Scuro</span></label></fieldset></div></div></div></header><main data-dpi-loading id="dpi-1-main" class="dpi-container dpi-page dpi-stack"><nav class="dpi-breadcrumb" aria-label="Percorso"><ol class="dpi-breadcrumb__list"><li class="dpi-breadcrumb__item"><a class="dpi-breadcrumb__link" href="../index.html">Docs</a></li><li class="dpi-breadcrumb__item"><a class="dpi-breadcrumb__link" href="../components.html">Componenti</a></li><li class="dpi-breadcrumb__item"><span class="dpi-breadcrumb__current" aria-current="page">navbar</span></li></ol></nav><h1 class="dpi-heading dpi-heading--1">navbar</h1><p class="dpi-text dpi-text--muted">Barra superiore OPZIONALE (non è la navigazione principale della demo): i link vanno nella lista, gli altri componenti a destra. Si comprime sotto 768px.</p><nav class="dpi-nav dpi-nav--underline dpi-nav--scroll" aria-label="In questa pagina" data-dpi-nav><ul class="dpi-nav__list"><li class="dpi-nav__item"><a class="dpi-nav__link" href="#esempi"><span>Esempi</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#proprieta"><span>Classi e attributi</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#comportamento"><span>Comportamento</span></a></li><li class="dpi-nav__item"><a class="dpi-nav__link" href="#limiti"><span>Parti incomplete</span></a></li></ul></nav><h2 class="dpi-heading dpi-heading--2" id="esempi" tabindex="-1">Esempi</h2><div class="dpi-u-mb-xl dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column"><h3 class="dpi-heading dpi-heading--3" id="esempio-1" tabindex="-1">Barra di navigazione</h3><div class="dpi-u-p-lg dpi-u-gap-md dpi-u-d-flex dpi-u-dir-column dpi-u-b-dashed dpi-u-r-lg dpi-u-ov-visible"><header class="dpi-navbar dpi-glass" data-dpi-navbar data-dpi-glass="bar">
+  <div class="dpi-navbar__inner dpi-container">
+    <a class="dpi-navbar__brand" href="#">Marchio</a>
+    <button class="dpi-btn dpi-btn--plain dpi-navbar__toggle" type="button" data-dpi-navbar-toggle aria-controls="ex1-1-menu" aria-expanded="false">
+      <span class="dpi-btn__content">Menu</span>
+    </button>
+    <div class="dpi-navbar__collapse" id="ex1-1-menu" data-dpi-navbar-collapse>
+      <nav aria-label="Principale">
+        <ul class="dpi-navbar__list">
+          <li>
+            <a class="dpi-navbar__link" href="#docs" aria-current="page">Docs</a>
+          </li>
+          <li>
+            <a class="dpi-navbar__link" href="#esempi">Esempi</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="dpi-navbar__end">
+        <div class="dpi-dropdown" data-dpi-dropdown="actions">
+          <button class="dpi-btn" type="button" data-dpi-dropdown-trigger>
+            Account
+          </button>
+          <div class="dpi-menu dpi-glass" id="ex1-2" data-dpi-dropdown-panel data-dpi-glass="menu" data-dpi-drop="menu">
+            <ul class="dpi-menu__list">
+              <li>
+                <a class="dpi-menu__item" href="#profilo"><span class="dpi-menu__label">Profilo</span></a>
+              </li>
+              <li>
+                <a class="dpi-menu__item" href="#esci"><span class="dpi-menu__label">Esci</span></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+</div><div class="dpi-code"><pre class="dpi-code__pre" tabindex="0" role="region" aria-label="Codice HTML"><code>&lt;header class=&quot;dpi-navbar dpi-glass&quot; data-dpi-navbar data-dpi-glass=&quot;bar&quot;&gt;
+  &lt;div class=&quot;dpi-navbar__inner dpi-container&quot;&gt;
+    &lt;a class=&quot;dpi-navbar__brand&quot; href=&quot;#&quot;&gt;Marchio&lt;/a&gt;
+    &lt;button class=&quot;dpi-btn dpi-btn--plain dpi-navbar__toggle&quot; type=&quot;button&quot; data-dpi-navbar-toggle aria-controls=&quot;dpi-1-menu&quot; aria-expanded=&quot;false&quot;&gt;
+      &lt;span class=&quot;dpi-btn__content&quot;&gt;Menu&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class=&quot;dpi-navbar__collapse&quot; id=&quot;dpi-1-menu&quot; data-dpi-navbar-collapse&gt;
+      &lt;nav aria-label=&quot;Principale&quot;&gt;
+        &lt;ul class=&quot;dpi-navbar__list&quot;&gt;
+          &lt;li&gt;
+            &lt;a class=&quot;dpi-navbar__link&quot; href=&quot;#docs&quot; aria-current=&quot;page&quot;&gt;Docs&lt;/a&gt;
+          &lt;/li&gt;
+          &lt;li&gt;
+            &lt;a class=&quot;dpi-navbar__link&quot; href=&quot;#esempi&quot;&gt;Esempi&lt;/a&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/nav&gt;
+      &lt;div class=&quot;dpi-navbar__end&quot;&gt;
+        &lt;div class=&quot;dpi-dropdown&quot; data-dpi-dropdown=&quot;actions&quot;&gt;
+          &lt;button class=&quot;dpi-btn&quot; type=&quot;button&quot; data-dpi-dropdown-trigger&gt;
+            Account
+          &lt;/button&gt;
+          &lt;div class=&quot;dpi-menu dpi-glass&quot; id=&quot;dpi-2&quot; data-dpi-dropdown-panel data-dpi-glass=&quot;menu&quot; data-dpi-drop=&quot;menu&quot;&gt;
+            &lt;ul class=&quot;dpi-menu__list&quot;&gt;
+              &lt;li&gt;
+                &lt;a class=&quot;dpi-menu__item&quot; href=&quot;#profilo&quot;&gt;&lt;span class=&quot;dpi-menu__label&quot;&gt;Profilo&lt;/span&gt;&lt;/a&gt;
+              &lt;/li&gt;
+              &lt;li&gt;
+                &lt;a class=&quot;dpi-menu__item&quot; href=&quot;#esci&quot;&gt;&lt;span class=&quot;dpi-menu__label&quot;&gt;Esci&lt;/span&gt;&lt;/a&gt;
+              &lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+</code></pre><div class="dpi-code__copy"><button class="dpi-btn dpi-btn--sm dpi-glass dpi-glass--pill" data-dpi-copy data-dpi-glass="button" data-dpi-drop="button" type="button"><span class="dpi-btn__content"><svg class="dpi-icon dpi-icon--sm" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="copy" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg><span class="dpi-btn__label">Copia</span></span></button></div></div></div><h2 class="dpi-heading dpi-heading--2" id="proprieta" tabindex="-1">Classi e attributi</h2><div class="dpi-table-wrap dpi-table-wrap--dashed"><table class="dpi-table dpi-table--stack"><caption class="dpi-visually-hidden">Classi e attributi usati negli esempi di navbar</caption><thead><tr><th scope="col">Nome</th><th scope="col">Tipo</th></tr></thead><tbody><tr><td data-label="Nome">dpi-btn</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-btn--plain</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-btn__content</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-container</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-dropdown</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-glass</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-menu</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-menu__item</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-menu__label</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-menu__list</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__brand</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__collapse</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__end</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__inner</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__link</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__list</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">dpi-navbar__toggle</td><td data-label="Tipo">classe</td></tr><tr><td data-label="Nome">data-dpi-drop</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-dropdown</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-dropdown-panel</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-dropdown-trigger</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-glass</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-navbar</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-navbar-collapse</td><td data-label="Tipo">attributo</td></tr><tr><td data-label="Nome">data-dpi-navbar-toggle</td><td data-label="Tipo">attributo</td></tr></tbody></table></div><p class="dpi-text dpi-text--muted">Le varianti e gli stati sono quelli mostrati negli esempi: copia il markup e cambia le classi di variante (es. dpi-btn--primary). Gli strati ottici di lenti e animazioni li crea il framework.</p><h2 class="dpi-heading dpi-heading--2" id="comportamento" tabindex="-1">Comportamento: tastiera, eventi e stati</h2><div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Tastiera</h4><p class="dpi-text">Tab tra le voci; Escape chiude il menu mobile.</p></div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Eventi</h4><p class="dpi-text">dpi:open, dpi:close.</p></div><div class="dpi-u-mb-sm"><h4 class="dpi-heading dpi-heading--4">Stati e varianti</h4><p class="dpi-text">sticky, glass.</p></div></div><h2 class="dpi-heading dpi-heading--2" id="limiti" tabindex="-1">Parti incomplete</h2><ul><li><p class="dpi-text">Toggler (parziale): Non esiste un componente toggler autonomo.</p></li></ul><dialog class="dpi-dialog dpi-glass dpi-glass--strong" id="cerca" aria-labelledby="cerca-title" data-dpi-dismissible><form class="dpi-dialog__form" method="dialog"><div class="dpi-dialog__header"><h2 class="dpi-dialog__title" id="cerca-title">Cerca nella documentazione</h2></div><div class="dpi-dialog__body dpi-stack"><div class="dpi-field"><label class="dpi-label" for="dpi-3">Cerca</label><span class="dpi-input-wrap"><span class="dpi-input-group"><span class="dpi-input-group__addon"><svg class="dpi-icon dpi-icon--md" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false" data-dpi-icon="search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg></span><input class="dpi-input" id="dpi-3" name="q" type="search" placeholder="Componente, proprietà o guida"></span></span></div><div aria-label="Risultati"><p class="dpi-text dpi-text--muted">Scrivi per cercare componenti, proprietà e guide.</p></div></div><div class="dpi-dialog__footer"></div></form></dialog></main></body></html>

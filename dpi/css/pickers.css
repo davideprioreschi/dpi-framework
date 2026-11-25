@@ -1,0 +1,38 @@
+/* dpi — selettori: ora (dpi-timepicker), giorni della settimana (dpi-weekdays), data+ora (dpi-datetime). Il selettore di data (dpi-datepicker) è in widgets.css.
+   Solo token --dpi-*: tema chiaro/scuro e contrasto forzato seguono i token. I pannelli vivono in un popover (top layer): visibili e cliccabili anche in un <dialog> modale. */
+
+/* ---------------------------------------------------------------- ora */
+.dpi-timepicker { position: relative; min-width: 7.5rem; }
+.dpi-timepicker .dpi-input { min-width: 0; font-variant-numeric: tabular-nums; }
+.dpi-timepicker[data-disabled] { opacity: 0.5; }
+.dpi-timepicker__panel { padding: var(--dpi-space-2); max-width: none; box-shadow: var(--dpi-shadow-lg); }
+.dpi-timepicker__cols { display: flex; gap: var(--dpi-space-2); }
+.dpi-timepicker__col { position: relative; display: grid; align-content: start; gap: 2px; min-width: 3.5rem; max-height: 14rem; padding: 2px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.dpi-timepicker__col + .dpi-timepicker__col { padding-inline-start: var(--dpi-space-2); border-inline-start: 1px solid var(--dpi-line); }
+.dpi-timepicker__opt { display: grid; place-items: center; min-height: var(--dpi-control-h-sm); padding: 0 var(--dpi-space-3); border: 0; border-radius: var(--dpi-radius-md); background: none; color: var(--dpi-text); font: inherit; font-size: var(--dpi-text-sm); font-variant-numeric: tabular-nums; cursor: pointer; transition: background var(--dpi-dur-fast); }
+.dpi-timepicker__opt:hover:not(:disabled) { background: color-mix(in srgb, var(--dpi-text) 8%, transparent); }
+.dpi-timepicker__opt[aria-selected="true"], .dpi-timepicker__opt[aria-selected="true"]:hover { background: var(--dpi-accent); color: var(--dpi-on-accent); }
+.dpi-timepicker__opt:disabled { opacity: 0.3; cursor: not-allowed; }
+.dpi-timepicker__opt:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+
+/* ---------------------------------------------------------------- giorni della settimana */
+.dpi-weekdays { display: flex; flex-wrap: wrap; gap: var(--dpi-space-2); min-width: 0; margin: 0; padding: 0; border: 0; }
+.dpi-weekdays__item { position: relative; display: inline-flex; }
+.dpi-weekdays__input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.dpi-weekdays__body { display: grid; place-items: center; min-width: var(--dpi-control-h); height: var(--dpi-control-h); padding: 0 var(--dpi-space-2); border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-pill); background: var(--dpi-field-bg, var(--dpi-surface)); color: var(--dpi-text); font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-medium); user-select: none; transition: background var(--dpi-dur-fast), border-color var(--dpi-dur-fast); }
+.dpi-weekdays__input:hover:not(:disabled) + .dpi-weekdays__body { border-color: color-mix(in srgb, var(--dpi-text) 38%, transparent); }
+.dpi-weekdays__input:checked + .dpi-weekdays__body { background: var(--dpi-accent); border-color: var(--dpi-accent); color: var(--dpi-on-accent); }
+.dpi-weekdays__input:focus-visible + .dpi-weekdays__body { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 2px; }
+.dpi-weekdays__input:disabled { cursor: not-allowed; }
+.dpi-weekdays__input:disabled + .dpi-weekdays__body { opacity: 0.5; }
+
+/* ---------------------------------------------------------------- data + ora affiancate */
+.dpi-datetime { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--dpi-space-3); }
+.dpi-datetime > .dpi-field { flex: 1 1 11rem; min-width: 0; }
+
+@media (prefers-reduced-motion: reduce) { .dpi-timepicker__opt, .dpi-weekdays__body { transition: none; } }
+@media (forced-colors: active) {
+    .dpi-timepicker__panel { border: 1px solid CanvasText; }
+    .dpi-timepicker__opt[aria-selected="true"], .dpi-weekdays__input:checked + .dpi-weekdays__body { background: Highlight; color: HighlightText; border-color: Highlight; }
+    .dpi-weekdays__body { border-color: ButtonText; }
+}

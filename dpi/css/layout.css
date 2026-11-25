@@ -1,0 +1,112 @@
+/*
+ * dpi — layout: container, griglia, stack, cluster, spaziature.
+ * Breakpoint (valori fissi, le custom properties non valgono nelle media query):
+ *   sm 36rem (576px) · md 48rem (768px) · lg 64rem (1024px)
+ * Mobile-first: le colonne si impilano finché non è dichiarato il breakpoint.
+ */
+.dpi-container {
+    width: 100%;
+    max-width: var(--dpi-container-max);
+    margin-inline: auto;
+    padding-inline: var(--dpi-gutter);
+}
+.dpi-container--narrow { max-width: 40rem; }
+.dpi-container--fluid { max-width: none; }
+
+/* Stack: spaziatura verticale tra figli diretti */
+.dpi-stack { display: flex; flex-direction: column; gap: var(--dpi-stack-gap, var(--dpi-space-4)); }
+.dpi-stack--sm { --dpi-stack-gap: var(--dpi-space-2); }
+.dpi-stack--lg { --dpi-stack-gap: var(--dpi-space-6); }
+
+/* Cluster: riga che va a capo (azioni, badge, toolbar) */
+.dpi-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dpi-cluster-gap, var(--dpi-space-2)); }
+.dpi-cluster--between { justify-content: space-between; }
+.dpi-cluster--end { justify-content: flex-end; }
+.dpi-cluster--lg { --dpi-cluster-gap: var(--dpi-space-4); }
+
+/* Griglia a 12 colonne */
+.dpi-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--dpi-grid-gap, var(--dpi-space-4));
+}
+.dpi-grid > * { grid-column: span 12; min-width: 0; }
+.dpi-grid--gap-lg { --dpi-grid-gap: var(--dpi-space-5); }
+
+.dpi-col-1  { grid-column: span 1; }  .dpi-col-2  { grid-column: span 2; }
+.dpi-col-3  { grid-column: span 3; }  .dpi-col-4  { grid-column: span 4; }
+.dpi-col-5  { grid-column: span 5; }  .dpi-col-6  { grid-column: span 6; }
+.dpi-col-7  { grid-column: span 7; }  .dpi-col-8  { grid-column: span 8; }
+.dpi-col-9  { grid-column: span 9; }  .dpi-col-10 { grid-column: span 10; }
+.dpi-col-11 { grid-column: span 11; } .dpi-col-12 { grid-column: span 12; }
+
+@media (min-width: 36rem) {
+    .dpi-grid > .dpi-col-sm-3 { grid-column: span 3; } .dpi-grid > .dpi-col-sm-4 { grid-column: span 4; }
+    .dpi-grid > .dpi-col-sm-6 { grid-column: span 6; } .dpi-grid > .dpi-col-sm-8 { grid-column: span 8; }
+    .dpi-grid > .dpi-col-sm-12 { grid-column: span 12; }
+}
+@media (min-width: 48rem) {
+    .dpi-grid > .dpi-col-md-3 { grid-column: span 3; } .dpi-grid > .dpi-col-md-4 { grid-column: span 4; }
+    .dpi-grid > .dpi-col-md-6 { grid-column: span 6; } .dpi-grid > .dpi-col-md-8 { grid-column: span 8; }
+    .dpi-grid > .dpi-col-md-9 { grid-column: span 9; } .dpi-grid > .dpi-col-md-12 { grid-column: span 12; }
+}
+@media (min-width: 64rem) {
+    .dpi-grid > .dpi-col-lg-3 { grid-column: span 3; } .dpi-grid > .dpi-col-lg-4 { grid-column: span 4; }
+    .dpi-grid > .dpi-col-lg-6 { grid-column: span 6; } .dpi-grid > .dpi-col-lg-8 { grid-column: span 8; }
+    .dpi-grid > .dpi-col-lg-9 { grid-column: span 9; } .dpi-grid > .dpi-col-lg-12 { grid-column: span 12; }
+}
+
+/* Griglia auto-adattiva: colonne di larghezza minima, senza breakpoint */
+.dpi-auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--dpi-auto-min, 16rem)), 1fr));
+    gap: var(--dpi-grid-gap, var(--dpi-space-4));
+}
+
+/* Spazi: margini e padding (scala token). Solo valori della scala, niente valori arbitrari. */
+.dpi-m-0 { margin: 0; } .dpi-mt-0 { margin-top: 0; }
+.dpi-mt-1 { margin-top: var(--dpi-space-1); } .dpi-mt-2 { margin-top: var(--dpi-space-2); }
+.dpi-mt-3 { margin-top: var(--dpi-space-3); } .dpi-mt-4 { margin-top: var(--dpi-space-4); }
+.dpi-mt-5 { margin-top: var(--dpi-space-5); } .dpi-mt-6 { margin-top: var(--dpi-space-6); }
+.dpi-mb-0 { margin-bottom: 0; }
+.dpi-mb-2 { margin-bottom: var(--dpi-space-2); } .dpi-mb-4 { margin-bottom: var(--dpi-space-4); }
+.dpi-mb-5 { margin-bottom: var(--dpi-space-5); } .dpi-mb-6 { margin-bottom: var(--dpi-space-6); }
+.dpi-p-0 { padding: 0; }
+.dpi-p-2 { padding: var(--dpi-space-2); } .dpi-p-3 { padding: var(--dpi-space-3); }
+.dpi-p-4 { padding: var(--dpi-space-4); } .dpi-p-5 { padding: var(--dpi-space-5); } .dpi-p-6 { padding: var(--dpi-space-6); }
+.dpi-gap-2 { gap: var(--dpi-space-2); } .dpi-gap-4 { gap: var(--dpi-space-4); } .dpi-gap-5 { gap: var(--dpi-space-5); }
+
+/* Testo e visibilità */
+.dpi-text-muted { color: var(--dpi-text-muted); }
+.dpi-text-sm { font-size: var(--dpi-text-sm); }
+.dpi-text-center { text-align: center; }
+.dpi-visually-hidden {
+    position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.dpi-skip-link {
+    position: absolute; left: var(--dpi-space-2); top: -4rem; z-index: var(--dpi-z-toast);
+    background: var(--dpi-surface); color: var(--dpi-text); padding: var(--dpi-space-2) var(--dpi-space-3);
+    border-radius: var(--dpi-radius-sm);
+}
+.dpi-skip-link:focus { top: var(--dpi-space-2); }
+
+/* Pagina applicativa: spazio verticale attorno al contenuto principale */
+.dpi-page { padding-block: var(--dpi-space-5) var(--dpi-space-7); }
+.dpi-page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--dpi-space-2) var(--dpi-space-4); }
+.dpi-center-screen { display: grid; place-items: center; min-height: 28rem; }
+.dpi-w-narrow { width: min(100%, 26rem); }
+
+/* Varianti usate dal framework */
+.dpi-cluster--md { --dpi-cluster-gap: var(--dpi-space-3); }
+.dpi-auto-grid--sm { --dpi-auto-min: 12rem; }
+.dpi-auto-grid--lg { --dpi-auto-min: 22rem; }
+/* MASSIMO DUE COLONNE: due colonne uguali (50/50 al netto del gap) quando c'è spazio per due colonne larghe almeno --dpi-auto-min (default 18rem), altrimenti una; mai tre o più, anche su monitor larghi.
+   Il minimo di ogni colonna è max(--dpi-auto-min, metà dello spazio): oltre due colonne non ci sta mai. Gli elementi in più vanno sulle righe successive. Le altre griglie non cambiano. */
+.dpi-auto-grid--2 { --dpi-auto-min: 18rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--dpi-auto-min), calc((100% - var(--dpi-grid-gap, var(--dpi-space-4))) / 2))), 1fr)); }
+.dpi-auto-grid--2 > * { min-width: 0; }
+.dpi-auto-grid--gap-lg { --dpi-grid-gap: var(--dpi-space-5); }
+
+/* I pulsanti dentro uno stack non si stirano a tutta larghezza */
+.dpi-stack > .dpi-btn { align-self: flex-start; }
+.dpi-has-backdrop { background: transparent; }

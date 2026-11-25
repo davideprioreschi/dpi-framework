@@ -1,0 +1,70 @@
+/*
+ * dpi — primitive condivise (revisione docs/component-review-2026-11-18.json). Un solo vocabolario per superficie, selezione, campo, bordo/focus e messaggio:
+ * le famiglie lo ereditano, nessuna ha una variante propria. NON tocca menu, bottombar, azioni espandibili né il materiale delle gocce (drop.css, material.css).
+ * Stato: scritto sui sorgenti, non verificato nel browser.
+ */
+:root {
+    /* SELEZIONE: piccola capsula chiara con il riflesso delle gocce (non un riempimento accentato) */
+    --dpi-sel-bg: light-dark(rgb(255 255 255 / 0.85), rgb(255 255 255 / 0.16));
+    --dpi-sel-shadow: var(--dpi-drop-rim), 0 1px 3px rgb(0 0 0 / 0.14);
+    /* CAMPO: materiale concavo, bordo neutro */
+    --dpi-field-bg: light-dark(rgb(0 0 0 / 0.045), rgb(255 255 255 / 0.06));
+    --dpi-field-shadow: inset 0 1px 2px light-dark(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.35));
+    --dpi-field-border: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.14));
+    /* SUPERFICIE di contenuto (card, pannelli, liste, calendario, accordion): un solo bordo, ombra appena accennata */
+    --dpi-pane-bg: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05));
+    --dpi-pane-border: light-dark(rgb(0 0 0 / 0.08), rgb(255 255 255 / 0.1));
+}
+
+/* ---- campi: input, select, textarea, combobox e celle OTP ereditano lo stesso materiale */
+.dpi-input, .dpi-select, .dpi-textarea, .dpi-otp__cell { background: var(--dpi-field-bg); border-color: var(--dpi-field-border); box-shadow: var(--dpi-field-shadow); }
+.dpi-input:focus-visible, .dpi-select:focus-visible, .dpi-textarea:focus-visible, .dpi-otp__cell:focus-visible { border-color: var(--dpi-field-border); outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 1px; }
+.dpi-input:disabled, .dpi-select:disabled, .dpi-textarea:disabled { background: var(--dpi-field-bg); }
+.dpi-combobox__list, .dpi-calendar, .dpi-accordion, .dpi-card, .dpi-list-group, .dpi-panel { background: var(--dpi-pane-bg); border-color: var(--dpi-pane-border); box-shadow: none; }
+
+/* ---- selezione: capsule coerenti (nav, tabs, breadcrumb corrente); niente sottolineature, bordi o pillole piene come linguaggi separati */
+.dpi-nav__link, .dpi-tabs__tab { border-radius: var(--dpi-radius-pill); border: 0; box-shadow: none; }
+.dpi-nav--underline .dpi-nav__link, .dpi-nav--tabs .dpi-nav__link { border-radius: var(--dpi-radius-pill); }
+.dpi-nav__link[aria-current], .dpi-nav--pills .dpi-nav__link[aria-current], .dpi-nav--stack .dpi-nav__link[aria-current], .dpi-nav--underline .dpi-nav__link[aria-current], .dpi-nav--tabs .dpi-nav__link[aria-current],
+.dpi-tabs__tab[aria-selected="true"], .dpi-tabs--pills .dpi-tabs__tab[aria-selected="true"] { background: var(--dpi-sel-bg); box-shadow: var(--dpi-sel-shadow); color: var(--dpi-text); }
+.dpi-tabs__list { border-bottom: 0; padding: 3px; border-radius: var(--dpi-radius-pill); background: var(--dpi-field-bg); width: fit-content; max-width: 100%; }
+.dpi-breadcrumb__current { padding: 0 var(--dpi-space-2); border-radius: var(--dpi-radius-pill); background: var(--dpi-sel-bg); box-shadow: var(--dpi-sel-shadow); }
+.dpi-breadcrumb__link:hover { text-decoration: none; color: var(--dpi-text); }
+
+/* ---- chip: capsule neutre; la selezione si legge dal segno e dal contrasto, non dal bordo colorato */
+.dpi-chip__body, .dpi-chip--input { background: var(--dpi-field-bg); border-color: transparent; }
+.dpi-chip__input:checked + .dpi-chip__body { background: var(--dpi-sel-bg); box-shadow: var(--dpi-sel-shadow); border-color: transparent; color: var(--dpi-text); font-weight: var(--dpi-weight-medium); }
+.dpi-chip__input:checked + .dpi-chip__body::before { content: "✓"; font-size: 0.85em; }
+
+/* ---- calendario: giorno selezionato = piccola capsula chiara; oggi = anello neutro */
+.dpi-calendar__day--selected, .dpi-calendar__day--selected:hover { background: var(--dpi-sel-bg); color: var(--dpi-text); box-shadow: var(--dpi-sel-shadow); font-weight: var(--dpi-weight-medium); }
+.dpi-calendar__day--today { box-shadow: inset 0 0 0 1.5px var(--dpi-text-muted); }
+.dpi-calendar__day--today.dpi-calendar__day--selected { box-shadow: var(--dpi-sel-shadow), inset 0 0 0 1.5px var(--dpi-text-muted); }
+
+/* ---- messaggi: superficie neutra, colore semantico solo sull'indicatore (icona o punto) */
+.dpi-alert { background: var(--dpi-pane-bg); color: var(--dpi-text); border-color: var(--dpi-pane-border); }
+.dpi-alert__icon { color: var(--_c); }
+.dpi-badge { background: var(--dpi-field-bg); color: var(--dpi-text); border-color: transparent; }
+.dpi-badge::before { content: ""; width: 0.5em; height: 0.5em; border-radius: 50%; background: var(--_c, var(--dpi-text-muted)); flex: none; }
+.dpi-toast { background: var(--dpi-glass-tint-blur); color: var(--dpi-text); -webkit-backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); }
+.dpi-toast--info, .dpi-toast--success, .dpi-toast--warning, .dpi-toast--danger { background: var(--dpi-glass-tint-blur); }
+
+/* ---- overlay leggeri: popover e tooltip con lo stesso materiale e leggibilità */
+.dpi-popover__panel, .dpi-tooltip__bubble { background: var(--dpi-glass-tint-blur); color: var(--dpi-text); border-color: var(--dpi-pane-border); -webkit-backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); }
+
+/* ---- stepper: indicatori piccoli e neutri; lo stato non è solo colore (segno di spunta, anello, testo per screen reader) */
+.dpi-stepper__marker { border: 0; background: var(--dpi-field-bg); box-shadow: var(--dpi-field-shadow); color: var(--dpi-text-muted); }
+.dpi-stepper__step--current .dpi-stepper__marker { background: var(--dpi-sel-bg); box-shadow: var(--dpi-sel-shadow); color: var(--dpi-text); font-weight: var(--dpi-weight-semibold, 600); }
+.dpi-stepper__step--done .dpi-stepper__marker { background: var(--dpi-sel-bg); box-shadow: var(--dpi-sel-shadow); color: var(--dpi-text); border: 0; }
+.dpi-stepper--horizontal .dpi-stepper__step:not(:last-child)::after, .dpi-stepper--horizontal .dpi-stepper__step--done:not(:last-child)::after { height: 1px; background: var(--dpi-pane-border); }
+.dpi-stepper__text { background: transparent; }
+
+/* ---- accordion: separatori tenui; apertura/chiusura dell'altezza continua dove il browser supporta interpolate-size */
+.dpi-accordion__item + .dpi-accordion__item { border-top-color: var(--dpi-pane-border); }
+@supports (interpolate-size: allow-keywords) {
+    .dpi-accordion, .dpi-disclosure { interpolate-size: allow-keywords; }
+    .dpi-accordion__item::details-content, .dpi-disclosure::details-content { block-size: 0; overflow: clip; transition: block-size var(--dpi-dur) var(--dpi-ease), content-visibility var(--dpi-dur) allow-discrete; }
+    .dpi-accordion__item[open]::details-content, .dpi-disclosure[open]::details-content { block-size: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .dpi-accordion__item::details-content, .dpi-disclosure::details-content { transition: none; } }
+@media (forced-colors: active) { .dpi-badge::before { background: CanvasText; } }

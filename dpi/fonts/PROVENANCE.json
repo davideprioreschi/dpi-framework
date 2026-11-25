@@ -1,0 +1,30 @@
+{
+  "name": "Poppins",
+  "designer": "Indian Type Foundry",
+  "copyright": "Copyright 2020 The Poppins Project Authors (https://github.com/itfoundry/Poppins)",
+  "license": "SIL Open Font License 1.1 (OFL.txt in questa cartella)",
+  "source": "https://fontsource.org/fonts/poppins — pacchetto npm @fontsource/poppins 5.1.0 (file woff2 invariati, scaricati da cdn.jsdelivr.net una sola volta in fase di sviluppo; nessuna richiesta di font a runtime)",
+  "retrieved": "2026-11-17",
+  "subsets": [
+    "latin",
+    "latin-ext"
+  ],
+  "weights": [
+    400,
+    500,
+    600,
+    700
+  ],
+  "style": "normal",
+  "files_sha256": {
+    "poppins-latin-400-normal.woff2": "7d93459d86585bfcdbb7e0376056226adb25821ee54b96236fe2123e9560929f",
+    "poppins-latin-500-normal.woff2": "cd36de204aca2d5fa263a731f7c20009b5e3d754ba1f1e03c33e93a48f3e7446",
+    "poppins-latin-600-normal.woff2": "f4e80d9dfd374d02989b87a27b5ed4cb78fbb177c27f1478e9a8b0afb7513149",
+    "poppins-latin-700-normal.woff2": "9338e65fc077355c7a87ae0d64cc101e23b9bf8ad78ae65f0f319c857311b526",
+    "poppins-latin-ext-400-normal.woff2": "a526dac26fcc645d428764b07fd6ae2ad3399129b75c22c8e149278157291189",
+    "poppins-latin-ext-500-normal.woff2": "75cd1c2bbd47db72c1a7a720e764c7672a95bdae7033c570d549ac88c9add234",
+    "poppins-latin-ext-600-normal.woff2": "26fd27fb6bb1dc4c64a687124cc328a5ed13d89155dbfcd218eda64a45835174",
+    "poppins-latin-ext-700-normal.woff2": "3d52320b7513a9e20df42e02b61709b91a5c2c2a25708225c664eb4639f3b0fd"
+  },
+  "note": "Pesi 400/500/600/700 effettivamente serviti: il CSS non dichiara altri pesi, quindi il browser non sintetizza grassetti né usa pesi mancanti."
+}

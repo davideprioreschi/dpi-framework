@@ -1,0 +1,44 @@
+DPI — framework frontend Liquid Glass
+=====================================
+
+COPIA E INCLUDI
+1. Copia l'intera cartella "dpi" nel tuo sito (alla radice o in una sottocartella; puoi rinominarla o spostarla).
+2. Nelle tue pagine HTML:
+
+       <link rel="stylesheet" href="/dpi/dpi.css">
+       <script src="/dpi/dpi.js" defer></script>
+
+   (adatta il percorso a dove hai messo la cartella: ogni riferimento interno al pacchetto è relativo, non c'è nessun percorso fisso)
+3. Scrivi HTML con le classi dpi-* documentate:
+
+       <button class="dpi-btn dpi-btn--primary">Continua</button>
+       <button class="dpi-btn" data-dpi-dialog-open="info">Apri il dialog</button>
+
+Nessun Composer, npm, Node, comando, build sul server, database o runtime PHP/Python/Java. Funziona su un hosting statico e con qualunque backend: il framework è HTML + CSS + JavaScript.
+
+REQUISITI
+- DISTRIBUZIONE (hosting): copia la cartella dpi e includi dpi.css e dpi.js; qualunque server HTTP/HTTPS, anche statico.
+- ANTEPRIMA LOCALE: dpi.js è un bundle classico autonomo (nessun modulo, nessun import dinamico, nessun fetch): le pagine di esempio si possono aprire anche con DOPPIO CLIC (file://),
+  senza server. I limiti del browser sull'origine file:// (font, motore del vetro, storage) NON sono stati osservati: se qualcosa non funziona, apri la pagina da un server HTTP
+  (es. python -m http.server nella cartella del sito). Le mappe esterne richiedono comunque rete e provider.
+- Un browser recente (light-dark(), :has(), import() dinamico). La rifrazione reale del vetro è solo Chromium; altrove il vetro è statico.
+
+CONTRATTO PUBBLICO
+- Classi: prefisso dpi-  (es. dpi-btn, dpi-btn--primary, dpi-card).
+- Attributi dichiarativi: prefisso data-dpi-*  (es. data-dpi-dialog-open="id", data-dpi-loading, data-dpi-icon="plus").
+- Variabili CSS: --dpi-*  (si ridefiniscono per personalizzare).
+- Eventi: dpi:*  su document. JavaScript facoltativo: window.DPI (DPI.init(frammento), DPI.theme, DPI.loading, DPI.toast, DPI.icon).
+- Contenuto inserito dopo il caricamento: DPI.init(elemento)  (non duplica le inizializzazioni).
+- Nessun gestore inline (onclick…). Senza JavaScript le pagine restano utilizzabili.
+
+ICONE E MATERIALE
+Le icone si scrivono per nome: <span data-dpi-icon="plus"></span>. I pulsanti (dpi-btn) e le schede (dpi-card) ricevono da soli il vetro e le animazioni: non scrivi gli strati ottici.
+La documentazione mostra il markup completo di ogni componente.
+
+CARICAMENTO
+Marca con data-dpi-loading il contenitore del contenuto DPI (di solito <main>): al primo caricamento mostra uno skeleton (almeno 1500 ms; limite massimo di sicurezza) e rivela il contenuto quando è pronto.
+Il resto del sito non viene nascosto. Disattivazione: data-dpi-loading="off".
+
+CONTENUTO
+dpi.css (con css/) e dpi.js (bundle: runtime, componenti, icone Lucide e motore LiquidGlass) · fonts/ (Poppins) · icons/ e vendor/liquidglass (licenze e provenienza) · img/ · MANIFEST.json (elenco e impronte)
+· THIRD-PARTY-LICENSES.txt (licenze e provenienza di Poppins, Lucide e LiquidGlass).

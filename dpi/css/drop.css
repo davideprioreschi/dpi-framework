@@ -1,0 +1,66 @@
+/*
+ * dpi — gocce (drop.js): superficie convessa di vetro che si deforma. Vale per ogni host [data-dpi-drop-ready].
+ * Strati dentro l'host (isolation: isolate), dal basso: ombra → stage del motore (solo in modalità refraction) → velo con bordo luminoso → contenuto.
+ * Ombra, stage e velo seguono la STESSA forma (left/top/width/height/border-radius scritti da JS ogni frame): è la forma a muoversi,
+ * non un elemento scalato. Nessuno dei tre riceve il puntatore: l'area di interazione è quella dell'host, prevedibile.
+ * Senza JS l'host mantiene il materiale statico di glass.css.
+ */
+/*
+ * ILLUMINAZIONE (approssimazione, NON simulazione fisica). Un solo riflesso: un anello sottile (1px) a DUE LOBI sul bordo del velo:
+ * lobo principale dal lato della luce, lobo debole sul lato opposto (riflesso interno). L'angolo --dpi-light-angle (0 = dall'alto, in senso orario) e
+ * l'intensità --dpi-light-strength li imposta drop.js: seguono il PUNTATORE (o il tocco) e, senza puntatore, la direzione del movimento; senza
+ * entrambi restano a 0deg/1 (luce dall'alto, stabile). Con reduced motion l'angolo non si anima. Non è una macchia che insegue il mouse: è
+ * un bordo, e cambia solo di angolo e di intensità.
+ */
+@property --dpi-light-angle { syntax: '<angle>'; inherits: true; initial-value: 0deg; }
+@property --dpi-light-strength { syntax: '<number>'; inherits: true; initial-value: 1; }
+[data-dpi-drop-ready] > .dpi-drop__tint { transition: --dpi-light-angle var(--dpi-dur-release, 420ms) cubic-bezier(0.2, 0.8, 0.2, 1), --dpi-light-strength var(--dpi-dur-release, 420ms) ease; }
+.dpi-drop__tint::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+/* Native and merging droplets share the EXACT same specular formula. */
+.dpi-drop__tint::before, .dpi-expand__surface-light {
+    background: conic-gradient(from var(--dpi-light-angle, 0deg) at var(--dpi-light-x, 50%) var(--dpi-light-y, 50%),
+        rgb(255 255 255 / calc(0.5 * var(--dpi-light-strength, 1))) 0deg, rgb(255 255 255 / 0.1) 62deg, rgb(255 255 255 / 0.04) 125deg,
+        rgb(255 255 255 / calc(0.16 * var(--dpi-light-strength, 1))) 180deg, rgb(255 255 255 / 0.04) 235deg, rgb(255 255 255 / 0.1) 298deg,
+        rgb(255 255 255 / calc(0.5 * var(--dpi-light-strength, 1))) 360deg);
+}
+@media (prefers-reduced-motion: reduce) { [data-dpi-drop-ready] > .dpi-drop__tint { transition: none; } }
+[data-dpi-drop-ready] {
+    isolation: isolate;
+    background: transparent !important; border-color: transparent !important; box-shadow: none !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+}
+[data-dpi-drop-ready]::before { content: none !important; }
+.dpi-drop__shadow, .dpi-drop__tint, .dpi-drop__stage, .dpi-drop__lens { position: absolute; pointer-events: none; }
+/* feedback di pressione dei pulsanti a forma stabile (senza deformazione): il velo si scurisce appena */
+[data-dpi-drop-ready][data-dpi-pressed] > .dpi-drop__tint { filter: brightness(0.93); }
+[data-dpi-drop-ready]:is(:not([data-dpi-elastic]), [data-dpi-elastic="off"]):not([data-dpi-pressed]) > .dpi-drop__tint { transition: filter var(--dpi-dur-release, 300ms) ease; }
+/* reduced-motion: anche i solo icona senza velo proprio (elasticOnly) mostrano la pressione, senza movimento */
+@media (prefers-reduced-motion: reduce) { [data-dpi-elastic]:not([data-dpi-drop-ready])[data-dpi-pressed] { filter: brightness(0.93); } }
+.dpi-drop__shadow { z-index: -3; box-shadow: var(--dpi-drop-shadow); transform-origin: 0 0; }
+[data-dpi-moving] > .dpi-drop__shadow { will-change: transform; } /* livello composito solo mentre si muove */
+.dpi-drop__stage { z-index: -2; overflow: visible; }
+.dpi-drop__tint { z-index: -1; background: var(--dpi-drop-body), var(--dpi-drop-tint); box-shadow: var(--dpi-drop-rim); }
+.dpi-drop__base { position: absolute; background: var(--dpi-drop-base, transparent); }
+.dpi-drop__clone { color: var(--dpi-text); }
+.dpi-drop__clone * { pointer-events: none !important; }
+/* senza fondale da rifrangere il velo appoggia sul contenuto: blur e più corpo */
+[data-dpi-glass-mode="blur"] > .dpi-drop__tint { background: var(--dpi-glass-tint-blur); -webkit-backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); backdrop-filter: blur(var(--dpi-glass-blur)) saturate(1.5); }
+[data-dpi-glass-mode="solid"] > .dpi-drop__tint { background: var(--dpi-surface); box-shadow: inset 0 0 0 1px var(--dpi-line); }
+[data-dpi-glass-mode="solid"] > .dpi-drop__shadow { box-shadow: none; }
+/* il contenuto sta sopra e si sposta appena verso la trazione (non si deforma: il testo resta leggibile) */
+[data-dpi-drop-ready] > .dpi-btn__content { position: relative; z-index: 1; translate: var(--dpi-dx, 0px) var(--dpi-dy, 0px); }
+@media (prefers-reduced-transparency: reduce) {
+    .dpi-drop__tint { background: var(--dpi-surface) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+    .dpi-drop__stage { display: none; }
+}
+@media (forced-colors: active) {
+    .dpi-drop__shadow, .dpi-drop__stage { display: none; }
+    .dpi-drop__tint { background: Canvas; box-shadow: none; border: 1px solid CanvasText; }
+}
+/* lo stage sporge oltre l'host (margine per l'overshoot): non deve creare scroll orizzontale quando l'host è vicino al bordo della pagina.
+   clip (non hidden): nessun contenitore di scroll, nessun effetto su sticky/fixed */
+body:has(.dpi-drop__stage) { overflow-x: clip; }

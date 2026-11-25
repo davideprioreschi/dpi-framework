@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Esempio minimo DPI</title>
+  <!-- DPI: copia la cartella "dpi" accanto a questo file e includi due file. Nessun server speciale: qualunque server HTTP, anche statico. -->
+  <script src="../dpi/theme-init.js"></script>   <!-- facoltativo: ripristina il tema salvato prima del primo disegno -->
+  <link rel="stylesheet" href="../dpi/dpi.css">
+  <link rel="stylesheet" href="../dpi/css/reset.css">
+  <script src="../dpi/dpi.js" defer></script>
+</head>
+<body class="dpi-root">
+  <main class="dpi-container dpi-page dpi-stack" data-dpi-loading>
+    <h1 class="dpi-heading dpi-heading--1">DPI funziona</h1>
+    <p class="dpi-text">Questa pagina è HTML con classi dpi-*. Gli asset (CSS, JavaScript, font, icone) sono locali.</p>
+
+    <section class="dpi-card">
+      <div class="dpi-card__body dpi-stack">
+        <h2 class="dpi-card__title">Azioni</h2>
+        <div class="dpi-cluster">
+          <button class="dpi-btn dpi-btn--primary"><span data-dpi-icon="check"></span>Continua</button>
+          <button class="dpi-btn">Annulla</button>
+          <button class="dpi-btn dpi-btn--icon-only" title="Cerca"><span data-dpi-icon="search"></span><span class="dpi-visually-hidden">Cerca</span></button>
+        </div>
+        <!-- Un dialog si apre con un attributo, senza JavaScript scritto da te -->
+        <button class="dpi-btn dpi-btn--tinted" data-dpi-dialog-open="info">Apri il dialog</button>
+      </div>
+    </section>
+
+    <dialog class="dpi-dialog dpi-glass dpi-glass--strong" id="info" aria-labelledby="info-title" data-dpi-dismissible>
+      <div class="dpi-dialog__form">
+        <div class="dpi-dialog__header"><h2 class="dpi-dialog__title" id="info-title">Un dialog</h2></div>
+        <div class="dpi-dialog__body dpi-stack"><p class="dpi-text">Aperto con data-dpi-dialog-open="info". Si chiude con Escape o con il pulsante.</p></div>
+        <div class="dpi-dialog__footer"><div class="dpi-cluster dpi-cluster--end"><button class="dpi-btn" data-dpi-dialog-close="">Chiudi</button></div></div>
+      </div>
+    </dialog>
+  </main>
+</body>
+</html>

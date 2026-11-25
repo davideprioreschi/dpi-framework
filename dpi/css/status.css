@@ -1,0 +1,22 @@
+/*
+ * dpi — STATO come testo (.dpi-status): una parola o due, con un'icona significativa per i toni importanti; niente fondo, bordo, pillola né pallino. Sostituisce la capsula per
+ * indicare lo stato di un elemento (aperto, in corso, scaduto, errore…). Lo stato resta riconoscibile anche senza colore: ci sono sempre il testo e, per success/info/warning/danger,
+ * un'icona. Gerarchia consigliata nelle interfacce di lavoro:
+ *   • metadati descrittivi  → testo semplice (.dpi-text--muted), ben spaziato
+ *   • progetto              → nome nel colore del progetto
+ *   • stato                 → .dpi-status (testo breve + icona)
+ *   • conteggio             → numero tipografico (.dpi-badge--count)
+ *   • chip                  → SOLO per elementi selezionabili o rimovibili (.dpi-chip)
+ * Toni: --success --info --warning --danger (il testo è il tono attenuato verso il colore del testo: leggibile in tema chiaro e scuro); senza tono: testo attenuato.
+ */
+.dpi-status {
+    --_c: var(--dpi-text-muted);
+    display: inline-flex; align-items: center; gap: 0.3em; max-inline-size: 100%; vertical-align: baseline;
+    font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-medium); line-height: 1.3; color: var(--_c); overflow-wrap: anywhere;
+}
+.dpi-status > .dpi-icon, .dpi-status > [data-dpi-icon] { flex: none; inline-size: 1em; block-size: 1em; }
+.dpi-status--success { --_c: color-mix(in srgb, var(--dpi-success) 82%, var(--dpi-text)); }
+.dpi-status--info    { --_c: color-mix(in srgb, var(--dpi-info) 82%, var(--dpi-text)); }
+.dpi-status--warning { --_c: color-mix(in srgb, var(--dpi-warning) 70%, var(--dpi-text)); }
+.dpi-status--danger  { --_c: color-mix(in srgb, var(--dpi-danger) 82%, var(--dpi-text)); }
+@media (forced-colors: active) { .dpi-status { color: CanvasText; } }

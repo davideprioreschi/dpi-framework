@@ -1,0 +1,388 @@
+/*
+ * dpi — componenti. Tutte le regole sono scoped da classi dpi-*; nessun selettore su elementi nudi.
+ * Elementi nativi (button, a, input, select, textarea, dialog, table) sono la base: le classi li stilizzano,
+ * non li sostituiscono. Gli stati dinamici passano da attributi ARIA/nativi (aria-expanded, [open], :disabled…).
+ */
+
+/* ------------------------------------------------------------------ focus condiviso */
+:where(.dpi-btn, .dpi-input, .dpi-select, .dpi-textarea, .dpi-check, .dpi-switch, .dpi-link,
+       .dpi-navbar__link, .dpi-navbar__toggle, .dpi-menu__item, .dpi-dialog__close):focus-visible {
+    outline: var(--dpi-focus-width) solid var(--dpi-focus);
+    outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ pulsanti e link */
+.dpi-btn {
+    --_bg: var(--dpi-surface-2);
+    --_fg: var(--dpi-text);
+    --_bd: var(--dpi-control-border);
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--dpi-space-2);
+    min-height: var(--dpi-control-h); padding: 0 var(--dpi-space-4);
+    border: 1px solid var(--_bd); border-radius: var(--dpi-radius-md);
+    background: var(--_bg); color: var(--_fg);
+    font: inherit; font-weight: var(--dpi-weight-label); line-height: 1.1; text-decoration: none;
+    cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.dpi-btn:hover { filter: brightness(0.96); }
+.dpi-btn--primary   { --_bg: var(--dpi-accent); --_fg: var(--dpi-on-accent); --_bd: transparent; }
+.dpi-btn--tinted    { --_bg: var(--dpi-accent-soft); --_fg: var(--dpi-accent); --_bd: transparent; }
+.dpi-btn--plain     { --_bg: transparent; --_fg: var(--dpi-accent); --_bd: transparent; }
+.dpi-btn--danger    { --_bg: var(--dpi-danger); --_fg: var(--dpi-on-danger); --_bd: transparent; }
+.dpi-btn--sm   { min-height: var(--dpi-control-h-sm); padding: 0 var(--dpi-space-3); font-size: var(--dpi-text-sm); }
+.dpi-btn--lg   { min-height: var(--dpi-control-h-lg); padding: 0 var(--dpi-space-5); font-size: var(--dpi-text-lg); }
+.dpi-btn--block { display: flex; width: 100%; }
+.dpi-btn--icon-only { width: var(--dpi-control-h); padding: 0; }
+.dpi-btn--icon-only.dpi-btn--sm { width: var(--dpi-control-h-sm); }
+.dpi-btn--icon-only.dpi-btn--lg { width: var(--dpi-control-h-lg); }
+.dpi-btn__label { min-width: 0; }
+.dpi-btn:disabled, .dpi-btn[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; filter: none; transform: none; }
+.dpi-btn[aria-disabled="true"] { pointer-events: none; }
+.dpi-btn[aria-busy="true"] { cursor: progress; }
+.dpi-btn[aria-busy="true"]::after {
+    content: ""; width: 1em; height: 1em; border: 2px solid currentColor; border-right-color: transparent;
+    border-radius: 50%; animation: dpi-spin 0.8s linear infinite;
+}
+@keyframes dpi-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .dpi-btn[aria-busy="true"]::after { animation: none; border-right-color: currentColor; } }
+
+.dpi-link { color: var(--dpi-accent); text-decoration: underline; text-underline-offset: 0.2em; }
+.dpi-link:hover { text-decoration-thickness: 2px; }
+
+/* ------------------------------------------------------------------ card / panel */
+.dpi-card {
+    background: var(--dpi-surface); color: var(--dpi-text);
+    border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-lg); box-shadow: var(--dpi-shadow-sm);
+}
+.dpi-card--raised { box-shadow: var(--dpi-shadow-md); }
+.dpi-card__header, .dpi-card__body, .dpi-card__footer { padding: var(--dpi-space-4) var(--dpi-space-5); }
+@media (max-width: 40rem) {
+    /* Schermi stretti: spazi dei contenitori limitati in unità di viewport, così lo zoom del testo (che fa crescere i rem)
+       non erode la larghezza dei controlli annidati. */
+    .dpi-card__header, .dpi-card__body, .dpi-card__footer { padding: min(var(--dpi-space-4), 4.5vw); }
+}
+.dpi-card__header { border-bottom: 1px solid var(--dpi-line); font-weight: var(--dpi-weight-label); }
+.dpi-card__footer { border-top: 1px solid var(--dpi-line); }
+.dpi-card__title { font-size: var(--dpi-text-lg); font-weight: var(--dpi-weight-bold); margin: 0 0 var(--dpi-space-2); }
+
+/* ------------------------------------------------------------------ navbar responsive */
+.dpi-navbar { position: relative; z-index: var(--dpi-z-sticky); background: var(--dpi-surface); color: var(--dpi-text); border-bottom: 1px solid var(--dpi-line); }
+.dpi-navbar--sticky { position: sticky; top: 0; }
+.dpi-navbar__inner { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dpi-space-2) var(--dpi-space-4); padding-block: var(--dpi-space-2); }
+.dpi-navbar__brand { font-weight: var(--dpi-weight-bold); color: inherit; text-decoration: none; min-height: var(--dpi-control-h); display: inline-flex; align-items: center; }
+.dpi-navbar__toggle { display: none; margin-inline-start: auto; }
+.dpi-navbar__collapse { display: flex; flex: 1 1 auto; flex-wrap: wrap; align-items: center; gap: var(--dpi-space-2) var(--dpi-space-4); }
+.dpi-navbar__list { display: flex; flex-wrap: wrap; gap: var(--dpi-space-1); list-style: none; margin: 0; padding: 0; }
+.dpi-navbar__link {
+    display: inline-flex; align-items: center; min-height: var(--dpi-control-h); padding: 0 var(--dpi-space-3);
+    border-radius: var(--dpi-radius-md); color: inherit; text-decoration: none;
+}
+.dpi-navbar__link:hover { background: var(--dpi-surface-2); }
+.dpi-navbar__link[aria-current="page"] { background: var(--dpi-accent-soft); color: var(--dpi-accent); font-weight: var(--dpi-weight-bold); }
+.dpi-navbar__end { margin-inline-start: auto; display: flex; align-items: center; gap: var(--dpi-space-2); flex-wrap: wrap; }
+
+@media (max-width: 47.99rem) {
+    /* Senza JS il menu resta aperto e impilato: una navbar sticky coprirebbe i contenuti, quindi qui non è sticky. */
+    :root:not(.dpi-js) .dpi-navbar--sticky { position: relative; }
+    /* Con JS: menu comprimibile. Senza JS (nessuna classe dpi-js) il menu resta sempre visibile e impilato. */
+    .dpi-js .dpi-navbar__toggle { display: inline-flex; }
+    .dpi-js .dpi-navbar__collapse:not([data-dpi-open]) { display: none; }
+    .dpi-navbar__collapse { flex-basis: 100%; flex-direction: column; align-items: stretch; }
+    .dpi-navbar__list { flex-direction: column; }
+    .dpi-navbar__end { margin-inline-start: 0; width: 100%; }
+}
+
+/* ------------------------------------------------------------------ dropdown / menu */
+.dpi-dropdown { position: relative; display: inline-block; align-self: flex-start; max-width: 100%; }
+.dpi-dropdown:is([data-dpi-state="opening"], [data-dpi-state="open"], [data-dpi-state="closing"]) { z-index: var(--dpi-z-dropdown); }
+:where(.dpi-dropdown, .dpi-menu:not(.dpi-dropdown *)) {
+    /* MATERIALE del menu: superficie OPACA ricavata dai token del framework (segue tema chiaro, scuro e temi personalizzati). Tutti configurabili su .dpi-menu o su un contenitore. */
+    --dpi-menu-bg: var(--dpi-surface);                                                    /* fondo */
+    --dpi-menu-fg: var(--dpi-text);                                                       /* testo */
+    --dpi-menu-border: color-mix(in srgb, var(--dpi-menu-fg) 16%, var(--dpi-menu-bg));    /* contorno sottile */
+    --dpi-menu-convex: 6%;                                                                /* bombatura: quanto il colore di base si schiarisce in alto e si scurisce in basso */
+    --dpi-menu-hi: color-mix(in srgb, var(--dpi-menu-bg) calc(100% - var(--dpi-menu-convex)), #fff);
+    --dpi-menu-lo: color-mix(in srgb, var(--dpi-menu-bg) calc(100% - var(--dpi-menu-convex) * 1.6), #000);
+    --dpi-menu-relief: inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.07)), inset 0 -7px 11px -8px rgb(0 0 0 / 0.09);   /* lieve rilievo interno */
+    --dpi-menu-shadow: 0 12px 24px -10px rgb(0 0 0 / 0.26), 0 2px 6px rgb(0 0 0 / 0.1);   /* ombra morbida */
+    --dpi-menu-hover: color-mix(in srgb, var(--dpi-menu-fg) 8%, transparent);
+}
+.dpi-menu {
+    --dpi-menu-radius: 28px;
+    position: absolute; z-index: var(--dpi-z-dropdown); inset-block-start: calc(100% + 8px); inset-inline-start: 0;
+    width: max-content; min-width: min(16rem, calc(100vw - 24px)); max-width: calc(100vw - 24px);
+    max-height: var(--dpi-menu-max-height, calc(100dvh - 24px));
+    margin: 0; padding: 8px;
+    translate: var(--dpi-menu-shift-x, 0px) 0;
+    background: var(--dpi-menu-bg); color: var(--dpi-menu-fg); border: 1px solid var(--dpi-menu-border);
+    border-radius: var(--dpi-menu-radius); box-shadow: var(--dpi-menu-shadow); list-style: none;
+    font-size: inherit; font-weight: 400;
+}
+.dpi-menu--wide { width: min(20rem, calc(100vw - 24px)); }
+.dpi-menu__list { position: relative; list-style: none; margin: 0; padding: 0; max-height: calc(var(--dpi-menu-max-height, 80dvh) - 18px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.dpi-dropdown--end > .dpi-menu, .dpi-dropdown[data-dpi-align="end"] > .dpi-menu { inset-inline-start: auto; inset-inline-end: 0; }
+.dpi-dropdown[data-dpi-placement="top"] > .dpi-menu { inset-block-start: auto; inset-block-end: calc(100% + 8px); }
+.dpi-menu[hidden] { display: none; }
+.dpi-menu__item {
+    display: flex; align-items: center; gap: 12px; width: 100%; min-height: 46px;
+    padding: 10px 16px; border: 0; border-radius: 16px; background: transparent;
+    color: inherit; font: inherit; font-weight: 400; text-align: start; text-decoration: none; cursor: pointer;
+}
+.dpi-menu__item:hover, .dpi-menu__item:focus-visible { background: var(--dpi-menu-hover); }
+.dpi-menu__item:focus { outline: none; }
+.dpi-menu__item:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+.dpi-menu__label { flex: 1; min-width: 0; overflow-wrap: break-word; }
+.dpi-menu__value { flex: none; margin-inline-start: auto; color: var(--dpi-text-muted); font-variant-numeric: tabular-nums; }
+.dpi-menu__text { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 2px; }
+.dpi-menu__description { display: block; color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); line-height: 1.4; }
+.dpi-menu__title { margin: 0; padding: 8px 16px 6px; color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); font-weight: 400; }
+.dpi-menu__item > .dpi-icon, .dpi-menu__item > [data-dpi-icon] { flex: none; width: 20px; height: 20px; }
+.dpi-menu__item:is([role="menuitemcheckbox"], [role="menuitemradio"])::before { content: "✓"; flex: none; width: 18px; font-size: 20px; visibility: hidden; }
+.dpi-menu__item:is([role="menuitemcheckbox"], [role="menuitemradio"])[aria-checked="true"]::before { visibility: visible; }
+.dpi-menu__item--danger { color: var(--dpi-danger); }
+.dpi-menu__item:disabled, .dpi-menu__item[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.dpi-menu__item:disabled:hover, .dpi-menu__item[aria-disabled="true"]:hover { background: transparent; }
+.dpi-menu__sep { height: 1px; margin: 6px 8px; background: var(--dpi-menu-border); border: 0; }
+@media (prefers-reduced-transparency: reduce) { .dpi-menu { --dpi-menu-tint: var(--dpi-surface); } }
+@media (forced-colors: active) {
+    .dpi-menu { background: Canvas; color: CanvasText; border: 1px solid CanvasText; }
+    .dpi-menu__item:hover, .dpi-menu__item:focus-visible { outline: 1px solid Highlight; background: Canvas; }
+}
+
+/* ------------------------------------------------------------------ form */
+.dpi-field { display: flex; flex-direction: column; gap: var(--dpi-space-1); }
+.dpi-label { font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-field); color: var(--dpi-text); }
+.dpi-required { color: var(--dpi-danger); }
+.dpi-hint { font-size: var(--dpi-text-xs); font-weight: 400; color: var(--dpi-text-muted); margin: 0; }
+.dpi-error { font-size: var(--dpi-text-xs); font-weight: var(--dpi-weight-label); color: var(--dpi-danger); margin: 0; }
+.dpi-input, .dpi-select, .dpi-textarea {
+    width: 100%; min-height: var(--dpi-control-h); padding: var(--dpi-space-2) var(--dpi-space-3);
+    background: var(--dpi-surface); color: var(--dpi-text);
+    border: 1px solid var(--dpi-control-border); border-radius: var(--dpi-radius-md);
+}
+.dpi-textarea { min-height: 6rem; resize: vertical; }
+.dpi-input--auto, .dpi-select--auto { width: auto; }
+.dpi-input::placeholder, .dpi-textarea::placeholder { color: var(--dpi-text-muted); opacity: 1; }
+.dpi-input:disabled, .dpi-select:disabled, .dpi-textarea:disabled { opacity: 0.55; cursor: not-allowed; background: var(--dpi-surface-2); }
+.dpi-input:read-only:not(:disabled), .dpi-textarea:read-only:not(:disabled) { background: var(--dpi-surface-2); }
+.dpi-input[aria-invalid="true"], .dpi-select[aria-invalid="true"], .dpi-textarea[aria-invalid="true"],
+.dpi-input:user-invalid, .dpi-select:user-invalid, .dpi-textarea:user-invalid { border-color: var(--dpi-danger); border-width: 2px; }
+
+.dpi-fieldset { border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-md); padding: var(--dpi-space-3) var(--dpi-space-4); margin: 0; min-width: 0; }
+.dpi-fieldset > legend { padding: 0 var(--dpi-space-1); font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-field); }
+
+/* checkbox e radio: controlli nativi, solo dimensione e accent-color */
+.dpi-check { display: inline-flex; align-items: center; gap: var(--dpi-space-2); min-height: var(--dpi-control-h); cursor: pointer; }
+.dpi-check > input { width: 1.25rem; height: 1.25rem; margin: 0; flex: none; cursor: inherit; }
+.dpi-check:has(> input:disabled) { opacity: 0.55; cursor: not-allowed; }
+.dpi-check > input:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 2px; }
+
+/* switch: <input type="checkbox" role="switch" class="dpi-switch"> — resta un checkbox nativo (name/value, form, reset) */
+.dpi-switch {
+    appearance: none; -webkit-appearance: none; position: relative; flex: none; margin: 0; cursor: pointer;
+    width: 3rem; height: 1.75rem; border-radius: var(--dpi-radius-pill); border: 0; background: var(--dpi-control-off);
+    transition: background var(--dpi-dur) var(--dpi-ease);
+}
+.dpi-switch::before {
+    content: ""; position: absolute; inset-block: 0.125rem; inset-inline-start: 0.125rem; aspect-ratio: 1;
+    border-radius: 50%; background: #fff; box-shadow: var(--dpi-shadow-sm);
+    transition: transform var(--dpi-dur) var(--dpi-ease);
+}
+.dpi-switch:checked { background: var(--dpi-control-on); }
+.dpi-switch:checked::before { transform: translateX(1.25rem); }
+[dir="rtl"] .dpi-switch:checked::before { transform: translateX(-1.25rem); }
+.dpi-switch:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* ------------------------------------------------------------------ alert e badge */
+.dpi-alert { --_c: var(--dpi-info); --_bg: var(--dpi-info-soft); padding: var(--dpi-space-3) var(--dpi-space-4); border-radius: var(--dpi-radius-md); background: var(--_bg); color: var(--_c); border: 1px solid transparent; }
+.dpi-alert--success { --_c: var(--dpi-success); --_bg: var(--dpi-success-soft); }
+.dpi-alert--warning { --_c: var(--dpi-warning); --_bg: var(--dpi-warning-soft); }
+.dpi-alert--danger  { --_c: var(--dpi-danger);  --_bg: var(--dpi-danger-soft); }
+.dpi-alert__title { font-weight: var(--dpi-weight-label); margin: 0; }
+
+.dpi-badge {
+    --_c: var(--dpi-text); --_bg: var(--dpi-surface-2);
+    display: inline-flex; align-items: center; padding: 0.1rem var(--dpi-space-2); border-radius: var(--dpi-radius-pill);
+    background: var(--_bg); color: var(--_c); font-size: var(--dpi-text-xs); font-weight: var(--dpi-weight-label); line-height: 1.5; white-space: nowrap;
+    border: 1px solid transparent;
+}
+.dpi-badge--info    { --_c: var(--dpi-info);    --_bg: var(--dpi-info-soft); }
+.dpi-badge--success { --_c: var(--dpi-success); --_bg: var(--dpi-success-soft); }
+.dpi-badge--warning { --_c: var(--dpi-warning); --_bg: var(--dpi-warning-soft); }
+.dpi-badge--danger  { --_c: var(--dpi-danger);  --_bg: var(--dpi-danger-soft); }
+
+/* ------------------------------------------------------------------ tabella e paginazione */
+.dpi-table-wrap { background: var(--dpi-surface); color: var(--dpi-text); border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-lg); overflow: hidden; }
+.dpi-table-wrap--scroll { overflow-x: auto; }
+.dpi-table { width: 100%; border-collapse: collapse; }
+.dpi-table th, .dpi-table td { text-align: start; padding: var(--dpi-space-3) var(--dpi-space-4); border-bottom: 1px solid var(--dpi-line); vertical-align: middle; overflow-wrap: anywhere; }
+.dpi-table th { font-size: var(--dpi-text-sm); font-weight: var(--dpi-weight-field); color: var(--dpi-text-muted); }
+.dpi-table tbody tr:last-child td { border-bottom: 0; }
+.dpi-table--striped tbody tr:nth-child(even) { background: var(--dpi-surface-2); }
+.dpi-table__num { text-align: end; font-variant-numeric: tabular-nums; }
+
+/* Sotto md la riga diventa una scheda con etichette (data-label su ogni cella) */
+@media (max-width: 40rem) {
+    .dpi-table--stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .dpi-table--stack, .dpi-table--stack tbody, .dpi-table--stack tr, .dpi-table--stack td { display: block; width: 100%; }
+    .dpi-table--stack tr { border-bottom: 8px solid var(--dpi-bg); padding: var(--dpi-space-1) 0; }
+    .dpi-table--stack td { border: 0; padding: var(--dpi-space-2) var(--dpi-space-4); display: flex; gap: var(--dpi-space-3); justify-content: space-between; text-align: end; }
+    .dpi-table--stack td::before { content: attr(data-label); font-weight: var(--dpi-weight-label); color: var(--dpi-text-muted); flex: 0 0 40%; text-align: start; }
+}
+
+.dpi-pagination { display: flex; align-items: center; justify-content: space-between; gap: var(--dpi-space-2); flex-wrap: wrap; }
+.dpi-pagination__info { color: var(--dpi-text-muted); }
+
+/* ------------------------------------------------------------------ dialog (elemento nativo <dialog>) */
+.dpi-dialog {
+    padding: 0; border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-lg);
+    background: var(--dpi-surface); color: var(--dpi-text); box-shadow: var(--dpi-shadow-lg);
+    width: min(32rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem);
+}
+.dpi-dialog::backdrop { background: var(--dpi-scrim, rgb(0 0 0 / 0.45)); }
+.dpi-dialog[open] { animation: dpi-dialog-in var(--dpi-dur) var(--dpi-ease); }
+@keyframes dpi-dialog-in { from { opacity: 0; transform: translateY(0.5rem) scale(0.98); } }
+.dpi-dialog__form { display: flex; flex-direction: column; max-height: inherit; margin: 0; }
+.dpi-dialog__header { display: flex; align-items: center; justify-content: space-between; gap: var(--dpi-space-3); padding: var(--dpi-space-4) var(--dpi-space-5); }
+.dpi-dialog__title { margin: 0; font-size: var(--dpi-text-lg); }
+.dpi-dialog__body { padding: 0 var(--dpi-space-5) var(--dpi-space-4); overflow: auto; }
+.dpi-dialog__footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--dpi-space-2); padding: var(--dpi-space-3) var(--dpi-space-5) var(--dpi-space-4); }
+body:has(dialog.dpi-dialog[open]) { overflow: hidden; }
+
+/* ------------------------------------------------------------------ testo, titoli, codice, divisore, disclosure */
+.dpi-text { margin: 0; }
+.dpi-text--muted { color: var(--dpi-text-muted); }
+.dpi-text--sm { font-size: var(--dpi-text-sm); }
+.dpi-heading { margin: 0; line-height: var(--dpi-leading-tight); font-weight: var(--dpi-weight-bold); }
+.dpi-heading--1 { font-size: var(--dpi-text-xl); }
+.dpi-heading--2 { font-size: var(--dpi-text-lg); }
+.dpi-heading--3 { font-size: var(--dpi-text-md); }
+.dpi-heading--4 { font-size: var(--dpi-text-sm); text-transform: uppercase; letter-spacing: 0.04em; color: var(--dpi-text-muted); }
+.dpi-divider { width: 100%; margin: 0; border: 0; border-top: 1px solid var(--dpi-line); }
+.dpi-code { position: relative; min-width: 0; }
+.dpi-code__pre {
+    margin: 0; padding: var(--dpi-space-4); padding-right: 5.5rem; overflow: auto; tab-size: 4; max-height: 26rem;
+    background: var(--dpi-surface-2); color: var(--dpi-text); border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-md);
+    font: var(--dpi-text-sm) / 1.5 var(--dpi-font-mono);
+}
+.dpi-code__pre:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 2px; }
+.dpi-code__copy { position: absolute; top: var(--dpi-space-2); right: var(--dpi-space-2); display: none; }
+.dpi-js .dpi-code__copy { display: block; }
+.dpi-btn[data-dpi-copy-state="done"] .dpi-icon { animation: dpi-icon-pop var(--dpi-dur-icon, 380ms) var(--dpi-ease-spring, ease); }
+.dpi-btn[data-dpi-copy-state="error"] { color: var(--dpi-danger); }
+.dpi-js .dpi-code__copy { display: inline-flex; }
+.dpi-code-inline { font: 0.9em var(--dpi-font-mono); background: var(--dpi-surface-2); padding: 0.1em 0.35em; border-radius: var(--dpi-radius-sm); }
+.dpi-disclosure { border: 1px solid var(--dpi-line); border-radius: var(--dpi-radius-md); background: var(--dpi-surface); color: var(--dpi-text); min-width: 0; }
+.dpi-disclosure > summary { display: flex; align-items: center; min-height: var(--dpi-control-h); padding: 0 var(--dpi-space-4); cursor: pointer; font-weight: var(--dpi-weight-bold); }
+.dpi-disclosure > summary:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -3px; border-radius: var(--dpi-radius-md); }
+.dpi-disclosure__body { padding: var(--dpi-space-2) var(--dpi-space-4) var(--dpi-space-4); }
+
+/* ------------------------------------------------------------------ segmented control (radio nativi) */
+/*
+ * Comportamento quando le etichette non entrano su una riga (prevedibile, senza ridurre il testo):
+ *  1. i segmenti hanno la larghezza naturale delle loro etichette e stanno su UNA riga se entrano;
+ *  2. altrimenti vanno a capo su più righe e, in ogni riga, si dividono lo spazio;
+ *  3. un'etichetta con più parole che non entra nemmeno da sola va a capo TRA le parole;
+ *  4. una parola non viene spezzata, salvo il caso limite di una singola parola più larga del contenitore.
+ */
+.dpi-segmented {
+    display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 3px;
+    width: fit-content; min-width: 0; min-inline-size: 0; max-width: 100%;
+    border: 1px solid var(--dpi-control-border); border-radius: var(--dpi-radius-lg); background: var(--dpi-surface-2); color: var(--dpi-text);
+}
+.dpi-segmented__item { position: relative; display: flex; flex: 1 1 auto; max-width: 100%; min-width: 44px; }   /* bersaglio minimo in px fisici: non cresce con lo zoom del testo */
+.dpi-segmented__input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+/* Etichetta a BLOCCO (non flex): così overflow-wrap può spezzare una parola troppo lunga come ultima risorsa. */
+.dpi-segmented__label {
+    display: block; width: 100%; padding: 0.425rem var(--dpi-space-3);
+    border-radius: var(--dpi-radius-pill); color: var(--dpi-text-muted); font-weight: var(--dpi-weight-label); pointer-events: none;
+    text-align: center; overflow-wrap: break-word; hyphens: manual; line-height: 1.2;
+    transition: background var(--dpi-dur) var(--dpi-ease), color var(--dpi-dur) var(--dpi-ease), box-shadow var(--dpi-dur) var(--dpi-ease), transform var(--dpi-dur-fast) var(--dpi-ease);
+}
+/* Schermi stretti: padding limitato in unità di viewport (non cresce con lo zoom del testo). DOPO la regola base, per vincere a parità di specificità. */
+@media (max-width: 40rem) { .dpi-segmented__label { padding-inline: min(var(--dpi-space-2), 2.5vw); } }
+.dpi-segmented__input:checked + .dpi-segmented__label { background: var(--dpi-surface); color: var(--dpi-text); box-shadow: var(--dpi-shadow-sm); }
+.dpi-segmented__input:focus-visible + .dpi-segmented__label { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 1px; }
+.dpi-segmented__input:disabled { cursor: not-allowed; }
+.dpi-segmented__input:disabled + .dpi-segmented__label { opacity: 0.5; }
+
+/* ------------------------------------------------------------------ bottom sheet (<dialog> nativo) */
+.dpi-sheet {
+    position: fixed; inset: 0; margin: 0; padding: 0; border: 0; width: 100%; max-width: none; height: 100%; max-height: none;
+    background: transparent; color: var(--dpi-text); overflow: hidden;
+}
+.dpi-sheet::backdrop { background: var(--dpi-scrim, rgb(0 0 0 / 0.45)); }
+.dpi-sheet__panel {
+    position: absolute; left: 0; right: 0; bottom: 0; margin-inline: auto; width: min(100%, 40rem);
+    display: flex; flex-direction: column; background: var(--dpi-surface); color: var(--dpi-text);
+    border-radius: var(--dpi-radius-lg) var(--dpi-radius-lg) 0 0; box-shadow: var(--dpi-shadow-lg);
+    max-height: 50dvh; transition: max-height var(--dpi-dur) var(--dpi-ease), transform var(--dpi-dur) var(--dpi-ease);
+}
+.dpi-sheet[data-dpi-sheet="large"] .dpi-sheet__panel { height: 92dvh; max-height: 92dvh; }
+.dpi-sheet__handle { display: flex; justify-content: center; align-items: center; width: 100%; min-height: var(--dpi-control-h); padding: 0; border: 0; background: transparent; cursor: grab; touch-action: none; }
+.dpi-sheet__handle:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -3px; border-radius: var(--dpi-radius-lg); }
+.dpi-sheet__grip { width: 2.5rem; height: 0.3125rem; border-radius: var(--dpi-radius-pill); background: var(--dpi-control-off); }
+.dpi-sheet__header { display: flex; align-items: center; justify-content: space-between; gap: var(--dpi-space-3); padding: 0 var(--dpi-space-5) var(--dpi-space-2); }
+.dpi-sheet__title { margin: 0; font-size: var(--dpi-text-lg); }
+.dpi-sheet__body { padding: 0 var(--dpi-space-5) var(--dpi-space-4); overflow: auto; min-height: 0; }
+.dpi-sheet__footer { padding: var(--dpi-space-2) var(--dpi-space-5) var(--dpi-space-5); }
+.dpi-sheet__footer:empty { display: none; }
+.dpi-sheet__panel.dpi-glass { background: var(--dpi-glass-tint); }
+body:has(dialog.dpi-sheet[open]) { overflow: hidden; }
+
+/* ------------------------------------------------------------------ icone (registro autorizzato, SVG in linea) */
+.dpi-icon { display: inline-block; flex: none; width: 1.25em; height: 1.25em; overflow: visible; stroke-width: var(--dpi-icon-stroke, 2); vertical-align: -0.2em; }
+.dpi-icon--md { width: 1.25em; height: 1.25em; }
+.dpi-icon--sm { width: 1em; height: 1em; }
+.dpi-icon--lg { width: 1.6em; height: 1.6em; }
+.dpi-icon--xl { width: 2.2em; height: 2.2em; }
+.dpi-link:has(.dpi-icon) { display: inline-flex; align-items: center; gap: 0.35em; }
+.dpi-navbar__link { gap: 0.45em; }
+.dpi-menu__label { flex: 1; min-width: 0; }
+.dpi-menu__item .dpi-icon { opacity: 0.9; }
+.dpi-badge { gap: 0.25em; }
+.dpi-alert { display: flex; align-items: flex-start; gap: var(--dpi-space-3); }
+.dpi-alert__icon { display: flex; margin-top: 0.12rem; }
+.dpi-alert__body { min-width: 0; flex: 1; }
+.dpi-segmented__label .dpi-icon { margin-inline-end: 0.35em; }
+.dpi-has-backdrop .dpi-page > .dpi-text--muted { color: color-mix(in srgb, var(--dpi-text-muted) 65%, var(--dpi-text)); }   /* testo direttamente sul fondale di pagina */
+.dpi-page-bg--neutral { background: var(--dpi-scene-neutral); }
+.dpi-page-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.dpi-page-bg__img { display: block; width: 100%; height: 100%; object-fit: cover; opacity: var(--dpi-bg-veil); }
+
+/* ------------------------------------------------------------------ modalità opaca e contrasto forzato */
+@media (forced-colors: active) {
+    .dpi-btn, .dpi-input, .dpi-select, .dpi-textarea, .dpi-card, .dpi-menu, .dpi-dialog, .dpi-table-wrap, .dpi-alert, .dpi-badge { border: 1px solid CanvasText; }
+    .dpi-btn--primary { background: ButtonText; color: ButtonFace; }
+    .dpi-switch { border: 2px solid ButtonText; background: Canvas; }
+    .dpi-switch::before { background: ButtonText; box-shadow: none; }
+    .dpi-switch:checked { background: Highlight; }
+    .dpi-sheet__panel { border: 1px solid CanvasText; background: Canvas; }
+    .dpi-segmented, .dpi-disclosure, .dpi-code__pre { border: 1px solid CanvasText; }
+    .dpi-segmented__input:checked + .dpi-segmented__label { outline: 2px solid Highlight; }
+    .dpi-navbar__link[aria-current="page"] { outline: 2px solid Highlight; }
+}
+
+/* ---------------------------------------------------------------- elenco (list_group / list_item): contenuto, non chrome — nessun vetro, solo righe */
+.dpi-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.dpi-list > li:not(.dpi-list__row) { display: contents; }
+.dpi-list__row {
+    display: flex; align-items: center; gap: var(--dpi-space-3); width: 100%; min-height: 3.25rem; padding: var(--dpi-space-2) var(--dpi-space-3);
+    border: 0; border-radius: var(--dpi-radius-md); background: transparent; color: var(--dpi-text); font: inherit; text-align: start; text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.dpi-list__row { position: relative; }
+/* divisore sottile tra le righe (non segue il raggio della riga: resta una linea) */
+.dpi-list > li:not(:last-child) > .dpi-list__row::after, .dpi-list > .dpi-list__row:not(:last-child)::after { content: ""; position: absolute; inset-inline: var(--dpi-space-3); bottom: 0; height: 1px; background: var(--dpi-line); pointer-events: none; }
+.dpi-list__row_link { cursor: pointer; transition: background var(--dpi-dur-press, 120ms) ease, scale var(--dpi-dur-release, 400ms) var(--dpi-ease-spring, ease); }
+.dpi-list__row_link:hover { background: color-mix(in srgb, var(--dpi-text) 6%, transparent); }
+.dpi-list__row_link:active { scale: 0.985; background: color-mix(in srgb, var(--dpi-text) 10%, transparent); transition-duration: var(--dpi-dur-press, 120ms); }
+.dpi-list__row_link:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+.dpi-list__row[aria-current="true"] { background: var(--dpi-accent-soft); }
+.dpi-list__row[aria-disabled="true"], .dpi-list__row:disabled { opacity: 0.5; cursor: not-allowed; }
+.dpi-list__row--done .dpi-list__label { text-decoration: line-through; color: var(--dpi-text-muted); }
+.dpi-list__icon { display: grid; place-items: center; flex: none; color: var(--dpi-text-muted); }
+.dpi-list__text { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.dpi-list__label { font-weight: var(--dpi-weight-medium); overflow-wrap: anywhere; }
+.dpi-list__detail, .dpi-list__meta { color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); }
+.dpi-list__meta { flex: none; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .dpi-list__row_link:active { scale: 1; } }

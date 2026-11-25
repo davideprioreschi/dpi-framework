@@ -1,0 +1,98 @@
+/* dpi — una goccia entra da destra e diventa direttamente la notifica. */
+.dpi-notify { position: fixed; inset: 0; overflow: clip; z-index: var(--dpi-z-toast); pointer-events: none; font: var(--dpi-text-md) / var(--dpi-leading) var(--dpi-font); color: var(--dpi-text); }
+.dpi-notify *, .dpi-notify *::before, .dpi-notify *::after { box-sizing: border-box; }
+.dpi-notify__safe { position: fixed; inset-inline: 0; bottom: 0; height: env(safe-area-inset-bottom, 0px); visibility: hidden; pointer-events: none; }
+
+.dpi-notify__dock {
+    position: fixed; top: max(12px, env(safe-area-inset-top, 0px));
+    right: max(12px, env(safe-area-inset-right, 0px)); left: auto; pointer-events: auto;
+    width: 48px; height: 48px;
+    --dpi-notify-width: min(420px, calc(100vw - 24px));
+}
+/* A transparent, non-interactive anchor puts the seed entirely offscreen.
+   It is never a rendered button; only the panel's opaque surface is drawn. */
+.dpi-notify__origin {
+    display: block; position: relative; left: 120px; width: 48px; height: 48px;
+    border-radius: 24px; visibility: hidden; pointer-events: none;
+}
+.dpi-notify .dpi-notify__dock[data-dpi-morph] > .dpi-notify__panel {
+    inset-inline-start: auto;
+    inset-inline-end: 0; width: var(--dpi-notify-width);
+    min-width: 0; padding: 0; max-height: var(--dpi-notify-height, calc(100dvh - 36px));
+}
+.dpi-notify__content {
+    position: relative; box-sizing: border-box; display: flex; align-items: flex-start;
+    gap: var(--dpi-space-3); overflow-y: auto; overscroll-behavior: contain;
+    max-height: var(--dpi-notify-height, calc(100dvh - 36px));
+    padding: 20px; background: none; border: 0; box-shadow: none;
+    color: var(--dpi-menu-fg); pointer-events: none;
+}
+.dpi-notify__content[data-dpi-interactive] { pointer-events: auto; }
+.dpi-notify__content--confirm { padding: 24px; min-width: min(20rem, 100%); text-align: center; }
+.dpi-notify__content--confirm .dpi-notify__text { gap: 8px; }
+.dpi-notify__content--confirm .dpi-notify__actions > .dpi-btn { flex: 1 1 7rem; }
+.dpi-notify__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-self: center; }
+.dpi-notify__icon { flex: none; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; margin-block: 2px; align-self: center; }
+.dpi-notify__content[data-dpi-tone="info"] .dpi-notify__icon { color: var(--dpi-info); }
+.dpi-notify__content[data-dpi-tone="success"] .dpi-notify__icon { color: var(--dpi-success); }
+.dpi-notify__content[data-dpi-tone="warning"] .dpi-notify__icon { color: var(--dpi-warning); }
+.dpi-notify__content[data-dpi-tone="danger"] .dpi-notify__icon { color: var(--dpi-danger); }
+.dpi-notify__title { margin: 0; font-size: var(--dpi-text-md); font-weight: var(--dpi-weight-bold); line-height: var(--dpi-leading-tight); overflow-wrap: break-word; }
+.dpi-notify__message { margin: 0; overflow-wrap: break-word; line-height: var(--dpi-leading); }
+.dpi-notify__detail { margin: 0; font-weight: var(--dpi-weight-medium); overflow-wrap: break-word; }
+.dpi-notify__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--dpi-space-2); margin-top: var(--dpi-space-4); }
+.dpi-notify__close { flex: none; align-self: flex-start; }
+
+@media (forced-colors: active) {
+    .dpi-notify__content { color: CanvasText; }
+}
+
+/* MATERIALE OPACO (nessun Liquid Glass): la goccia e il pannello usano i token del materiale del menu (superficie opaca del tema, lieve bombatura, contorno sottile, ombra
+   morbida), qui riesposti come token delle notifiche così un tema colorato può configurarli senza toccare i menu. Lo stesso materiale vale per tutta la deformazione. */
+.dpi-notify .dpi-notify__dock {
+    --dpi-menu-bg: var(--dpi-notify-bg, var(--dpi-surface));
+    --dpi-menu-fg: var(--dpi-notify-fg, var(--dpi-text));
+    --dpi-menu-border: var(--dpi-notify-border, color-mix(in srgb, var(--dpi-menu-fg) 16%, var(--dpi-menu-bg)));
+    --dpi-menu-convex: var(--dpi-notify-convex, 6%);
+    --dpi-menu-shadow: var(--dpi-notify-shadow, 0 12px 24px -10px rgb(0 0 0 / 0.26), 0 2px 6px rgb(0 0 0 / 0.1));
+}
+/* nessun livello ottico: rifrazione e copia del fondale non esistono per le notifiche */
+.dpi-notify .dpi-notify__dock > .dpi-notify__panel > :is(.dpi-drop__lens, .dpi-drop__stage) { display: none; }
+
+.dpi-notify__dock[hidden] { display: none; }
+
+
+/* Only show a button when its full bounds fit in the current shape of the morphing surface.
+   Visibility preserves layout and the native controls; no DOM recreation. */
+.dpi-notify__content [data-dpi-notify-clipped] { visibility: hidden; }
+
+/* ---- NOTIFICA DALLA BARRA (bar-notify.js): il contenuto sta in un livello del contenitore, ritagliato dalla sagoma della massa con clip-path (mai scalato). Ogni notifica è
+   un «slot» largo/alto quanto il corpo finale; il contenitore dello slot (container-type) sceglie la disposizione dallo spazio REALE, non dalla larghezza della finestra. */
+.dpi-bbn-wrap { position: fixed; left: 0; top: 0; pointer-events: none; overflow: visible; z-index: 1; }
+.dpi-bbn-wrap[hidden] { display: none; }
+.dpi-bbn-slot {
+    position: absolute; box-sizing: border-box; display: flex; align-items: center; justify-content: center; pointer-events: none;
+    container: dpi-bbn / inline-size; color: var(--dpi-notify-fg, var(--dpi-text)); overflow: hidden; border-radius: 26px;
+    --dpi-menu-fg: var(--dpi-notify-fg, var(--dpi-text));
+}
+.dpi-bbn-slot[data-scrolls] { overflow-y: auto; align-items: flex-start; overscroll-behavior: contain; }
+.dpi-bbn-slot[data-measure] { container-type: normal; display: inline-flex; }
+.dpi-bbn-slot > .dpi-notify__content { flex: 1 1 auto; min-width: 0; max-height: none; overflow: visible; width: 100%; }
+.dpi-bbn-slot > .dpi-notify__content[data-dpi-interactive] { pointer-events: auto; }
+.dpi-bbn-slot:has(> .dpi-notify__content[data-dpi-interactive]) { pointer-events: auto; }
+/* abbastanza spazio (contenitore ≥ 30rem): le azioni stanno sulla stessa riga del testo */
+@container dpi-bbn (min-width: 30rem) {
+    .dpi-notify__content:not(.dpi-notify__content--confirm) .dpi-notify__text { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--dpi-space-4); align-items: center; }
+    .dpi-notify__content:not(.dpi-notify__content--confirm) .dpi-notify__text > :not(.dpi-notify__actions) { grid-column: 1; }
+    .dpi-notify__content:not(.dpi-notify__content--confirm) .dpi-notify__actions { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; flex-wrap: nowrap; }
+}
+@container dpi-bbn (max-width: 15rem) { .dpi-notify__content { padding: 14px; gap: var(--dpi-space-2); } }
+@media (prefers-reduced-motion: reduce) {
+    .dpi-bbn-slot { transition: opacity 160ms linear; }
+}
+
+/* ---- SOPRA UN <dialog> MODALE (notify.js, attachHost): il contenitore diventa un popover manuale dentro il dialogo (top layer, sopra di lui). Lo stile del popover del browser
+   (riquadro centrato con bordo, riempimento e fondo) non deve comparire: il contenitore resta il livello trasparente a tutto schermo di sempre. */
+.dpi-notify:popover-open { width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; color: var(--dpi-text); }
+/* conferma modale aperta da un dialogo: il fondo cattura il clic (non lo lascia arrivare al fondale del dialogo, che potrebbe chiuderlo) */
+.dpi-notify[data-dpi-notify-scrim] { pointer-events: auto; }

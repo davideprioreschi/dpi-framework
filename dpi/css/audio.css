@@ -1,0 +1,30 @@
+/*
+ * dpi — lettore audio (js/audio.js). Barra compatta: pulsante play/pausa, tempo, posizione, velocità e scarica; tutto con i token DPI (tema chiaro/scuro, focus visibile).
+ * Su schermi stretti la posizione passa alla riga sotto e occupa tutta la larghezza.
+ */
+.dpi-audio {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--dpi-space-2); box-sizing: border-box; inline-size: 100%; max-inline-size: 32rem; min-width: 0;
+    padding: var(--dpi-space-2) var(--dpi-space-3); border-radius: var(--dpi-radius-lg); background: var(--dpi-surface-2); border: 1px solid var(--dpi-line); color: var(--dpi-text);
+}
+.dpi-audio > audio { display: none; }
+.dpi-audio__play { flex: none; }
+.dpi-audio__play [hidden] { display: none; }
+.dpi-audio__time { flex: none; font-size: var(--dpi-text-xs); font-variant-numeric: tabular-nums; color: var(--dpi-text-muted); white-space: nowrap; }
+.dpi-audio__seek {
+    flex: 1 1 8rem; min-width: 0; margin: 0; block-size: 1.5rem; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none;
+    --_p: var(--dpi-audio-p, 0%);
+}
+.dpi-audio__seek:disabled { cursor: default; opacity: 0.55; }
+.dpi-audio__seek::-webkit-slider-runnable-track { block-size: 0.3125rem; border-radius: var(--dpi-radius-pill); background: linear-gradient(to right, var(--dpi-accent) var(--_p), var(--dpi-line) var(--_p)); }
+.dpi-audio__seek::-moz-range-track { block-size: 0.3125rem; border-radius: var(--dpi-radius-pill); background: var(--dpi-line); }
+.dpi-audio__seek::-moz-range-progress { block-size: 0.3125rem; border-radius: var(--dpi-radius-pill); background: var(--dpi-accent); }
+.dpi-audio__seek::-webkit-slider-thumb { -webkit-appearance: none; inline-size: 0.9375rem; block-size: 0.9375rem; margin-block-start: -0.3125rem; border-radius: var(--dpi-radius-pill); background: var(--dpi-accent); border: 2px solid var(--dpi-surface); box-shadow: 0 1px 3px rgb(0 0 0 / 0.35); }
+.dpi-audio__seek::-moz-range-thumb { inline-size: 0.8125rem; block-size: 0.8125rem; border-radius: var(--dpi-radius-pill); background: var(--dpi-accent); border: 2px solid var(--dpi-surface); box-shadow: 0 1px 3px rgb(0 0 0 / 0.35); }
+.dpi-audio__seek:focus-visible { outline: var(--dpi-focus-width, 2px) solid var(--dpi-focus); outline-offset: 3px; border-radius: var(--dpi-radius-pill); }
+.dpi-audio__tools { display: inline-flex; align-items: center; gap: var(--dpi-space-1); flex: none; }
+.dpi-audio__rate { min-inline-size: 3rem; font-variant-numeric: tabular-nums; }
+.dpi-audio[data-dpi-busy] .dpi-audio__time::after { content: " …"; }
+.dpi-audio__error { flex: 1 1 100%; margin: 0; color: var(--dpi-danger); }
+.dpi-audio[data-dpi-error] > :is(.dpi-audio__seek, .dpi-audio__time, .dpi-audio__rate) { opacity: 0.5; }
+@media (max-width: 30rem) { .dpi-audio__seek { order: 5; flex: 1 1 100%; } }
+@media (forced-colors: active) { .dpi-audio__seek::-webkit-slider-runnable-track { background: CanvasText; } .dpi-audio__seek::-webkit-slider-thumb { background: Highlight; forced-color-adjust: none; } }

@@ -1,0 +1,32 @@
+{
+    "name": "liquidglass",
+    "description": "Motore di rifrazione 'liquid glass' (SVG feDisplacementMap via CSS filter). Codice di terze parti, NON modificato.",
+    "source": "https://github.com/gentpan/liquidglass",
+    "docs": "https://liquidglass.dev",
+    "revision": "d5db099ef00828496aa2733e4f35542c05a0b1f8",
+    "revision_note": "HEAD di main al momento del vendoring: Merge pull request #5 from TingChieh/fix/surface-page-edge",
+    "retrieved": "2026-11-17",
+    "license": "MIT (Copyright (c) 2026 gentpan) — vedi LICENSE in questa cartella",
+    "files_shipped": {
+        "liquid-glass.js": {
+            "upstream_path": "lib/liquid-glass.js",
+            "sha256": "92a62e5b80cfa7e03912b13bdc53aff1c0ae367a5f296de1327e0f62f0579210",
+            "note": "byte identici al blob upstream del commit indicato (fine riga LF)"
+        },
+        "LICENSE": {
+            "upstream_path": "LICENSE",
+            "sha256": "d450a6ba35c35dc88b721d48b9930695024df6ded6553cecc4cacdb95e4364e1"
+        }
+    },
+    "files_evaluated_not_shipped": {
+        "lib/components.js": {
+            "sha256": "1c0c518153fdc73fe5dbe88834382e4a2b8fbf8b54666cd4783c75b2f83b8fa4",
+            "reason": "Inietta un <style> a runtime (incompatibile con style-src 'self' senza hash), registra 11 elementi lg-* e duplica la semantica di controlli nativi. Non adottato: l'adattatore lq-* usa solo l'API core documentata (createGlass)."
+        },
+        "lib/glass-webgl.js": {
+            "sha256": "0cdc8def96c2c67facafe029ca1a564da0df270fb089d7f30c6defe4606b0fce",
+            "reason": "Serve solo per <video>/canvas; non necessario in questa milestone."
+        }
+    },
+    "not_covered_by_mit": "Le immagini demo dell'upstream (images/) non sono MIT e NON sono incluse. La scena del catalogo (public/lq/img/scene.svg) è generata localmente da tools/make-scene.py."
+}

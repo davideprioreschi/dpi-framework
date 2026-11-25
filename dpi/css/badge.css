@@ -1,0 +1,35 @@
+/* Project count: a small themed capsule, distinct from notification counters. */
+.dpi-badge.dpi-badge--project {
+    --dpi-badge-color: var(--dpi-accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    min-inline-size: 1.65em;
+    padding: 0.16em 0.55em;
+    margin: 0;
+    border: 0;
+    border-radius: var(--dpi-radius-pill);
+    background: color-mix(in srgb, var(--dpi-badge-color) 13%, var(--dpi-surface));
+    color: var(--dpi-badge-color);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dpi-badge-color) 16%, transparent);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    font-size: 0.75em;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.3;
+    vertical-align: middle;
+}
+.dpi-badge--project::before { content: none; }
+.dpi-nav__link > .dpi-badge--project,
+.dpi-tabs__tab > .dpi-badge--project { align-self: center; margin-inline-start: 0.15em; }
+.dpi-nav__link[aria-current] > .dpi-badge--project,
+.dpi-tabs__tab[aria-selected="true"] > .dpi-badge--project {
+    background: color-mix(in srgb, var(--dpi-badge-color) 21%, var(--dpi-surface));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dpi-badge-color) 28%, transparent);
+}
+.dpi-badge.dpi-badge--project[hidden] { display: none; }
+@media (forced-colors: active) {
+    .dpi-badge.dpi-badge--project { background: Canvas; color: CanvasText; border: 1px solid CanvasText; box-shadow: none; }
+}

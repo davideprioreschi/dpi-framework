@@ -1,0 +1,305 @@
+/*
+ * dpi — campi di form: input, textarea, select (nativa e componente `data-dpi-select`), scelta file (`dpi-file`), barra di filtri (`dpi-toolbar`),
+ * contatori e badge senza pallino, avatar con immagine intera. Va DOPO harmony.css: raffina il materiale dei campi senza cambiarne il linguaggio
+ * (stessi token --dpi-field-*, stesso anello di focus). NON tocca menu, bottom bar, azioni espandibili, toggle, notifiche né lo skeleton.
+ * Nota sulla specificità: material.css dipinge i campi con `:root:not([data-dpi-surface="solid"]) :is(...)` (0,3,0): le regole di stato qui sotto
+ * usano `:root` + selettore per pareggiarla e vincere per ordine.
+ * Stato: scritto sui sorgenti, non verificato nel browser.
+ */
+
+/* ---------------------------------------------------------------- campi: base comune (altezza, tipografia, transizioni) */
+.dpi-input, .dpi-select, .dpi-textarea {
+    box-sizing: border-box; font: inherit; line-height: 1.35; accent-color: var(--dpi-accent);
+    transition: border-color var(--dpi-dur-fast) ease, box-shadow var(--dpi-dur-fast) ease, background-color var(--dpi-dur-fast) ease;
+}
+/* stessa altezza di dpi-btn: --dpi-control-h (predefinita) e --dpi-control-h-sm per --sm; --lg per i moduli compatti al contrario */
+.dpi-input, .dpi-select { min-height: var(--dpi-control-h); padding-block: 0.25rem; }
+.dpi-input--sm, .dpi-select--sm { min-height: var(--dpi-control-h-sm); padding-inline: var(--dpi-space-3); font-size: var(--dpi-text-sm); }
+.dpi-input--lg, .dpi-select--lg { min-height: var(--dpi-control-h-lg); padding-inline: var(--dpi-space-4); font-size: var(--dpi-text-lg); }
+.dpi-textarea { min-height: 6rem; padding-block: 0.625rem; line-height: var(--dpi-leading); resize: vertical; }
+.dpi-textarea--sm { min-height: 4rem; font-size: var(--dpi-text-sm); }
+.dpi-textarea--lg { min-height: 9rem; }
+.dpi-textarea--auto { field-sizing: content; max-height: 20rem; }   /* cresce col testo dove il browser lo supporta; altrove resta verticale ridimensionabile */
+.dpi-textarea--fixed { resize: none; }
+
+.dpi-input::placeholder, .dpi-textarea::placeholder { color: var(--dpi-text-muted); opacity: 1; }
+.dpi-input::selection, .dpi-textarea::selection { background: color-mix(in srgb, var(--dpi-accent) 30%, transparent); }
+
+/* ---------------------------------------------------------------- stati: hover, focus, readonly, disabled, invalid/valid */
+:root :is(.dpi-input, .dpi-select, .dpi-textarea):hover:not(:disabled, :focus-visible, [aria-invalid="true"], :user-invalid) {
+    border-color: color-mix(in srgb, var(--dpi-text) 38%, transparent);
+}
+:root :is(.dpi-input, .dpi-select, .dpi-textarea):focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 1px; }
+:root :is(.dpi-input, .dpi-textarea):read-only:not(:disabled) { background: transparent; box-shadow: none; border-style: dashed; border-color: var(--dpi-control-border); }
+:root :is(.dpi-input, .dpi-select, .dpi-textarea):disabled { opacity: 0.55; cursor: not-allowed; }
+/* non valido: bordo e anello interno in colore di errore, SENZA cambiare lo spessore del bordo (niente scatti di layout); lo stato è anche aria-invalid */
+:root :is(.dpi-input, .dpi-select, .dpi-textarea)[aria-invalid="true"],
+:root :is(.dpi-input, .dpi-select, .dpi-textarea):user-invalid {
+    border-width: 1px; border-color: var(--dpi-danger);
+    box-shadow: var(--dpi-field-shadow), inset 0 0 0 1px var(--dpi-danger);
+}
+:root :is(.dpi-input, .dpi-select, .dpi-textarea)[aria-invalid="true"]:focus-visible,
+:root :is(.dpi-input, .dpi-select, .dpi-textarea):user-invalid:focus-visible { outline-color: var(--dpi-focus); }
+/* valido dopo l'interazione: solo i campi obbligatori (un opzionale vuoto non merita un segnale di successo) */
+:root :is(.dpi-input, .dpi-select, .dpi-textarea)[required]:user-valid:not([aria-invalid="true"]) { border-color: var(--dpi-success); }
+
+/* ---------------------------------------------------------------- input: tipi con controlli nativi (si lasciano funzionare: icona del calendario, spinner, X di ricerca) */
+.dpi-input:is([type="date"], [type="time"], [type="datetime-local"], [type="month"], [type="week"]) { min-width: 0; font-variant-numeric: tabular-nums; }
+.dpi-input[type="number"] { font-variant-numeric: tabular-nums; }
+.dpi-input::-webkit-datetime-edit { padding: 0; }
+.dpi-input::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; border-radius: 0.25rem; padding: 0.125rem; margin-inline-start: 0.25rem; }
+.dpi-input::-webkit-calendar-picker-indicator:hover { opacity: 1; background: color-mix(in srgb, var(--dpi-text) 8%, transparent); }
+.dpi-input::-webkit-calendar-picker-indicator:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: 0; }
+.dpi-input[type="search"]::-webkit-search-cancel-button { cursor: pointer; }
+.dpi-input[type="file"] { padding-block: 0.25rem; cursor: pointer; }
+.dpi-input[type="file"]::file-selector-button {
+    margin-inline-end: var(--dpi-space-3); padding: 0.25rem var(--dpi-space-3); border: 1px solid var(--dpi-control-border); border-radius: var(--dpi-radius-sm);
+    background: var(--dpi-surface-2); color: var(--dpi-text); font: inherit; font-weight: var(--dpi-weight-label); cursor: pointer;
+}
+.dpi-input[type="color"] { padding: 0.25rem; cursor: pointer; }
+
+/* ---------------------------------------------------------------- select nativa: freccia propria (resta una <select>), popup e opzioni leggibili in chiaro e scuro */
+/* Il tema è già dato da color-scheme su :root/[data-dpi-theme] (tokens.css): il popup nativo lo eredita. Il difetto reale era un altro: il fondo del campo è
+   un velo semitrasparente e Chromium lo applica anche al popup, lasciando testo chiaro su fondo chiaro in tema scuro. Opzioni e gruppi hanno quindi un fondo pieno. */
+.dpi-select :is(option, optgroup) { background-color: var(--dpi-surface); color: var(--dpi-text); }
+.dpi-select optgroup { font-weight: var(--dpi-weight-medium); }
+.dpi-select option:disabled { color: var(--dpi-text-muted); }
+select.dpi-select:not([multiple], [size]) {
+    appearance: none; -webkit-appearance: none; cursor: pointer; padding-inline-end: 2.5rem;
+}
+:root select.dpi-select:not([multiple], [size]) {
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position: calc(100% - 1.25rem) 52%, calc(100% - 0.95rem) 52%;
+    background-size: 0.32rem 0.32rem, 0.32rem 0.32rem; background-repeat: no-repeat;
+}
+:root[dir="rtl"] select.dpi-select:not([multiple], [size]), [dir="rtl"] :root select.dpi-select:not([multiple], [size]), [dir="rtl"] select.dpi-select:not([multiple], [size]) {
+    background-position: 0.95rem 52%, 1.25rem 52%;
+}
+select.dpi-select[multiple], select.dpi-select[size] { padding-block: var(--dpi-space-1); }
+select.dpi-select[multiple] option, select.dpi-select[size] option { padding: 0.35rem var(--dpi-space-2); border-radius: var(--dpi-radius-sm); }
+@media (forced-colors: active) { select.dpi-select:not([multiple], [size]) { appearance: auto; -webkit-appearance: auto; background-image: none; } }
+
+/* ---------------------------------------------------------------- data-dpi-select: la <select> nativa resta nel DOM (valore, form, required, reset, FormData), nascosta in modo accessibile */
+select.dpi-select[data-dpi-select-ready] {
+    position: absolute; width: 1px; height: 1px; min-height: 0; margin: -1px; padding: 0; border: 0; overflow: hidden;
+    opacity: 0; pointer-events: none; clip-path: inset(50%); white-space: nowrap; -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.dpi-selectx__trigger {
+    display: flex; align-items: center; gap: var(--dpi-space-2); position: relative; width: 100%; text-align: start; cursor: pointer;
+    padding-inline-end: 2.5rem; margin: 0; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.dpi-select--auto.dpi-selectx__trigger { width: auto; }
+.dpi-selectx__trigger::after {
+    content: ""; position: absolute; inset-inline-end: 1.1rem; inset-block-start: 50%; width: 0.5rem; height: 0.5rem; margin-top: -0.38rem;
+    border: solid currentColor; border-width: 0 2px 2px 0; rotate: 45deg; pointer-events: none; transition: rotate var(--dpi-dur-fast) ease, margin var(--dpi-dur-fast) ease;
+}
+.dpi-selectx__trigger[aria-expanded="true"]::after { rotate: 225deg; margin-top: -0.12rem; }
+.dpi-selectx__value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dpi-selectx__trigger[data-dpi-placeholder] .dpi-selectx__value { color: var(--dpi-text-muted); }
+.dpi-selectx__trigger:disabled { cursor: not-allowed; }
+/* stato non valido: la nativa nascosta lo possiede (:user-invalid dopo l'interazione) e lo si riflette sul trigger */
+:root select.dpi-select:user-invalid + .dpi-selectx__trigger {
+    border-color: var(--dpi-danger); box-shadow: var(--dpi-field-shadow), inset 0 0 0 1px var(--dpi-danger);
+}
+:root select.dpi-select[required]:user-valid + .dpi-selectx__trigger { border-color: var(--dpi-success); }
+
+/* pannello: stesso materiale OPACO e stesso raggio del menu (token --dpi-menu-*, ridefiniti qui perché il pannello non sta in .dpi-dropdown). Nessuna animazione del menu:
+   solo una dissolvenza propria e breve. Vive in un popover (top layer): sopra dialog modali e contenitori con overflow o transform. */
+.dpi-selectx__panel {
+    --_bg: var(--dpi-menu-bg, var(--dpi-surface)); --_fg: var(--dpi-menu-fg, var(--dpi-text));
+    --_bd: color-mix(in srgb, var(--_fg) 16%, var(--_bg));
+    --_hi: color-mix(in srgb, var(--_bg) 94%, #fff); --_lo: color-mix(in srgb, var(--_bg) 90%, #000);
+    position: fixed; inset: auto; z-index: calc(var(--dpi-z-modal) + 10); margin: 0; box-sizing: border-box;
+    width: max-content; min-width: 8rem; max-width: calc(100vw - 16px); max-height: 20rem; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+    padding: 8px; color: var(--_fg); font: inherit; font-weight: 400; line-height: 1.35;
+    background: radial-gradient(130% 150% at 50% 30%, var(--_hi) 0%, var(--_bg) 58%, var(--_lo) 100%), var(--_bg);
+    border: 1px solid var(--dpi-menu-border, var(--_bd)); border-radius: var(--dpi-menu-radius, 28px);
+    box-shadow: var(--dpi-menu-shadow, 0 12px 24px -10px rgb(0 0 0 / 0.26), 0 2px 6px rgb(0 0 0 / 0.1)), var(--dpi-menu-relief, inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.07)));
+    -webkit-backdrop-filter: none; backdrop-filter: none; animation: dpi-selectx-in var(--dpi-dur-fast) ease-out;
+}
+.dpi-selectx__panel[hidden] { display: none; }
+.dpi-selectx__panel:focus { outline: none; }
+/* durante la misura il pannello è invisibile (open() lo posiziona nello stesso compito, prima del primo fotogramma): nessun fotogramma con il pannello fuori posto */
+.dpi-selectx__panel[data-dpi-placing] { visibility: hidden; animation: none; }
+@keyframes dpi-selectx-in { from { opacity: 0; } to { opacity: 1; } }
+.dpi-selectx__option {
+    display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 8px 14px 8px 10px; border-radius: 14px; cursor: pointer; overflow-wrap: anywhere;
+}
+.dpi-selectx__option::before { content: "✓"; flex: none; width: 1.1rem; font-size: 1rem; line-height: 1; text-align: center; visibility: hidden; }
+.dpi-selectx__option[aria-selected="true"]::before { visibility: visible; }
+.dpi-selectx__option[aria-selected="true"] { font-weight: var(--dpi-weight-medium); }
+.dpi-selectx__option[data-dpi-active] { background: var(--dpi-menu-hover, color-mix(in srgb, var(--_fg) 8%, transparent)); }
+.dpi-selectx__panel[data-dpi-keyboard] .dpi-selectx__option[data-dpi-active] { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+.dpi-selectx__option[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.dpi-selectx__option[data-dpi-empty] { color: var(--dpi-text-muted); }
+.dpi-selectx__group { padding: 8px 14px 4px; color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); }
+[role="group"] > .dpi-selectx__option { padding-inline-start: 10px; }
+[role="group"] + [role="group"], .dpi-selectx__option + [role="group"] { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--dpi-menu-border, var(--_bd)); }
+/* piede del pannello multiplo («Nessuno», «Fatto»): resta in vista in fondo all'elenco che scorre; pulsanti DPI senza vetro (il pannello è opaco) */
+.dpi-selectx__foot {
+    position: sticky; inset-block-end: -8px; display: flex; justify-content: space-between; gap: var(--dpi-space-2); margin: 4px -8px -8px; padding: 8px;
+    background: var(--_bg); border-top: var(--dpi-separator-dash, 1px dashed var(--_bd)); border-end-start-radius: calc(var(--dpi-menu-radius, 28px) - 1px); border-end-end-radius: calc(var(--dpi-menu-radius, 28px) - 1px);
+}
+.dpi-selectx__foot .dpi-btn { cursor: pointer; }
+.dpi-selectx__foot [data-dpi-select-act="done"] { margin-inline-start: auto; }
+/* chip delle voci scelte (data-dpi-select-chips): elementi DISTINTI e leggibili, ognuno con il proprio «×» (pulsante DPI senza materiale, tutta l'altezza del chip: bersaglio comodo anche al tocco) */
+.dpi-selectx__chips { display: flex; flex-wrap: wrap; gap: var(--dpi-space-2); margin: var(--dpi-space-2) 0 0; padding: 0; list-style: none; min-width: 0; width: 100%; contain: inline-size; }   /* contain: un nome lungo non allarga il contenitore (grid/flex senza min-width:0): i chip vanno a capo, il testo si tronca */
+.dpi-selectx__chips[hidden] { display: none; }
+.dpi-selectx__chip { box-sizing: border-box; max-width: 100%; padding-inline: var(--dpi-space-3) 0; gap: 0; background: var(--dpi-sel-bg, var(--dpi-surface)); border-color: var(--dpi-field-border, var(--dpi-line)); box-shadow: var(--dpi-sel-shadow, none); }
+.dpi-selectx__chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-block: 0.1rem; }
+.dpi-selectx__chip .dpi-selectx__chip-x { flex: none; width: var(--dpi-control-h-sm); min-height: var(--dpi-control-h-sm); height: var(--dpi-control-h-sm); margin-inline-start: var(--dpi-space-1); padding: 0; color: var(--dpi-text-muted); }
+.dpi-selectx__chip .dpi-selectx__chip-x:hover { color: var(--dpi-text); filter: none; background: color-mix(in srgb, var(--dpi-text) 10%, transparent); }
+.dpi-selectx__chip .dpi-selectx__chip-x:focus-visible { outline: var(--dpi-focus-width) solid var(--dpi-focus); outline-offset: -2px; }
+@media (prefers-reduced-motion: reduce) { .dpi-selectx__panel { animation: none; } .dpi-selectx__trigger::after { transition: none; } }
+@media (forced-colors: active) {
+    .dpi-selectx__panel { background: Canvas; color: CanvasText; border: 1px solid CanvasText; box-shadow: none; }
+    .dpi-selectx__option[data-dpi-active] { outline: 2px solid Highlight; background: Canvas; }
+    .dpi-selectx__trigger::after { border-color: ButtonText; }
+}
+
+/* ---------------------------------------------------------------- gruppi di campi (dpi-input-group): una sola altezza, un solo anello di focus */
+.dpi-input-group { min-height: var(--dpi-control-h); background: var(--dpi-field-bg); border-color: var(--dpi-field-border); box-shadow: var(--dpi-field-shadow); align-items: stretch; }
+.dpi-input-group:hover:not(:focus-within) { border-color: color-mix(in srgb, var(--dpi-text) 38%, transparent); }
+.dpi-input-group > :is(.dpi-input, .dpi-select), .dpi-input-group .dpi-input { min-height: calc(var(--dpi-control-h) - 2px); border-width: 0; }
+.dpi-input-group :is(.dpi-input, .dpi-select):focus-visible { outline: none; }
+.dpi-input-group > .dpi-btn, .dpi-input-group .dpi-btn { min-height: calc(var(--dpi-control-h) - 2px); border-radius: 0; border-width: 0; }
+.dpi-input-group__addon { min-height: calc(var(--dpi-control-h) - 2px); }
+.dpi-input-group:has(:is(.dpi-input, .dpi-textarea)[aria-invalid="true"], :is(.dpi-input, .dpi-textarea):user-invalid) { border-color: var(--dpi-danger); }
+.dpi-input-group:has(:is(.dpi-input, .dpi-textarea):disabled) { opacity: 0.55; }
+
+/* ---------------------------------------------------------------- file: dpi-file (l'<input type="file"> nativo resta nel DOM; qui solo l'aspetto) */
+.dpi-file { position: relative; display: grid; gap: var(--dpi-space-2); min-width: 0; }
+/* senza JS il controllo nativo resta visibile e stilizzato (.dpi-input[type="file"]); con JS (data-dpi-file-ready) è nascosto in modo accessibile: non display:none,
+   perché `required` deve poter segnalare l'errore ed ancorare il suo messaggio qui */
+.dpi-file[data-dpi-file-ready] > .dpi-file__input {
+    position: absolute; inset-inline-start: 0; inset-block-end: 0; width: 1px; height: 1px; min-height: 0; margin: 0; padding: 0; border: 0; overflow: hidden;
+    opacity: 0; pointer-events: none; clip-path: inset(50%);
+}
+.dpi-file__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--dpi-space-2) var(--dpi-space-3); min-width: 0; }
+.dpi-file__pick { flex: none; }
+.dpi-file__hint { min-width: 0; color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); overflow-wrap: anywhere; }
+.dpi-file__hint[hidden] { display: none; }
+.dpi-file__list { display: grid; gap: var(--dpi-space-1); margin: 0; padding: 0; list-style: none; min-width: 0; }
+.dpi-file__list:empty { display: none; }
+.dpi-file__item {
+    display: flex; align-items: center; gap: var(--dpi-space-2); min-width: 0; min-height: var(--dpi-control-h-sm); padding: 0.125rem 0.125rem 0.125rem var(--dpi-space-3);
+    border: 1px solid var(--dpi-field-border); border-radius: var(--dpi-radius-md); background: var(--dpi-field-bg);
+}
+.dpi-file__icon { flex: none; display: inline-flex; color: var(--dpi-text-muted); }
+.dpi-file__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dpi-file__size { flex: none; color: var(--dpi-text-muted); font-size: var(--dpi-text-sm); font-variant-numeric: tabular-nums; }
+.dpi-file__remove { flex: none; }
+.dpi-file__error { margin: 0; }
+.dpi-file__error[hidden] { display: none; }
+/* area di trascinamento (data-dpi-file-drop): il contenitore stesso è il bersaglio */
+.dpi-file[data-dpi-file-drop][data-dpi-file-ready] {
+    padding: var(--dpi-space-4); border: 1px dashed var(--dpi-control-border); border-radius: var(--dpi-radius-lg); background: var(--dpi-field-bg);
+    transition: border-color var(--dpi-dur-fast) ease, background-color var(--dpi-dur-fast) ease;
+}
+.dpi-file[data-dpi-file-drop][data-dpi-file-ready] > .dpi-file__bar { justify-content: center; text-align: center; }
+.dpi-file[data-dpi-dragover] { border-color: var(--dpi-accent); border-style: solid; background: var(--dpi-accent-soft); }
+.dpi-file[data-dpi-disabled] { opacity: 0.55; cursor: not-allowed; }
+.dpi-file[data-dpi-disabled] .dpi-file__pick { pointer-events: none; }
+.dpi-file:has(.dpi-file__input:user-invalid) .dpi-file__pick { border-color: var(--dpi-danger); }
+.dpi-file[data-dpi-invalid] .dpi-file__pick { border-color: var(--dpi-danger); }
+@media (prefers-reduced-motion: reduce) { .dpi-file[data-dpi-file-drop][data-dpi-file-ready] { transition: none; } }
+@media (forced-colors: active) { .dpi-file[data-dpi-file-drop][data-dpi-file-ready], .dpi-file__item { border: 1px solid CanvasText; } .dpi-file[data-dpi-dragover] { outline: 2px solid Highlight; } }
+
+/* ---------------------------------------------------------------- barre di filtri / toolbar: etichetta + controllo per campo, pulsanti allineati al bordo inferiore dei campi */
+.dpi-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--dpi-space-3); min-width: 0; }
+.dpi-toolbar > .dpi-field { flex: 0 1 12rem; min-width: min(100%, 8rem); }
+.dpi-toolbar > .dpi-field--grow, .dpi-toolbar > .dpi-toolbar__grow { flex: 1 1 14rem; }
+.dpi-toolbar > .dpi-field--narrow { flex: 0 1 8rem; }
+.dpi-toolbar > .dpi-btn, .dpi-toolbar > .dpi-check, .dpi-toolbar > .dpi-dropdown, .dpi-toolbar__actions > .dpi-btn { flex: none; }
+.dpi-toolbar__actions { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--dpi-space-2); }
+.dpi-toolbar__end { margin-inline-start: auto; }   /* spinge un gruppo (es. le azioni) al lato opposto */
+.dpi-toolbar--sm { gap: var(--dpi-space-2); }
+.dpi-toolbar--sm :is(.dpi-input, .dpi-select) { min-height: var(--dpi-control-h-sm); font-size: var(--dpi-text-sm); }
+@media (max-width: 36rem) {
+    .dpi-toolbar { gap: var(--dpi-space-3) var(--dpi-space-2); }
+    .dpi-toolbar > .dpi-field, .dpi-toolbar > .dpi-field--grow, .dpi-toolbar > .dpi-field--narrow { flex: 1 1 100%; }
+    .dpi-toolbar > .dpi-btn { flex: 1 1 auto; }
+    .dpi-toolbar__end { margin-inline-start: 0; flex: 1 1 100%; }
+    .dpi-toolbar__end > .dpi-btn { flex: 1 1 auto; }
+}
+
+/* ---------------------------------------------------------------- badge: .dpi-badge--plain (senza pallino) e .dpi-badge--count (contatore) */
+.dpi-badge--plain::before { content: none; }
+.dpi-badge--plain:is(.dpi-badge--info, .dpi-badge--success, .dpi-badge--warning, .dpi-badge--danger) { color: var(--_c); }
+:root[data-dpi-surface="solid"] .dpi-badge--plain:is(.dpi-badge--info, .dpi-badge--success, .dpi-badge--warning, .dpi-badge--danger) { background: var(--_bg); }
+/*
+ * CONTATORE NUMERICO (.dpi-badge--count): discreto, non una capsula decorativa.
+ *   • nel testo, nelle righe di elenco, nelle intestazioni e nelle voci di navigazione: il NUMERO è tipografia (cifre tabulari, colore attenuato, nessun fondo né bordo né pallino),
+ *     vicino alla voce a cui si riferisce; i toni (--info/--success/--warning/--danger) colorano solo il numero;
+ *   • su un pulsante solo icona (figlio diretto del pulsante o del suo .dpi-btn__content): contatore PICCOLO e proporzionato, pastiglia piena nel tono (accento di default), ancorata
+ *     all'angolo dell'icona, senza anello bianco né contenitore aggiuntivo.
+ * Il valore zero si nasconde con l'attributo [hidden] (regola in fondo a questa sezione). Nome accessibile: lo aggiorna l'applicazione (aria-label sul pulsante o testo
+ * .dpi-visually-hidden accanto al numero): il numero da solo non è un nome.
+ */
+.dpi-badge--count {
+    --_c: var(--dpi-text-muted); --_cb: var(--dpi-accent); --_cf: var(--dpi-on-accent);
+    box-sizing: border-box; display: inline; min-width: 0; height: auto; padding: 0; margin: 0;
+    font-size: 0.8125em; font-weight: var(--dpi-weight-medium); line-height: inherit; font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--_c);
+}
+.dpi-badge--count::before { content: none; }
+.dpi-badge--count.dpi-badge--info    { --_c: var(--dpi-info);    --_cb: var(--dpi-info);    --_cf: light-dark(#ffffff, #00152e); }
+.dpi-badge--count.dpi-badge--success { --_c: var(--dpi-success); --_cb: var(--dpi-success); --_cf: light-dark(#ffffff, #04210f); }
+.dpi-badge--count.dpi-badge--warning { --_c: var(--dpi-warning); --_cb: var(--dpi-warning); --_cf: light-dark(#ffffff, #3a2a00); }
+.dpi-badge--count.dpi-badge--danger  { --_c: var(--dpi-danger);  --_cb: var(--dpi-danger);  --_cf: var(--dpi-on-danger); }
+/* azzera il materiale di .dpi-badge (fondo, bordo, raggio, ombra, sfocatura) */
+:root .dpi-badge.dpi-badge--count { background: none; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+/* nelle righe di elenco e nelle voci di navigazione il numero sta a destra, allineato alla linea di base della voce */
+.dpi-list__row > .dpi-badge--count, .dpi-nav__link > .dpi-badge--count { margin-inline-start: auto; align-self: center; }
+/* conteggio accanto al nome in una voce di navigazione o scheda (nome e numero separati, spazio vero nel testo): numero piccolo, tabulare, attenuato; sulla voce attiva eredita il colore della voce */
+.dpi-nav__link > .dpi-badge--count, .dpi-tabs__tab > .dpi-badge--count { margin-inline-start: 0; align-self: baseline; }
+.dpi-nav__link[aria-current] > .dpi-badge--count, .dpi-tabs__tab[aria-selected="true"] > .dpi-badge--count { color: inherit; }
+/* sul pulsante solo icona: pastiglia piccola ancorata all'icona (il pulsante scritto a mano riceve il wrapper .dpi-btn__content da enhance.js) */
+.dpi-btn--icon-only:has(> .dpi-badge--count) { position: relative; overflow: visible; }
+.dpi-btn--icon-only > .dpi-btn__content { position: relative; overflow: visible; }
+:root .dpi-btn--icon-only > .dpi-badge.dpi-badge--count, :root .dpi-btn--icon-only > .dpi-btn__content > .dpi-badge.dpi-badge--count {
+    position: absolute; z-index: 2; pointer-events: none; display: inline-flex; align-items: center; justify-content: center;
+    min-width: 0.9375rem; height: 0.9375rem; padding: 0 0.25rem; border-radius: var(--dpi-radius-pill);
+    background: var(--_cb); color: var(--_cf); font-size: 0.625rem; font-weight: var(--dpi-weight-bold); line-height: 1;
+}
+:root .dpi-btn--icon-only > .dpi-badge.dpi-badge--count { inset-block-start: 0.2rem; inset-inline-end: 0.2rem; }
+:root .dpi-btn--icon-only > .dpi-btn__content > .dpi-badge.dpi-badge--count { inset-block-start: -0.4rem; inset-inline-end: -0.5rem; }
+@media (forced-colors: active) {
+    :root .dpi-btn--icon-only > .dpi-badge.dpi-badge--count, :root .dpi-btn--icon-only > .dpi-btn__content > .dpi-badge.dpi-badge--count { background: Highlight; color: HighlightText; border: 1px solid HighlightText; forced-color-adjust: none; }
+}
+
+/* ---------------------------------------------------------------- avatar: immagine intera (contain) e ripiego quando l'immagine non carica */
+.dpi-avatar--contain { background: var(--dpi-avatar-bg, var(--dpi-surface-2)); box-shadow: inset 0 0 0 1px var(--dpi-line); }
+.dpi-avatar--contain > .dpi-avatar__img { inset: 6%; width: 88%; height: 88%; object-fit: contain; }
+.dpi-avatar--contain:not([data-dpi-failed]):has(> .dpi-avatar__img) > .dpi-avatar__initials { visibility: hidden; }
+/* senza iniziali, l'avatar con immagine in errore mostra un'icona persona (maschera: segue il colore del testo) */
+.dpi-avatar[data-dpi-failed]:not(:has(> .dpi-avatar__initials))::after {
+    content: ""; width: 56%; height: 56%; background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ---------------------------------------------------------------- badge nascosto: [hidden] vince SEMPRE (contatore a 0: nessuna cifra, nessuna pastiglia, nessuno spazio).
+   Causa del vecchio difetto: le regole del contatore sul pulsante solo icona (:root .dpi-btn--icon-only > .dpi-btn__content > .dpi-badge.dpi-badge--count, specificità 0,5,0) impostano
+   display:inline-flex e battevano .dpi-badge[hidden] (0,2,0): l'attributo hidden non nascondeva nulla. Questa regola ha specificità maggiore di qualunque regola di display dei badge
+   e sta in fondo alla sezione. */
+.dpi-badge[hidden] { display: none; }
+:root:root:root .dpi-badge[hidden], :root:root:root .dpi-badge.dpi-badge--count[hidden] { display: none; }
+
+/* ---------------------------------------------------------------- dpi-searchbar: ricerca espandibile. A riposo solo il pulsante con la lente; searchbar.js alterna data-dpi-open e aria-expanded.
+   Si anima inline-size e opacity (mai display); l'invio è il submit nativo del form. Campo chiuso: visibility:hidden (dopo la transizione) + tabindex/inert da JS. */
+.dpi-searchbar {
+    display: flex; align-items: center; gap: 0; box-sizing: border-box; min-width: 0; max-inline-size: 100%;
+    inline-size: var(--dpi-control-h); margin: 0;
+    transition: inline-size var(--dpi-dur) var(--dpi-ease), gap var(--dpi-dur) var(--dpi-ease);
+}
+.dpi-searchbar[data-dpi-open] { inline-size: min(26rem, 100%); gap: var(--dpi-space-2); }
+.dpi-searchbar__toggle { flex: none; }
+.dpi-searchbar__input {
+    flex: 1 1 0; min-width: 0; inline-size: 0; padding-inline: 0; border-width: 0; opacity: 0; visibility: hidden;
+    transition: opacity var(--dpi-dur) var(--dpi-ease), padding var(--dpi-dur) var(--dpi-ease), visibility 0s var(--dpi-dur);
+}
+.dpi-searchbar[data-dpi-open] .dpi-searchbar__input {
+    inline-size: auto; padding-inline: var(--dpi-space-3); border-width: 1px; opacity: 1; visibility: visible; transition-delay: 0s;
+}
+@media (max-width: 36rem) { .dpi-searchbar[data-dpi-open] { inline-size: 100%; flex: 1 1 100%; } }
+@media (prefers-reduced-motion: reduce) { .dpi-searchbar, .dpi-searchbar__input { transition: none; } }
