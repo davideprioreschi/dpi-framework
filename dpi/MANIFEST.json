@@ -1,6 +1,6 @@
 {
   "name": "dpi",
-  "built_utc": "2026-11-25T11:00:35.503Z",
+  "built_utc": "2026-11-25T12:14:39.180Z",
   "entry": {
     "css": "dpi.css",
     "js": "dpi.js"
@@ -148,8 +148,8 @@
       "sha256": "24ad76f0fb86e68997b5fb218312910a5dc5396c94e8de8831d7606531032fd1"
     },
     "dpi.js": {
-      "bytes": 477067,
-      "sha256": "ff02f2ff967b842913c0b4d77c1a64e779b668afdb0835c58ec8511b772d9390"
+      "bytes": 477423,
+      "sha256": "1b11d9936a451c350d6bf0a2fea54a8703be291fe60c3f189f1ccc99d344667b"
     },
     "fonts/OFL.txt": {
       "bytes": 4384,

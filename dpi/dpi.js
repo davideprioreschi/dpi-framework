@@ -3357,6 +3357,17 @@
   function shiftPath(d, dx, dy) {
     return d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_, a, b) => `${(+a + dx).toFixed(2)} ${(+b + dy).toFixed(2)}`);
   }
+  function asBar(st, e, path) {
+    const { box, barRect: b } = st, s = e.style;
+    s.inset = "auto";
+    s.left = `${-box.x}px`;
+    s.top = `${-box.y}px`;
+    s.width = `${b.w}px`;
+    s.height = `${b.h}px`;
+    s.boxSizing = "border-box";
+    s.border = "1px solid transparent";
+    s.clipPath = `path('${shiftPath(path, box.x, box.y)}')`;
+  }
   function paint2(st) {
     const { m, box, bar: bar2 } = st;
     for (const pl of [st.pl, st.plIn]) {
@@ -3373,8 +3384,7 @@
     m.layer.style.height = `${box.h}px`;
     m.sv.setAttribute("viewBox", `0 0 ${box.w} ${box.h}`);
     m.sh.setAttribute("viewBox", `0 0 ${box.w} ${box.h}`);
-    m.filt.setAttribute("width", box.w);
-    m.filt.setAttribute("height", box.h);
+    for (const [k, v] of [["x", -64], ["y", -64], ["width", box.w + 128], ["height", box.h + 128]]) m.filt.setAttribute(k, v);
     m.fill.setAttribute("d", fr.path);
     m.shadow.setAttribute("d", fr.path);
     m.rim.setAttribute("d", fr.path);
@@ -3422,8 +3432,8 @@
         st.tint.style.backdropFilter = "none";
         m.glassP.after(st.tint);
       }
-      st.tint.style.clipPath = `path('${fr.path}')`;
-    } else m.glass.style.clipPath = `path('${fr.path}')`;
+      asBar(st, st.tint, fr.path);
+    } else asBar(st, m.glass, fr.path);
     m.grad.setAttribute("gradientTransform", `translate(${st.body.x + st.body.w / 2 - box.x} ${st.body.y + st.body.h * 0.3 - box.y}) scale(${Math.max(40, st.body.w * 1.3)} ${Math.max(40, st.body.h * 1.5)})`);
     const f3 = st.form;
     f3.style.left = `${box.x - o.x}px`;
