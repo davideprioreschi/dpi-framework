@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Progetti · esempio DPI</title>
+  <script src="https://davideprioreschi.github.io/dpi-framework/dpi/theme-init.js"></script>
+  <link rel="stylesheet" href="https://davideprioreschi.github.io/dpi-framework/dpi/dpi.css">
+  <link rel="stylesheet" href="https://davideprioreschi.github.io/dpi-framework/dpi/css/reset.css">
+  <script src="https://davideprioreschi.github.io/dpi-framework/dpi/dpi.js" defer></script>
+</head>
+<body class="dpi-root">
+  <main class="dpi-container dpi-page dpi-stack" data-dpi-loading>
+    <h1 class="dpi-heading dpi-heading--1">Progetti</h1>
+
+    <div class="dpi-cluster">
+      <button class="dpi-btn dpi-btn--primary" type="button" data-dpi-dialog-open="nuovo">
+        <span data-dpi-icon="plus"></span>Nuovo progetto
+      </button>
+      <button class="dpi-btn" type="button" data-dpi-toast="Bozza salvata" data-dpi-tone="success">Salva bozza</button>
+      <fieldset class="dpi-segmented dpi-glass dpi-glass--pill" data-dpi-glass="button">
+        <legend class="dpi-visually-hidden">Aspetto</legend>
+        <label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="auto" data-dpi-theme-pref checked><span class="dpi-segmented__label">Auto</span></label>
+        <label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="light" data-dpi-theme-pref><span class="dpi-segmented__label">Chiaro</span></label>
+        <label class="dpi-segmented__item"><input class="dpi-segmented__input" type="radio" name="aspetto" value="dark" data-dpi-theme-pref><span class="dpi-segmented__label">Scuro</span></label>
+      </fieldset>
+    </div>
+
+    <dl class="dpi-metrics dpi-metrics--cards">
+      <div class="dpi-metric"><dt class="dpi-metric__label">Aperti</dt><dd class="dpi-metric__value">12</dd></div>
+      <div class="dpi-metric dpi-metric--success"><dt class="dpi-metric__label">Completati</dt><dd class="dpi-metric__value">26</dd></div>
+    </dl>
+
+    <section class="dpi-card" aria-labelledby="attivita-title">
+      <div class="dpi-card__body dpi-stack">
+        <h2 class="dpi-card__title" id="attivita-title">Attività della settimana</h2>
+        <div class="dpi-table-wrap dpi-table-wrap--dashed">
+          <table class="dpi-table dpi-table--stack">
+            <caption class="dpi-visually-hidden">Attività della settimana</caption>
+            <thead>
+              <tr><th scope="col">Attività</th><th scope="col">Stato</th><th scope="col" class="dpi-table__num">Ore</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-label="Attività">Bozza del sito</td><td data-label="Stato"><span class="dpi-badge dpi-badge--success">Fatta</span></td><td data-label="Ore" class="dpi-table__num">6</td></tr>
+              <tr><td data-label="Attività">Testi della pagina</td><td data-label="Stato"><span class="dpi-badge dpi-badge--warning">In corso</span></td><td data-label="Ore" class="dpi-table__num">3</td></tr>
+              <tr><td data-label="Attività">Revisione finale</td><td data-label="Stato"><span class="dpi-badge dpi-badge--info">Nuova</span></td><td data-label="Ore" class="dpi-table__num">2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="dpi-card" aria-labelledby="contatto-title">
+      <form class="dpi-card__body dpi-stack" id="contatto">
+        <h2 class="dpi-card__title" id="contatto-title">Invita una persona</h2>
+        <div class="dpi-field">
+          <label class="dpi-label" for="email">Email</label>
+          <input class="dpi-input" id="email" name="email" type="email" required placeholder="nome@esempio.it">
+        </div>
+        <div class="dpi-field">
+          <label class="dpi-label" for="ruolo">Ruolo</label>
+          <select class="dpi-select" id="ruolo" name="ruolo" data-dpi-select>
+            <option value="lettore">Lettore</option>
+            <option value="autore" selected>Autore</option>
+          </select>
+        </div>
+        <div class="dpi-cluster dpi-cluster--end">
+          <button class="dpi-btn" type="reset">Azzera</button>
+          <button class="dpi-btn dpi-btn--primary" type="submit">Invia invito</button>
+        </div>
+      </form>
+    </section>
+
+    <dialog class="dpi-dialog dpi-glass dpi-glass--strong" id="nuovo" aria-labelledby="nuovo-title" data-dpi-dismissible>
+      <form class="dpi-dialog__form" method="dialog">
+        <div class="dpi-dialog__header"><h2 class="dpi-dialog__title" id="nuovo-title">Nuovo progetto</h2></div>
+        <div class="dpi-dialog__body dpi-stack">
+          <div class="dpi-field">
+            <label class="dpi-label" for="nome">Nome</label>
+            <input class="dpi-input" id="nome" name="nome" type="text" placeholder="Sito vetrina">
+          </div>
+        </div>
+        <div class="dpi-dialog__footer">
+          <div class="dpi-cluster dpi-cluster--end">
+            <button class="dpi-btn" type="button" data-dpi-dialog-close="">Annulla</button>
+            <button class="dpi-btn dpi-btn--primary" type="button" data-dpi-dialog-close="ok" value="ok">Crea</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+  </main>
+
+  <nav class="dpi-bottombar dpi-glass" aria-label="Sezioni" data-dpi-bottombar data-dpi-count="3" data-dpi-index="0" data-dpi-glass="bar">
+    <ul class="dpi-bottombar__list">
+      <li><a class="dpi-bottombar__item" href="#" draggable="false" aria-current="page"><span class="dpi-bottombar__icon"><span data-dpi-icon="house" data-dpi-icon-size="lg"></span></span><span class="dpi-bottombar__label">Home</span></a></li>
+      <li><a class="dpi-bottombar__item" href="#agenda" draggable="false"><span class="dpi-bottombar__icon"><span data-dpi-icon="calendar" data-dpi-icon-size="lg"></span></span><span class="dpi-bottombar__label">Agenda</span></a></li>
+      <li><a class="dpi-bottombar__item" href="#profilo" draggable="false"><span class="dpi-bottombar__icon"><span data-dpi-icon="user" data-dpi-icon-size="lg"></span></span><span class="dpi-bottombar__label">Profilo</span></a></li>
+    </ul>
+  </nav>
+
+  <script>
+    // In un progetto con CSP questo codice va in un file .js separato, incluso con defer.
+    document.addEventListener('submit', (e) => {
+      if (e.target.id !== 'contatto') return;
+      e.preventDefault(); // qui andrebbe la chiamata al proprio backend
+      DPI.toast.show({ message: 'Invito pronto per l\'invio', tone: 'success' });
+    });
+  </script>
+</body>
+</html>
