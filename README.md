@@ -7,8 +7,17 @@ HTML, CSS e JavaScript. Nessuna build, nessuna dipendenza a runtime.
 ```html
 <script src="https://davideprioreschi.github.io/dpi-framework/dpi/theme-init.js"></script>
 <link rel="stylesheet" href="https://davideprioreschi.github.io/dpi-framework/dpi/dpi.css">
+<link rel="stylesheet" href="https://davideprioreschi.github.io/dpi-framework/dpi/css/reset.css">
 <script src="https://davideprioreschi.github.io/dpi-framework/dpi/dpi.js" defer></script>
 ```
+
+E sul contenitore che deve usare la tipografia di DPI:
+
+```html
+<body class="dpi-root">
+```
+
+`reset.css` agisce solo dentro `.dpi-root`, non sul resto della pagina.
 
 Questi indirizzi seguono sempre l'ultima versione pubblicata: un aggiornamento arriva ai siti che li usano senza interventi (la cache del browser può impiegare qualche minuto).
 
