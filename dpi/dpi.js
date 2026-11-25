@@ -2570,7 +2570,7 @@
       list.style.visibility = !full && x1 - x0 < 1 ? "hidden" : "";
       const lens = st.lens, LL = st.lensLocal;
       if (lens && LL) {
-        const lx0 = pk.x >= LL.x ? x0 + Math.max(0, LL.x + LL.w - pk.x) * Math.max(0, Math.min(1, x0 / Math.max(1, pk.x))) : x0;
+        const lx0 = pk && pk.x >= LL.x ? x0 + Math.max(0, LL.x + LL.w - pk.x) * Math.max(0, Math.min(1, x0 / Math.max(1, pk.x))) : x0;
         lens.style.clipPath = full ? "" : `inset(0 ${Math.max(0, LL.x + LL.w - x1).toFixed(2)}px 0 ${Math.max(0, lx0 - LL.x).toFixed(2)}px)`;
         lens.style.visibility = !full && (x1 <= LL.x + 0.5 || lx0 >= LL.x + LL.w - 0.5) ? "hidden" : "";
       }
@@ -2950,6 +2950,7 @@
   var ACCEL2 = 13;
   var EDGE2 = 5;
   var GAP = 8;
+  var NATIVE_U = 0.012;
   var BLOB = 0.62;
   var reduced5 = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
   var coarse = () => typeof matchMedia === "function" && matchMedia("(pointer: coarse)").matches;
@@ -3091,7 +3092,7 @@
     S2 = st;
     measureAll(st);
     st.m = buildMass(st);
-    nativeEdge(st.m);
+    nativeEdge(st.m, bar2.hasAttribute("data-dpi-live") && !RECT_GLASS2);
     bar2.setAttribute("data-dpi-bbn", reduced5() ? "search-reduced" : "search");
     bar2.setAttribute("data-dpi-bbn-kind", "search");
     btn.setAttribute("aria-expanded", "true");
@@ -3311,6 +3312,8 @@
     const ins = (r2) => ({ x: r2.x + 1, y: r2.y + 1, w: Math.max(2, r2.w - 2), h: Math.max(2, r2.h - 2), r: Math.max(0, (r2.r ?? 0) - 1) });
     st.plIn = plan({ bar: ins(barRect), pocket: ins(pocket), body: ins(body), grow: 1, mode: "side", gap: GAP, radius: Math.max(0, barRect.r - 1) });
     st.plIn.blob = st.pl.blob;
+    st.pl.basePocket = st.pl.pocket;
+    st.plIn.basePocket = st.plIn.pocket;
     const lr = listOf2(bar2)?.getBoundingClientRect();
     st.listLocal = lr ? { x: lr.left - br.left, y: lr.top - br.top, w: lr.width, h: lr.height } : null;
     const fx = body.x - st.box.x, fy = body.y - st.box.y;
@@ -3322,7 +3325,7 @@
     f3.height = `${body.h}px`;
     st.field.style.setProperty("--bsr-pad-r", `${Math.max(8, (body.h - 36) / 2)}px`);
   }
-  function nativeEdge(m) {
+  function nativeEdge(m, live3) {
     const id = `${m.layer.querySelector("filter").id}-in`;
     const cp = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
     cp.id = id;
@@ -3333,13 +3336,35 @@
     m.rim.setAttribute("clip-path", `url(#${id})`);
     m.rim.style.strokeWidth = "2px";
     m.layer.querySelector("feGaussianBlur")?.setAttribute("stdDeviation", "14");
+    if (!live3) {
+      const li = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+      li.id = `${id}-lit`;
+      li.setAttribute("clipPathUnits", "userSpaceOnUse");
+      m.innerClip = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      li.append(m.innerClip);
+      m.sv.prepend(li);
+      m.lights = [[1, "var(--dpi-lens-edge)"], [-1, "light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.3))"]].map(([dy, fill2]) => {
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("fill-rule", "evenodd");
+        p.setAttribute("clip-path", `url(#${id}-lit)`);
+        p.style.fill = fill2;
+        p.style.stroke = "none";
+        m.sv.append(p);
+        return { p, dy };
+      });
+    }
   }
   function shiftPath(d, dx, dy) {
     return d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_, a, b) => `${(+a + dx).toFixed(2)} ${(+b + dy).toFixed(2)}`);
   }
   function paint2(st) {
     const { m, box, bar: bar2 } = st;
-    const fr = frame2(st.pl, st.u, box, { cell: st.cell });
+    for (const pl of [st.pl, st.plIn]) {
+      const b = pl.basePocket, h0 = Math.min(b.w, b.h), h = h0 + (b.h - h0) * ease4(st.u / 0.2);
+      pl.pocket = { x: b.x, y: b.y + (b.h - h) / 2, w: b.w, h, r: Math.min(b.r, h / 2, b.w / 2) };
+    }
+    const cell = st.cell;
+    const fr = frame2(st.pl, st.u, box, { cell });
     st.fr = fr;
     const o = st.originLocal;
     m.layer.style.left = `${box.x - o.x}px`;
@@ -3354,13 +3379,25 @@
     m.shadow.setAttribute("d", fr.path);
     m.rim.setAttribute("d", fr.path);
     m.clipPath.setAttribute("d", fr.path);
+    if (m.lights && st.u >= NATIVE_U) {
+      const inner = frame2(st.plIn, st.u, box, { cell }).path;
+      m.innerClip.setAttribute("d", inner);
+      for (const l of m.lights) l.p.setAttribute("d", `${inner} ${shiftPath(inner, 0, l.dy)}`);
+    }
     m.layer.style.setProperty("--bbn-m", "0");
     m.layer.style.clipPath = "";
+    const native = st.u < NATIVE_U;
+    if (native !== st.native) {
+      st.native = native;
+      m.layer.style.display = native ? "none" : "";
+      if (native) bar2.removeAttribute("data-dpi-bbn");
+      else bar2.setAttribute("data-dpi-bbn", reduced5() ? "search-reduced" : "search");
+    }
     const live3 = bar2.hasAttribute("data-dpi-live") && !RECT_GLASS2;
     if (live3) {
       m.glass.style.display = "none";
       const surf = bar2.querySelector(":scope > .dpi-bottombar__surface");
-      const frIn = st.u <= 5e-4 ? null : frame2(st.plIn, st.u, box, { cell: st.cell });
+      const frIn = native ? null : frame2(st.plIn, st.u, box, { cell });
       if (surf) surf.style.clipPath = frIn ? `path('${shiftPath(frIn.path, box.x - o.x, box.y - o.y)}')` : "";
     } else if (RECT_GLASS2) {
       const place5 = (e, r) => {
@@ -3378,6 +3415,14 @@
       };
       place5(m.glass, fr.body);
       place5(m.glassP, fr.pocket);
+      if (!st.tint) {
+        for (const e of [m.glass, m.glassP]) e.style.background = "none";
+        st.tint = el2("span", "dpi-bbn__glass");
+        st.tint.style.webkitBackdropFilter = "none";
+        st.tint.style.backdropFilter = "none";
+        m.glassP.after(st.tint);
+      }
+      st.tint.style.clipPath = `path('${fr.path}')`;
     } else m.glass.style.clipPath = `path('${fr.path}')`;
     m.grad.setAttribute("gradientTransform", `translate(${st.body.x + st.body.w / 2 - box.x} ${st.body.y + st.body.h * 0.3 - box.y}) scale(${Math.max(40, st.body.w * 1.3)} ${Math.max(40, st.body.h * 1.5)})`);
     const f3 = st.form;
@@ -4706,7 +4751,8 @@
     setAria(false);
     root4.setAttribute("data-dpi-collapsed", "");
     space(0);
-    dB.host.addEventListener("dpi:drop-settled", () => {
+    dB.host.addEventListener("dpi:drop-settled", (e) => {
+      if (e.target !== dB.host) return;
       root4.toggleAttribute("data-dpi-motion", false);
       material.reset();
       transitioning = false;
@@ -4800,7 +4846,7 @@
     });
     new ResizeObserver(() => {
       reach();
-      if (!st.open && !dB.running) {
+      if (!st.open && !transitioning && !dB.running) {
         snapCollapsed();
         update();
       }
